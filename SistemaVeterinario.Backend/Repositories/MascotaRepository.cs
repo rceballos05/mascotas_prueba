@@ -1,19 +1,29 @@
 ﻿
-using Newtonsoft.Json.Linq;
-using SistemaVeterinario.Backend.Entities.Requests;
-using SistemaVeterinario.Backend.Interfaces;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
+using SistemaVeterinario.Backend.Entities.Requests;
+using SistemaVeterinario.Backend.Entities.Responses;
+using SistemaVeterinario.Backend.Interfaces;
 
 namespace SistemaVeterinario.Backend.Repositories
 {
     public class MascotaRepository : IMascotaRepository
     {
-        private readonly HttpClient httpClient;
-
-        public MascotaRepository(HttpClient _httpClient)
+        private static readonly JsonSerializerOptions SerializerOptions = new()
         {
-            httpClient = _httpClient;
+            PropertyNameCaseInsensitive = true
+        };
+
+        private readonly HttpClient httpClient;
+        private readonly ILogger<MascotaRepository> logger;
+
+        public MascotaRepository(HttpClient httpClient, ILogger<MascotaRepository> logger)
+        {
+            this.httpClient = httpClient;
+            this.logger = logger;
         }
 
         public async Task<dynamic> DeleteMascota(string token, string prefijo, string id)
@@ -85,27 +95,44 @@ namespace SistemaVeterinario.Backend.Repositories
             }
         }
 
-        public async Task<dynamic> GetNumeroMascota(string token, string prefijo)
+        public async Task<string?> GetNumeroMascota(string token, string prefijo)
         {
             try
             {
-                //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                var response = await httpClient.GetAsync($"api/Mascotas/{prefijo}/numero-mascota");
-                var responseString = await response.Content.ReadAsStringAsync();
+                SetAuthorization(token);
 
-                dynamic rsp = JObject.Parse(responseString);
+                using var response = await httpClient.GetAsync($"api/Mascotas/{prefijo}/numero-mascota");
+                var payload = await response.Content.ReadAsStringAsync();
 
-                if (rsp.statusCode == 200)
+                if (!response.IsSuccessStatusCode)
                 {
-                    string numero = rsp.items[0];
-                    string nuevoNumero = Convert.ToString((Convert.ToInt32(numero) + 1)).PadLeft(10,'0');
-                    return nuevoNumero;
+                    logger.LogWarning("No se pudo obtener el correlativo de mascota para el prefijo {Prefijo}. Código {StatusCode}. Respuesta: {Payload}", prefijo, response.StatusCode, payload);
+                    throw new HttpRequestException($"Error al obtener número de mascota ({(int)response.StatusCode}). {payload}");
                 }
-                return null;
+
+                var envelope = JsonSerializer.Deserialize<ApiResponse<List<string>>>(payload, SerializerOptions);
+                if (envelope?.Items is null || envelope.Items.Count == 0)
+                {
+                    logger.LogInformation("La respuesta de número de mascota para el prefijo {Prefijo} no contiene elementos.", prefijo);
+                    return null;
+                }
+
+                var numeroOrigen = envelope.Items[0];
+                if (!int.TryParse(numeroOrigen, out var numeroActual))
+                {
+                    logger.LogWarning("El número de mascota '{NumeroOrigen}' no es válido.", numeroOrigen);
+                    return null;
+                }
+
+                return (numeroActual + 1).ToString("D10");
             }
-            catch (Exception e)
+            catch (HttpRequestException)
             {
-                var error = e.Message;
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error inesperado al obtener el número de mascota");
                 throw;
             }
         }
@@ -164,6 +191,17 @@ namespace SistemaVeterinario.Backend.Repositories
                 var error = e.Message;
                 throw;
             }
+        }
+
+        private void SetAuthorization(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                httpClient.DefaultRequestHeaders.Authorization = null;
+                return;
+            }
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 }

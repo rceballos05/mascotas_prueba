@@ -1,3 +1,4 @@
+using System.Net;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -5,6 +6,7 @@ using Radzen;
 using SistemaVeterinario.Backend.Interfaces;
 using SistemaVeterinario.Backend.NavigationData;
 using SistemaVeterinario.Backend.Repositories;
+using SistemaVeterinario.Backend.Statics;
 using SistemaVeterinario.Web;
 using SistemaVeterinario.Web.Services;
 
@@ -17,9 +19,22 @@ builder.Services.AddScoped<DialogService>();
 builder.Services.AddSingleton<UserNavgationData>();
 builder.Services.AddSingleton<MascotaNavigationData>();
 builder.Services.AddSingleton<EmpresaSeleccionadaNavigationData>();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://45.236.164.152:82/") }); //VPN
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://192.168.1.2:88/") }); //oficina
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://10.32.64.8:88/") }); // CASA
+var apiBaseUrl = builder.Configuration["Api:BaseUrl"];
+builder.Services.AddHttpClient(HttpClientNames.Api, client =>
+{
+    if (!string.IsNullOrWhiteSpace(apiBaseUrl) && Uri.TryCreate(apiBaseUrl, UriKind.Absolute, out var baseUri))
+    {
+        client.BaseAddress = baseUri;
+    }
+    else
+    {
+        client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+    }
+
+    client.DefaultRequestVersion = HttpVersion.Version20;
+    client.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrHigher;
+});
+builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(HttpClientNames.Api));
 builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 builder.Services.AddScoped<ArchivosService>();
 builder.Services.AddScoped<IAyudaRepository, AyudaRepository>();

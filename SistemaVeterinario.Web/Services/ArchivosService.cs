@@ -1,44 +1,42 @@
-﻿namespace SistemaVeterinario.Web.Services
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using SistemaVeterinario.Backend.Statics;
+using SistemaVeterinario.Web.Services.Contracts;
+
+namespace SistemaVeterinario.Web.Services;
+
+public sealed class ArchivosService
 {
-    public class ArchivosService
+    private readonly IHttpClientFactory httpClientFactory;
+    private readonly ILogger<ArchivosService> logger;
+
+    public ArchivosService(IHttpClientFactory httpClientFactory, ILogger<ArchivosService> logger)
     {
-        private readonly string _basePath = @"C:\Uploads";
-
-        public void CrearCarpetaCliente(string clienteId)
-        {
-            var rutaCliente = Path.Combine(_basePath, $"cliente_{clienteId}");
-
-            if (!Directory.Exists(rutaCliente))
-                Directory.CreateDirectory(rutaCliente);
-        }
-
-        public void CrearCarpetaMascota(string clienteId, string mascotaId)
-        {
-            var rutaMascota = Path.Combine(_basePath, $"cliente_{clienteId}", $"mascota_{mascotaId}");
-
-            if (!Directory.Exists(rutaMascota))
-                Directory.CreateDirectory(rutaMascota);
-        }
-        public async Task<bool> ClienteExistePeroSinCarpetaAsync(int clienteId)
-        {
-           
-            // 2. Verificar si su carpeta física existe
-            var rutaCarpeta = Path.Combine("C:\\ArchivosVeterinaria", $"cliente_{clienteId}");
-
-            var carpetaExiste = Directory.Exists(rutaCarpeta);
-
-            // 3. Retornar true solo si el cliente existe pero no tiene carpeta
-            return !carpetaExiste;
-        }
-        public async Task VerificarYCrearCarpetaClienteAsync(int clienteId)
-        {
-            if (await ClienteExistePeroSinCarpetaAsync(clienteId))
-            {
-                var rutaCarpeta = Path.Combine("C:\\ArchivosVeterinaria", $"cliente_{clienteId}");
-                Directory.CreateDirectory(rutaCarpeta);
-            }
-        }
+        this.httpClientFactory = httpClientFactory;
+        this.logger = logger;
     }
 
+    public Task<FileResourceResponse?> CrearCarpetaClienteAsync(string clienteId, CancellationToken cancellationToken = default)
+    {
+        return CrearRecursoAsync(clienteId, new CreateFileResourceRequest(), cancellationToken);
+    }
 
+    public Task<FileResourceResponse?> CrearCarpetaMascotaAsync(string clienteId, string mascotaId, CancellationToken cancellationToken = default)
+    {
+        return CrearRecursoAsync(clienteId, new CreateFileResourceRequest { MascotaId = mascotaId }, cancellationToken);
+    }
+
+    private async Task<FileResourceResponse?> CrearRecursoAsync(string clienteId, CreateFileResourceRequest request, CancellationToken cancellationToken)
+    {
+        var client = httpClientFactory.CreateClient(HttpClientNames.Api);
+        using var response = await client.PostAsJsonAsync($"api/archivos/{clienteId}", request, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            var detalle = await response.Content.ReadAsStringAsync(cancellationToken);
+            logger.LogError("No se pudo crear el recurso de archivos para el cliente {ClienteId}. StatusCode: {StatusCode}. Detalle: {Detalle}", clienteId, response.StatusCode, detalle);
+            throw new HttpRequestException($"Error al crear recurso de archivos ({response.StatusCode}). {detalle}");
+        }
+
+        return await response.Content.ReadFromJsonAsync<FileResourceResponse>(cancellationToken: cancellationToken);
+    }
 }

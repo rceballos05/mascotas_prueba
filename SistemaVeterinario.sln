@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaVeterinario.Web", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaVeterinario.Backend", "SistemaVeterinario.Backend\SistemaVeterinario.Backend.csproj", "{952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaVeterinario.Api", "SistemaVeterinario.Api\SistemaVeterinario.Api.csproj", "{734DF85A-6E1B-4853-BC4D-8BD534B9BA55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +35,13 @@ Global
 		{4FFFED7B-1337-4F53-B4EF-0033DC0239E1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
+                {952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {952FB8A2-C050-43BA-8AE3-0CBD2B6D9F46}.Release|Any CPU.Build.0 = Release|Any CPU
+                {734DF85A-6E1B-4853-BC4D-8BD534B9BA55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {734DF85A-6E1B-4853-BC4D-8BD534B9BA55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {734DF85A-6E1B-4853-BC4D-8BD534B9BA55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {734DF85A-6E1B-4853-BC4D-8BD534B9BA55}.Release|Any CPU.Build.0 = Release|Any CPU
+        EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection

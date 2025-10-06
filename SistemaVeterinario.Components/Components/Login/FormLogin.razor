@@ -1,4 +1,5 @@
-﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Backend.Entities.Responses
+@using SistemaVeterinario.Backend.Interfaces
 @using SistemaVeterinario.Web.Statics
 @inject UserNavgationData userDataService
 @inject ILoginRepository loginRepository
@@ -6,7 +7,8 @@
 @inject IJSRuntime js
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject MascotaNavigationData mascotaData
-<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+@inject ILogger<FormLogin> logger
+
 <EditForm Model="Login">
     <DataAnnotationsValidator/>
     <form class="my-4" action="index.html">
@@ -115,19 +117,18 @@
 
         context.PreventNavigation();
     }
-    private void KeyEvent(KeyboardEventArgs e)
+    private async Task KeyEvent(KeyboardEventArgs e)
     {
-
         if (e.Key == "Enter")
         {
             loading = true;
             StateHasChanged();
-            IniciarSesion();
+            await IniciarSesion();
         }
     }
-    private async void KeyEventRut(KeyboardEventArgs e)
-    {
 
+    private async Task KeyEventRut(KeyboardEventArgs e)
+    {
         if (e.Key == "Enter")
         {
             await pass.FocusAsync();
@@ -147,7 +148,7 @@
             Rut rutFn = new Rut();
             _rut = rutFn.FormatoRut(rutLimpio);
             Login.rut = rutLimpio.PadLeft(10,'0');
-            Console.WriteLine($"rut ----> {Login.rut}");
+            logger.LogDebug("RUT formateado {Rut}", Login.rut);
         }
 
     }
@@ -206,7 +207,7 @@
     {
         await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{palabra}'");
     }
-    private async void ValidaRut()
+    private async Task ValidaRut()
     {
         Rut rutFn = new Rut();
         var res = rutFn.ValidaRut(Login.rut);
@@ -214,60 +215,69 @@
         {
             await js.InvokeAsync<string>("showAlertErrorRut");
         }
-        Console.WriteLine($"RUT CORRECTO?: {res}");
+        logger.LogDebug("Validación de RUT con resultado {Resultado}", res);
     }
-    private async void IniciarSesion()
+    private async Task IniciarSesion()
     {
-        loading = true;
-        var rut = Login.rut.Replace(".", "").Replace("-", "");
-        Login.rut = rut.PadLeft(10, '0');
-        var response = await loginRepository.IniciarSesion(Login);
-        if(response != null)
+        try
         {
-            dynamic prueba = response.items;
-            var admUser = JsonSerializer.Deserialize<AdmUser>(Convert.ToString(prueba[0].login));
+            loading = true;
+            var rut = Login.rut.Replace(".", string.Empty).Replace("-", string.Empty);
+            Login.rut = rut.PadLeft(10, '0');
 
-            List<EmpresasDto> empresas = [];
-            foreach (var item in prueba[0].empresas)
+            LoginResponse loginResult;
+            try
             {
-                empresas.Add(JsonSerializer.Deserialize<EmpresasDto>(Convert.ToString(item)));
+                loginResult = await loginRepository.IniciarSesion(Login);
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Error al autenticar al usuario {Rut}", Login.rut);
+                throw;
             }
 
-            string token = prueba[0].token;
-            userDataService.Login = admUser;
-            userDataService.Token = token;
+            if (loginResult.Login is null)
+            {
+                throw new InvalidOperationException("La respuesta de autenticación no contiene datos de usuario.");
+            }
+
+            var empresas = loginResult.Empresas ?? new List<EmpresasDto>();
+
+            userDataService.Login = loginResult.Login;
+            userDataService.Token = loginResult.Token;
             userDataService.Empresas = empresas;
             mascotaData.IdMascota = null;
             mascotaData.RutCliente = null;
+
             await js.InvokeAsync<string>("showAlertSuccessLogin");
-            await localStorage.SetItemAsync("login", new LoginResponse{ Empresas = empresas, Login = admUser, Token = token} );
-            await localStorage.SetItemAsync("mascota", new MascotasDto
-                {
-                    
-                });
-            await localStorage.SetItemAsync("propietario", new Propietario
-                {
-                    
-                });
-            List<MascotasDto> lst = new List<MascotasDto>();
-            await localStorage.SetItemAsync("mascotasPropietario", lst);
+            await localStorage.SetItemAsync("login", new LoginResponse
+            {
+                Empresas = empresas,
+                Login = loginResult.Login,
+                Token = loginResult.Token
+            });
+            await localStorage.SetItemAsync("mascota", new MascotasDto());
+            await localStorage.SetItemAsync("propietario", new Propietario());
+            await localStorage.SetItemAsync("mascotasPropietario", new List<MascotasDto>());
 
             navigationManager.NavigateTo("/home");
-
         }
-        else
+        catch (Exception ex)
         {
-            var rutTemp = Login.rut.Remove(0,1);
+            var rutTemp = Login.rut.Length > 1 ? Login.rut.Remove(0, 1) : Login.rut;
             Rut rutFn = new Rut();
-            loading = false;
-
             rutTemp = rutFn.FormatoRut(rutTemp);
-            StateHasChanged();
             Login.rut = rutTemp;
+            loading = false;
+            StateHasChanged();
+            logger.LogError(ex, "No se pudo iniciar sesión para el usuario {Rut}", Login.rut);
             await js.InvokeAsync<string>("showAlertErrorLogin");
-            
-            //Login.rut = rutFn.FormatoRut(Login.rut.Remove(0));
             await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{Login.rut}'");
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
         }
     }
 }
