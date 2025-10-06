@@ -14,6 +14,7 @@
 @inject UserNavgationData userLoged
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject HttpClient Http
+@inject ILogger<FrmNuevaMascota> logger
 
 <style>
     body {
@@ -508,13 +509,19 @@
     protected override async Task OnInitializedAsync()
     {
         MascotaDto.FechaCreacion = DateTime.Now.ToString("yyyy-MM-dd");
-        MascotaDto.IdMascota = await mascota.GetNumeroMascota(userLoged.Token, empresaData.Prefijo);
+        var correlativoMascota = await mascota.GetNumeroMascota(userLoged.Token, empresaData.Prefijo);
+        if (string.IsNullOrWhiteSpace(correlativoMascota))
+        {
+            await js.InvokeVoidAsync("mostrarAlertaError", "No fue posible generar un correlativo para la mascota.");
+            correlativoMascota = string.Empty;
+        }
+        MascotaDto.IdMascota = correlativoMascota;
         MascotaDto.NumeroHospitalizacion = "";
         fechaNacimiento = DateOnly.Parse(DateTime.Now.ToString().Split(" ")[0]);
         MascotaDto.IdFotoPerfil = UrlImagen;
         var id = await mascotasFotosRepository.IdFoto(userLoged.Token, empresaData.Prefijo);
         UrlImagen = $"{Http.BaseAddress}api/imagenes/test/base/base/{ImagenBase}";
-        Console.WriteLine(UrlImagen);
+        logger.LogDebug("URL de imagen de mascota {Url}", UrlImagen);
         int id_convertido = Convert.ToInt32(id) + 1;
         fotos.IdFoto = Convert.ToString(id_convertido).PadLeft(10, '0');
         var sx = await sexo.GetSexos(userLoged.Token, empresaData.Prefijo);
@@ -552,7 +559,7 @@
                 especies = esp;
             }
         }
-        Console.WriteLine("url: " + Http.BaseAddress);
+        logger.LogDebug("Base address API {BaseAddress}", Http.BaseAddress);
         // var raz = await raza.GetRazas(userLoged.Token,empresaData.Prefijo);
         // if (raz != null)
         // {
@@ -621,7 +628,7 @@
                     fotos.IdMascota = MascotaDto.IdMascota;
                     fotos.IdCliente = MascotaDto.RutCliente;
                     UrlImagen = $"{Http.BaseAddress}api/imagenes/test/{MascotaDto.RutCliente}/{MascotaDto.IdMascota}/{ImagenBase}";
-                    Console.WriteLine(UrlImagen);
+                    logger.LogDebug("URL de imagen de mascota {Url}", UrlImagen);
                     StateHasChanged();
                 }
                 else

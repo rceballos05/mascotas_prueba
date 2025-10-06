@@ -1,9 +1,9 @@
-﻿using SistemaVeterinario.Backend.Entities.Requests;
+using SistemaVeterinario.Backend.Entities.Requests;
+using SistemaVeterinario.Backend.Entities.Responses;
 
-namespace SistemaVeterinario.Backend.Interfaces
+namespace SistemaVeterinario.Backend.Interfaces;
+
+public interface ILoginRepository
 {
-    public interface ILoginRepository
-    {
-        Task<dynamic> IniciarSesion(LoginRequest request);
-    }
+    Task<LoginResponse> IniciarSesion(LoginRequest request);
 }
