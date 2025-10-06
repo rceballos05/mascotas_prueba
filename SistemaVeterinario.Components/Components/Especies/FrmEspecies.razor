@@ -1,0 +1,61 @@
+﻿<div class="page-content mt-5 ml-3">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Tipo de la Especie</h5>
+                    <form id="speciesForm">
+                        <div class="mb-3">
+                            <label for="type" class="form-label">Tipo de la Especie</label>
+                            <input type="text" class="form-control" id="type">
+                        </div>
+                        <div class="mb-3">
+                            <label for="identifier" class="form-label">Identificador</label>
+                            <input type="text" class="form-control" id="identifier">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="name">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="active" checked>
+                            <label class="form-check-label" for="active">Activo</label>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-plus"></i> Agregar Registro
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm" id="deleteBtn">
+                                <i class="bi bi-trash"></i> Eliminar Registro
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="clearBtn">
+                                <i class="bi bi-arrow-counterclockwise"></i> Limpiar Formulario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Listado Especies</h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="speciesTableBody">
+                                <!-- Table rows will be dynamically added here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

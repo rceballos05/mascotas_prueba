@@ -1,0 +1,36 @@
+﻿@using SistemaVeterinario.Components.Services
+<!-- Modal -->
+@if (Show)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show" tabindex="-1" style="display:block;">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">@Title</h5>
+                    <button type="button" class="btn-close" @onclick="CloseModal"></button>
+                </div>
+                <div class="modal-body">
+                   @ChildContent
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Show { get; set; }
+    [Parameter] public string Title { get; set; } = null!;
+    [Parameter] public EventCallback<bool> ShowChanged { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    
+    private async Task CloseModal()
+    {
+        Show = false;
+        await ShowChanged.InvokeAsync(Show);
+    }
+}

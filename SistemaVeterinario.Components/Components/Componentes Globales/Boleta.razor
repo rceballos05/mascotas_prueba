@@ -1,0 +1,208 @@
+﻿<style>
+    @@media print {
+        body
+
+    {
+        margin: 0;
+    }
+
+    .no-print {
+        display: none;
+    }
+
+    }
+
+    body {
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.2;
+        margin: 0;
+        padding: 8px;
+        width: 58mm;
+        max-width: 58mm;
+        background: white;
+        color: black;
+    }
+
+    .ticket {
+        width: 100%;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .left {
+        text-align: left;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .bold {
+        font-weight: bold;
+    }
+
+    .small {
+        font-size: 10px;
+    }
+
+    .large {
+        font-size: 14px;
+    }
+
+    .line {
+        border-bottom: 1px dashed #000;
+        margin: 4px 0;
+    }
+
+    .double-line {
+        border-bottom: 2px solid #000;
+        margin: 6px 0;
+    }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 2px 0;
+    }
+
+    .item-name {
+        flex: 1;
+        padding-right: 4px;
+    }
+
+    .item-price {
+        white-space: nowrap;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        margin: 3px 0;
+    }
+
+    .spacing {
+        margin: 8px 0;
+    }
+</style>
+
+<div class="ticket">
+    Encabezado
+    <div class="center bold large">
+        MINIMARKET EL SOL
+    </div>
+    <div class="center small">
+        Av. Principal 123<br>
+        Lima, Perú<br>
+        RUC: 20123456789<br>
+        Tel: (01) 234-5678
+    </div>
+
+    <div class="double-line"></div>
+
+    Información de la boleta
+    <div class="center bold">
+        BOLETA DE VENTA ELECTRÓNICA
+    </div>
+    <div class="center">
+        B001-00000123
+    </div>
+
+    <div class="line"></div>
+
+    <div class="left small">
+        Fecha: 02/09/2025 14:30:25<br>
+        Cajero: María González<br>
+        Cliente: Consumidor Final
+    </div>
+
+    <div class="double-line"></div>
+
+    Productos
+    <div class="left small bold">
+        CANT  DESCRIPCIÓN        PRECIO
+    </div>
+    <div class="line"></div>
+
+    <div class="item-row small">
+        <span>2x</span>
+        <span class="item-name">Coca Cola 500ml</span>
+        <span class="item-price">S/ 6.00</span>
+    </div>
+
+    <div class="item-row small">
+        <span>1x</span>
+        <span class="item-name">Pan Integral</span>
+        <span class="item-price">S/ 3.50</span>
+    </div>
+
+    <div class="item-row small">
+        <span>3x</span>
+        <span class="item-name">Leche Gloria 1L</span>
+        <span class="item-price">S/ 12.90</span>
+    </div>
+
+    <div class="item-row small">
+        <span>1x</span>
+        <span class="item-name">Arroz Superior 5kg</span>
+        <span class="item-price">S/ 18.50</span>
+    </div>
+
+    <div class="line"></div>
+
+    Totales
+    <div class="total-row">
+        <span>SUBTOTAL:</span>
+        <span>S/ 40.90</span>
+    </div>
+
+    <div class="total-row">
+        <span>IGV (18%):</span>
+        <span>S/ 7.36</span>
+    </div>
+
+    <div class="double-line"></div>
+
+    <div class="total-row large">
+        <span>TOTAL:</span>
+        <span>S/ 48.26</span>
+    </div>
+
+    <div class="double-line"></div>
+
+    Información de pago
+    <div class="left small">
+        Forma de Pago: EFECTIVO<br>
+        Recibido: S/ 50.00<br>
+        Vuelto: S/ 1.74
+    </div>
+
+    <div class="spacing"></div>
+
+    Pie de página
+    <div class="center small">
+        ¡GRACIAS POR SU COMPRA!<br>
+        Conserve su boleta<br>
+        <br>
+        Representación impresa de la<br>
+        Boleta de Venta Electrónica<br>
+        <br>
+        Consulte en:<br>
+        www.sunat.gob.pe
+    </div>
+
+    <div class="spacing"></div>
+
+    Código QR simulado
+    <div class="center small">
+        [QR CODE]<br>
+        Código Hash: ABC123XYZ789
+    </div>
+
+    <div class="spacing"></div>
+
+   
+</div>

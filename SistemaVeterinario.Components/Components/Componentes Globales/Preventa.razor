@@ -1,0 +1,325 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject IJSRuntime JS
+
+
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+    }
+
+    .invoice-container {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    background: white;
+    padding: 0.75in;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+    }
+
+    .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    }
+
+    .logo {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    }
+
+    .logo-shape {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    }
+
+    .shape-1 { background: #4a90e2; top: 0; left: 0; border-radius: 50% 0 0 0; }
+    .shape-2 { background: #7ed321; top: 0; right: 0; border-radius: 0 50% 0 0; }
+    .shape-3 { background: #f5a623; bottom: 0; left: 0; border-radius: 0 0 0 50%; }
+    .shape-4 { background: #d0021b; bottom: 0; right: 0; border-radius: 0 0 50% 0; }
+
+    .company-info h1 {
+    color: #7ed321;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+
+    .contact-info {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+    }
+
+    .invoice-type {
+    text-align: right;
+    color: #888;
+    }
+
+    .invoice-type h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    }
+
+    .invoice-details {
+    font-size: 12px;
+    line-height: 1.6;
+    }
+
+    .client-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    }
+
+    .client-left {
+    flex: 1;
+    }
+
+    .client-right {
+    flex: 1;
+    text-align: right;
+    }
+
+    .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    }
+
+    .invoice-table th {
+    background-color: #e8e8e8;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    }
+
+    .invoice-table td {
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    }
+
+    .invoice-table .description {
+    text-align: left;
+    padding-left: 15px;
+    }
+
+    .invoice-table .code {
+    font-family: monospace;
+    font-size: 11px;
+    }
+
+    .total-row {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    }
+
+    .total-section {
+    text-align: right;
+    margin-top: 20px;
+    }
+
+    .total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    }
+
+    .notice {
+    margin-top: 80px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #7ed321;
+    font-size: 12px;
+    color: #666;
+    }
+
+    .footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    }
+
+    @@media print {
+    body {
+    background: white;
+    padding: 0;
+    }
+
+    .invoice-container {
+    width: 8.5in;
+    min-height: 11in;
+    padding: 0.5in;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    }
+
+    @@page {
+    size: letter;
+    margin: 0.5in;
+    }
+    }
+
+    .page {
+    page-break-after: always;
+    break-after: page; /* navegadores modernos */
+    }
+
+    .page:last-child {
+    page-break-after: auto;
+    }
+</style>
+@{
+    var itemsPorPagina = 12;
+    var total = DetallesDto.Ventas.Count;
+    <div id="receipt">
+        @{
+            for (int i = 0; i < total; i += itemsPorPagina)
+            {
+                var pagina = DetallesDto.Ventas.Skip(i).Take(itemsPorPagina).ToList();
+
+                <div class="invoice-container page">
+                    <div class="header">
+                        <div class="logo-section">
+                            <div class="logo">
+                                <div class="logo-shape shape-1"></div>
+                                <div class="logo-shape shape-2"></div>
+                                <div class="logo-shape shape-3"></div>
+                                <div class="logo-shape shape-4"></div>
+                            </div>
+                            <div class="company-info">
+                                <h1>@MaeEmpresasDatos.RazonSocial</h1>
+                                <div class="contact-info">
+                                    <div>Fono: @MaeEmpresasDatos.Fono</div> <div>Web: @MaeEmpresasDatos.Sitioweb</div> <div>E-mail: @MaeEmpresasDatos.Email</div>
+                                </div>
+                            </div>
+                        </div> <div class="invoice-type"> <h2>Consultas Visitas y Procedimientos</h2> <div class="invoice-details"> <div>BOX: @CabezaDto.CajaDoc FOLIO: @CabezaDto.Foliosii</div> <div>FECHA: @CabezaDto.FechaEmision</div> </div> </div>
+                    </div>
+
+                    <div class="client-info">
+                        <div class="client-left">
+                            <div>PROPIETARIO: @rutfn.FormatoRut(Propietario.Rut) @Propietario.Nombre</div>
+                            <div>DIRECCIÓN: @Propietario.Direccion, comuna</div>
+                        </div>
+                        <div class="client-right">
+                            <div>N° FICHA: @Mascotas.IdMascota</div>
+                            <div>MASCOTA: @Mascotas.NombreMascota</div>
+                        </div>
+                    </div>
+
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th>Cant.</th>
+                                <th>Precio</th>
+                                <th>Dcto%</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in pagina)
+                            {
+                                <tr>
+                                    <td class="code">@item.ArtCodigo</td>
+                                    <td class="description">@item.ArtDescripcion</td>
+                                    <td>@item.ArtCantidad</td>
+                                    <td>$@item.ArtPrecio</td>
+                                    <td>@item.ArtDescuento</td>
+                                    <td>$@item.TotalLinea</td>
+                                </tr>
+                            }
+                            @* Total solo en la última página *@
+                            @if (i + itemsPorPagina >= total)
+                            {
+                                <tr class="total-row">
+                                    <td colspan="5" style="text-align: right; padding-right: 20px;"><strong>TOTAL</strong></td>
+                                    <td><strong>$@CabezaDto.MontoTotal</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="notice">
+                        Recuerde que en Horario Extendido los procedimientos clínicos tienen un % de recargo - CONTACTO@VETARAUCANIA.CL
+                    </div>
+
+                    <div class="footer">
+                        Pag. @(i / itemsPorPagina + 1) de @Math.Ceiling((double)total / itemsPorPagina)
+                    </div>
+                </div>
+
+            }
+        }
+
+    </div>
+
+}
+
+
+@code{
+    [Parameter]
+    public LocalVentaCabezaDto CabezaDto{ get; set; }
+    [Parameter]
+    public VentaDetalleDtoRequest DetallesDto { get; set; }
+    [Parameter]
+    public string Local { get; set; }
+    [Parameter]
+    public Propietario Propietario { get; set; }
+    [Parameter]
+    public MascotasDto Mascotas{ get; set; }
+    [Parameter] public EventCallback Recargar{ get; set; }
+    [Parameter]
+    public MaeEmpresasDatos MaeEmpresasDatos { get; set; }
+    private Rut rutfn = new Rut();
+   
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+           
+
+            await JS.InvokeVoidAsync("printHtmlComponent", "receipt");
+
+            // esperar a que termine el print
+            await Task.Delay(500);
+
+            await Recargar.InvokeAsync();
+        }
+    }
+
+}

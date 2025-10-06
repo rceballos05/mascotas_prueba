@@ -1,0 +1,337 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject IPropietarioRepository propietarioRepository
+@inject IMascotaRepository mascotaRepository
+@inject MascotaNavigationData MascotaNavigationData
+@inject IRazaRepository razaRepository
+@inject IJSRuntime JS
+
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+    }
+
+    .invoice-container {
+        width: 8.5in;
+        min-height: 11in;
+        margin: 0 auto;
+        background: white;
+        padding: 0.75in;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 20px;
+    }
+
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .logo {
+        width: 80px;
+        height: 80px;
+        position: relative;
+    }
+
+    .logo-shape {
+        position: absolute;
+        width: 35px;
+        height: 35px;
+    }
+
+    .shape-1 {
+        background: #4a90e2;
+        top: 0;
+        left: 0;
+        border-radius: 50% 0 0 0;
+    }
+
+    .shape-2 {
+        background: #7ed321;
+        top: 0;
+        right: 0;
+        border-radius: 0 50% 0 0;
+    }
+
+    .shape-3 {
+        background: #f5a623;
+        bottom: 0;
+        left: 0;
+        border-radius: 0 0 0 50%;
+    }
+
+    .shape-4 {
+        background: #d0021b;
+        bottom: 0;
+        right: 0;
+        border-radius: 0 0 50% 0;
+    }
+
+    .company-info h1 {
+        color: #7ed321;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .contact-info {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+    }
+
+    .invoice-type {
+        text-align: right;
+        color: #888;
+    }
+
+        .invoice-type h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+    .invoice-details {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .client-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .client-left {
+        flex: 1;
+    }
+
+    .client-right {
+        flex: 1;
+        text-align: right;
+    }
+
+    .invoice-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+        .invoice-table th {
+            background-color: #e8e8e8;
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid #ccc;
+        }
+
+        .invoice-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+            font-size: 13px;
+        }
+
+        .invoice-table .description {
+            text-align: left;
+            padding-left: 15px;
+        }
+
+        .invoice-table .code {
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+    .total-row {
+        background-color: #f9f9f9;
+        font-weight: bold;
+    }
+
+    .total-section {
+        text-align: right;
+        margin-top: 20px;
+    }
+
+    .total-amount {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .notice {
+        margin-top: 80px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-left: 4px solid #7ed321;
+        font-size: 12px;
+        color: #666;
+    }
+
+    .footer {
+        margin-top: 30px;
+        padding-top: 15px;
+        border-top: 1px solid #e0e0e0;
+        text-align: center;
+        font-size: 11px;
+        color: #888;
+    }
+
+    @@media print {
+        body {
+            background: white;
+            padding: 0;
+        }
+
+        .invoice-container {
+            width: 8.5in;
+            min-height: 11in;
+            padding: 0.5in;
+            box-shadow: none;
+            border-radius: 0;
+            margin: 0;
+        }
+
+        @@page {
+            size: letter;
+            margin: 0.5in;
+        }
+
+    }
+
+    .contenedor-firmas {
+        display: flex;
+        gap: 60px; /* espacio horizontal entre firmas */
+    }
+
+    .firma {
+        text-align: center;
+    }
+
+        .firma hr {
+            width: 200px;
+            margin: 0 auto 8px;
+            border: none;
+            border-top: 1px solid #000;
+        }
+
+        .firma p {
+            font-weight: bold;
+            margin: 0;
+        }
+</style>
+
+<div class="invoice-container" id="eutanasia">
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-shape shape-1"></div>
+                <div class="logo-shape shape-2"></div>
+                <div class="logo-shape shape-3"></div>
+                <div class="logo-shape shape-4"></div>
+            </div>
+            <div class="company-info">
+                <h1>@MaeEmpresasDatos.RazonSocial</h1>
+                <div class="contact-info">
+                    <div>Fono: @MaeEmpresasDatos.Fono</div>
+                    <div>Web: @MaeEmpresasDatos.Sitioweb</div>
+                    <div>E-mail: @MaeEmpresasDatos.Email</div>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-type">
+            <h2>Autorizacion Eutanasia</h2>
+            <div class="invoice-details">
+
+                <div>FECHA: @DateTime.Now.ToString("dd-MM-yyyy")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="client-info">
+        <div class="client-left">
+            <div>Propietario: @Propietario.Nombre</div>
+            <div>Rut: @rutFn.FormatoRut(Propietario.Rut)</div>
+            <div>Dirección: @Propietario.Direccion, comuna</div>
+            <div>Fono: @Propietario.Fono, comuna</div>
+            <div>Mascota: @Mascota.NombreMascota</div>
+            <div>Autorizo: PROCEDIMIENTO DE EUTANASIA</div>
+        </div>
+    </div>
+
+    <div class="glosa1">
+        <p>
+            @Glosa1
+        </p>
+    </div>
+    <div class="glosa2">
+        <p>
+            @Glosa2
+        </p>
+    </div>
+    <div class="contenedor-firmas ms-2 mt-5">
+        <div class="firma">
+            <hr>
+            <p>@Especialista.Nombre</p>
+        </div>
+        <div class="firma">
+            <hr>
+            <p>@Propietario.Nombre</p>
+        </div>
+    </div>
+    <!-- Adding extended hours notice -->
+    <div class="notice">
+        <p>Recuerde que en Horario Extendido los procedimientos clínicos tienen un % de recargo - CONTACTO@VETARAUCANIA.CL</p>
+    </div>
+
+    <!-- Adding footer with specialist and page info -->
+    <div class="footer">
+        <p>Pag. 1 de 1. @DateTime.Now.ToString("dd-MM-yyyy HH:mm") Especialista @Especialista.Nombre</p>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Glosa1 { get; set; }
+    [Parameter]
+    public string Glosa2 { get; set; }
+    private Rut rutFn = new Rut();
+    [Parameter]
+    public MaeEmpresasDatos MaeEmpresasDatos { get; set; }
+    [Parameter]
+    public Propietario Propietario { get; set; }
+    [Parameter]
+    public MascotasDto Mascota { get; set; }
+    [Parameter]
+    public SeguUsuarios Especialista { get; set; }
+    private string IdMascota = "";
+    private string RutCliente = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+       
+       // await JS.InvokeVoidAsync("printHtmlComponent", "eutanasia");
+    }
+
+   
+}

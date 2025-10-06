@@ -1,0 +1,92 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IAyudaRepository repository
+
+
+<div class="container border p-3">
+    <div class="mb-3">
+        <label for="search" class="form-label">Criterios</label>
+        <div class="input-group">
+            <input type="text" id="search" class="form-control" placeholder="Buscar..." @bind-value ="Palabra">
+            <button class="btn btn-outline-secondary" @onclick="BuscarCliente">Buscar</button>
+        </div>
+    </div>
+
+    <div class="title-header p-2">RESULTADOS</div>
+
+    <div class="table-wrapper mt-2">
+        <table class="table table-bordered table-sm">
+            <thead>
+                <tr>
+                    <th>Rut</th>
+                    <th>Nombre</th>
+                    <th>Direccion</th>
+                    <th>Fono</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (busqueda.Count <= 0)
+                {
+                    <h4>SIN DATOS</h4>
+                }
+                else
+                {
+                    foreach(var item in busqueda)
+                    {
+                        <tr>
+                            <td>@item.Rut</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Direccion</td>
+                            <td>@item.Celular</td>
+                            <td><button class="btn btn-outline-danger" @onclick="() => SeleccionarCliente(item.Rut)">Seleccionar</button></td>
+
+                        </tr>
+                    }
+                }
+
+
+
+
+                <!-- Puedes continuar agregando más filas aquí -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@code{
+    private string Palabra = "";
+    private List<ClienteAyudaDtoResponse> busqueda = new List<ClienteAyudaDtoResponse>();
+    public string rutSeleccionado="";
+    private async Task BuscarCliente()
+    {
+        busqueda = [];
+        var resp = await repository.AyudaPropietario(userLoged.Token, empresaData.Prefijo, Palabra);
+
+
+        // busqueda = resp;
+        var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+        if(resp is not null)
+        {
+            busqueda = JsonSerializer.Deserialize<List<ClienteAyudaDtoResponse>>(resp.ToString(), options);
+
+            Console.WriteLine(busqueda);
+        }
+       
+        StateHasChanged();
+
+    }
+
+    [Parameter] public EventCallback<string> PropietarioSeleccionado { get; set; }
+
+    private void SeleccionarCliente(string rut)
+    {
+        PropietarioSeleccionado.InvokeAsync(rut);
+        
+    }
+
+}

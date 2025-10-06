@@ -1,0 +1,633 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+@inject ISexoRepository sexoRepository
+@inject IRazaRepository razaRepository
+@inject IEspecieRepository especieRepository
+@inject IComunasRepository comunasRepository
+@inject IMascotasFotosRepository mascotasFotosRepository
+@inject IEspecialistaRepository especialistaRepository
+@inject MascotaNavigationData mascotaNavigationData
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 1200px;
+    margin: 20px auto;
+    }
+
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .section-header {
+    background-color: #f0f0f0;
+    color: #000;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    }
+
+    .form-section {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #f8f8f8;
+    }
+
+    .form-label {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    font-size: 13px;
+    display: block;
+    height: 100%;
+    }
+
+    .table-container {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    background-color: white;
+    }
+
+    .table {
+    margin-bottom: 0;
+    }
+
+    .table th {
+    background-color: #f0f0f0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-weight: normal;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 5px;
+    font-size: 13px;
+    }
+
+    .table td {
+    border: 1px solid #ddd;
+    padding: 5px;
+    font-size: 13px;
+    }
+
+    .btn-action {
+    background-color: #00b0f0;
+    color: white;
+    border: 1px solid #0099cc;
+    padding: 5px 10px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    }
+
+    .btn-action i {
+    margin-right: 5px;
+    }
+
+    .btn-add {
+    background-color: #00b0f0;
+    color: white;
+    border: 1px solid #0099cc;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    }
+
+    .btn-save {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    }
+
+    .btn-save i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #0066cc;
+    }
+
+    .btn-print {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    }
+
+    .btn-print i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #0066cc;
+    }
+
+    .btn-delete {
+    background-color: #ff0000;
+    color: white;
+    border: 1px solid #cc0000;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    }
+
+    .btn-delete i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: white;
+    }
+
+    .info-message {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: #666;
+    }
+
+    .amount-label {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    font-size: 13px;
+    display: block;
+    height: 100%;
+    }
+
+    .amount-value {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    font-size: 13px;
+    text-align: right;
+    height: 100%;
+    }
+
+    .pet-info {
+    background-color: #f0f8e0;
+    padding: 5px 10px;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    }
+
+    .textarea-container {
+    position: relative;
+    }
+
+    .textarea-scroll {
+    height: 80px;
+    resize: none;
+    }
+
+    .scroll-indicator {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    }
+
+    .scroll-indicator i {
+    color: #999;
+    font-size: 12px;
+    }
+
+    .form-switch .form-check-input {
+    width: 40px;
+    height: 20px;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Window Header -->
+
+    <div class="container-fluid p-2">
+        <div class="row">
+            <!-- Admission Information Section -->
+            <div class="col-md-6">
+                <div class="section-header">Información de Ingreso</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Especialista</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select">
+                                <option>Seleccionar</option>
+                                @if (Especialistas.Count > 0)
+                                {
+                                    foreach (SeguUsuarios item in Especialistas)
+                                    {
+                                        <option value="@item.Codigoprofesional">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Nº Ingreso</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="0000000112" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Ingreso</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@DateTime.Now.ToString("dd-MM-yyyy")" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Data Section -->
+            <div class="col-md-6">
+                <div class="section-header">Datos de Mascota</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@Mascota.IdMascota" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pet-info">@Mascota.NombreMascota</div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="pet-info"></div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="pet-info">@Mascota.Sexo</div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="form-label">Propietario</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@Cliente.Rut" readonly>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="pet-info">@Cliente.Nombre</div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Dirección</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pet-info">@Cliente.Direccion</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Admission Information -->
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="section-header">Información de Ingreso</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Asunto</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-1">
+                            <label class="form-label">Peso</label>
+                        </div>
+                        <div class="col-md-1">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="form-label">Dieta</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intervention Details -->
+        <div class="row mt-2">
+            <div class="col-md-12">
+                <div class="section-header">Detalle de Intervenciones</div>
+                <div class="form-section">
+                    <div class="table-container">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="5%"></th>
+                                    <th width="10%">Fecha</th>
+                                    <th width="8%">Hora</th>
+                                    <th width="15%">Especialista</th>
+                                    <th width="10%">Código</th>
+                                    <th width="25%">Descripción</th>
+                                    <th width="7%">Cant.</th>
+                                    <th width="7%">Precio</th>
+                                    <th width="7%">Dcto%</th>
+                                    <th width="7%">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Filas vacías para simular la tabla vacía -->
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-2">
+                            <button class="btn-action">
+                                Agregar Atención
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn-add">+</button>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="info-message">Presione SUP para eliminar Item</div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="amount-label">Saldos Crédito</label>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="amount-value"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="amount-label">Monto Atención</label>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="amount-value">$0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medical Discharge Information -->
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="section-header">Información de Alta Médica</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Generar Alta Hospitalaria</label>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check form-switch mt-1">
+                                <input class="form-check-input" type="checkbox" id="generateDischarge">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha alta</label>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select">
+                                <option>20-05-2025</option>
+                                <option>21-05-2025</option>
+                                <option>22-05-2025</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Especialista Alta</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-select">
+                                <option>Seleccionar</option>
+                                @if(Especialistas.Count > 0)
+                                {
+                                    foreach(SeguUsuarios item in Especialistas)
+                                    {
+                                        <option value="@item.Codigoprofesional">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="form-label">Observaciones</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-section" style="height: 100%;">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Profesional</th>
+                                <th>Observación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Tabla vacía -->
+                        </tbody>
+                    </table>
+
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <button class="btn-action">
+                                Agregar Observación
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <button class="btn-add">+</button>
+                        </div>
+                        <div class="col-md-7"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <button class="btn-save">
+                    <i class="bi bi-save"></i>
+                    Guardar
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn-print">
+                    <i class="bi bi-printer"></i>
+                    Imprimir Informe
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button class="btn-delete">
+                    <i class="bi bi-x-lg"></i>
+                    Eliminar Ingreso
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+
+    private MascotasDto Mascota = new();
+    private Propietario Cliente = new();
+    private string IdMascota = "";
+    private string RutCliente = "";
+    private List<SeguUsuarios> Especialistas = new();
+    private SexoDto Sexo = new();
+    private EspecieDto Especie = new();
+    private RazaDto Raza = new();
+    private Rut rutFn = new Rut();
+    private ComunaDto Comuna = new();
+    private MedMascotaFotos MascotaFotos = new();
+    private string Edad = "";
+    private string RutFormato = "";
+    protected override async Task OnInitializedAsync()
+    {
+        
+        IdMascota = mascotaNavigationData.IdMascota;
+        RutCliente = mascotaNavigationData.RutCliente;
+        if (!string.IsNullOrEmpty(IdMascota))
+        {
+            var result = await mascotaRepository.GetMascota(userLoged.Token, empresaData.Prefijo, IdMascota);
+            Console.WriteLine(result[0]);
+            var p = result[0];
+            var r = await razaRepository.GetRaza(userLoged.Token, empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            Console.WriteLine(r);
+            Console.WriteLine(x);
+            Mascota.IdMascota = p.idMascota;
+            Mascota.NombreMascota = p.nombreMascota;
+            Mascota.CodRaza = p.codRaza;
+            Mascota.Raza = x.raza;
+            Mascota.CodSexo = p.codSexo;
+            Mascota.Sexo = p.sexo;
+            Mascota.CodColor = p.codColor;
+            Mascota.FechaNacimiento = p.fechaNacimiento;
+            Mascota.EstadoReproductivo = p.estadoReproductivo;
+            Mascota.Microchip = p.microchip;
+            Mascota.IdEstado = p.idEstado;
+            Mascota.Estado = p.estado;
+            Mascota.FechaCreacion = p.fechaCreacion;
+            Mascota.Especie = p.especie;
+        }
+        if (!string.IsNullOrEmpty(RutCliente))
+        {
+            var resp = await propietarioRepository.GetPropietario(userLoged.Token, RutCliente, empresaData.Prefijo);
+            // Console.WriteLine(resp);
+            dynamic bandera = resp;
+            Cliente.Nombre = bandera.nombre;
+            Cliente.Rut = RutCliente;
+            Cliente.Email = bandera.email;
+            Cliente.Direccion = bandera.direccion;
+            Cliente.Fono = bandera.fono1;
+            Cliente.Cupo = bandera.cupo;
+            Cliente.Disponible = bandera.disponible;
+            Cliente.Bloqueo = bandera.bloqueo == 0 ? false : true;
+            Cliente.Plazo = bandera.plazo;
+        }
+        
+        // var result = await comunasRepository.
+        Especialistas = await especialistaRepository.GetMedicos(userLoged.Token,empresaData.Prefijo,"01");
+        StateHasChanged();
+
+    }
+}

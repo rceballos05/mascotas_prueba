@@ -1,0 +1,243 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+    .window-controls {
+        margin-left: auto;
+    }
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+    .purple-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+    .form-label {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    .action-button i {
+        margin-right: 10px;
+        font-size: 20px;
+        color: #007bff;
+    }
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+    .input-with-dropdown {
+        position: relative;
+    }
+    .input-with-dropdown .form-select {
+        padding-right: 25px;
+    }
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+    .document-area {
+        background-color: white;
+        border: 1px solid #ddd;
+        min-height: 250px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    .paw-logo {
+        background-color: #e0e0e0;
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+   
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 20%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Datos del Recinto -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos del Recinto</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Recinto</label>
+                        </div>
+                        <div class="col-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option></option>
+                                    <option>01 CLINICA VETERINARIA ARAUCANIA</option>
+                                    <option>02 CLINICA CENTRAL</option>
+                                    <option>03 CLINICA NORTE</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>12-05-2025</option>
+                                    <option>11-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Mascota -->
+            <div class="col-md-5">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos de Mascota</h6>
+                    <div class="row mb-3">
+                        <div class="col-2">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" style="background-color: #f0fff0;">
+                        </div>
+                        <div class="col-1">
+                            <input type="text" class="form-control" style="width: 40px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <label class="form-label">Cliente</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" style="width: 40px;">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <button class="action-button mb-3" id="btnGenerar">
+                        <i class="bi bi-search"></i>
+                        Generar Glosas
+                    </button>
+                    <button class="action-button" id="btnImprimir">
+                        <i class="bi bi-printer"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos del Documento -->
+        <div class="purple-section">
+            <h6 class="mb-3">Datos del Documento</h6>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="document-area paw-logo">
+                        <svg width="200" height="200" viewBox="0 0 200 200">
+                            <path d="M60,40 C70,20 90,20 100,40 C110,20 130,20 140,40 C150,60 150,80 140,100 C130,120 110,120 100,100 C90,120 70,120 60,100 C50,80 50,60 60,40 Z" fill="#32CD32" />
+                            <ellipse cx="50" cy="70" rx="25" ry="35" fill="#32CD32" />
+                            <ellipse cx="150" cy="70" rx="25" ry="35" fill="#32CD32" />
+                            <ellipse cx="80" cy="150" rx="30" ry="25" fill="#32CD32" />
+                            <ellipse cx="120" cy="150" rx="30" ry="25" fill="#32CD32" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="document-area" id="documentContent">
+                        <!-- Área para el contenido del documento -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>

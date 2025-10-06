@@ -1,0 +1,10 @@
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Release\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Release\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\obj\Debug\net8.0\staticwebassets.build.json

@@ -1,0 +1,75 @@
+﻿<div class="page-content mt-5 ml-3">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="form-container">
+                <h4 class="mb-4 text-center">Mantenedor Usuarios</h4>
+
+                <form>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="active" class="form-label">Activo</label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="active">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rut" class="form-label">Rut</label>
+                        <input type="text" class="form-control" id="rut" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fullname" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="fullname" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-mail</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="cargo" class="form-label">Cargo</label>
+                        <input type="text" class="form-control" id="cargo">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Opciones</label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="codigo">
+                                <label class="form-check-label" for="codigo">Código Profesional</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="medico">
+                                <label class="form-check-label" for="medico">Médico Hospital</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-save"></i> Guardar Datos
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button type="reset" class="btn btn-secondary w-100">
+                                <i class="bi bi-trash"></i> Limpiar Formulario
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,404 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+@inject ISexoRepository sexoRepository
+@inject IRazaRepository razaRepository
+@inject IEspecieRepository especieRepository
+@inject IComunasRepository comunasRepository
+@inject IMascotasFotosRepository mascotasFotosRepository
+@inject MascotaNavigationData mascotaNavigationData
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject HttpClient http
+@inject IJSRuntime JS
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 1200px;
+    margin: 20px auto;
+    }
+
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .progress-bar {
+    height: 20px;
+    background-color: #007bff;
+    }
+
+    .section-header {
+    background-color: #d8d8f0;
+    color: #000;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #b8c7dc;
+    }
+
+    .form-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8c7dc;
+    padding: 10px;
+    margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #f8f8f8;
+    }
+
+    .form-label {
+    font-size: 13px;
+    margin-bottom: 0;
+    padding-top: 5px;
+    }
+
+    .btn-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+    }
+
+    .btn-action i {
+    margin-right: 10px;
+    font-size: 20px;
+    }
+
+    .btn-generate i {
+    color: #0066cc;
+    }
+
+    .btn-print i {
+    color: #0066cc;
+    }
+
+    .footer-info {
+    font-size: 12px;
+    color: #0066cc;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    }
+
+    .paw-container {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250px;
+    }
+
+    .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+    .info-table td {
+    padding: 5px;
+    border: 1px solid #ddd;
+    font-size: 13px;
+    }
+
+    .info-table td:first-child {
+    background-color: #00b0f0;
+    color: white;
+    font-weight: bold;
+    width: 150px;
+    }
+
+    .info-table tr:nth-child(even) td:not(:first-child) {
+    background-color: #f2f2f2;
+    }
+
+    .age-badge {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-left: 5px;
+    }
+</style>
+
+<div class="container-fluid">
+    <!-- Window Header -->
+
+    <!-- Progress Bar -->
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 15%"></div>
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row">
+            <!-- Subscriber Data Section -->
+            <div class="col-md-5">
+                <div class="section-header">Datos del Suscriptor</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Médico</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select">
+                                <option>047 Alvaro Fernando Cofre Hern</option>
+                                <option>048 Maria Rodriguez Lopez</option>
+                                <option>049 Carlos Mendez Soto</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="@DateTime.Now.ToString("dd-MM-yyyy")" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Data Section -->
+            <div class="col-md-7">
+                <div class="section-header">Datos de Mascota</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" @bind="Mascota.IdMascota" readonly>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" @bind="Mascota.NombreMascota" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <span class="age-badge">5 Años</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="form-label">Cliente</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@rutFn.FormatoRut(Cliente.Rut)" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" @bind="Cliente.Nombre" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <!-- Document Data Section -->
+            <div class="col-md-9">
+                <div class="section-header">Datos del Documento</div>
+                <div class="form-section" id="CarnetSL">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="paw-container">
+                                @if (urlFoto is null)
+                                {
+                                    <img src="../assets/images/wila.jpeg" asp-append-version="true" width="250" height="250" />
+                                }
+                                else
+                                {
+                                    <img src="@urlFoto" asp-append-version="true" width="250" height="250" />
+                                }
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <table class="info-table">
+                                <tr>
+                                    <td>Ficha Nº @Mascota.IdMascota</td>
+                                    <td colspan="2">@Mascota.NombreMascota</td>
+                                </tr>
+                                <tr>
+                                    <td>Especie</td>
+                                    <td colspan="2">@Mascota.Especie, @Mascota.Raza, BLANCO.</td>
+                                </tr>
+                                <tr>
+                                    <td>Sexo</td>
+                                    <td colspan="2">@Mascota.Sexo</td>
+                                </tr>
+                                <tr>
+                                    <td>Fech.Naci</td>
+                                    <td colspan="2">@Mascota.FechaNacimiento.ToString("dd-MM-yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td>Rut Propietario</td>
+                                    <td colspan="2">@rutFn.FormatoRut(Cliente.Rut)</td>
+                                </tr>
+                                <tr>
+                                    <td>Nombre</td>
+                                    <td colspan="2">@Cliente.Nombre</td>
+                                </tr>
+                                <tr>
+                                    <td>Dirección</td>
+                                    <td colspan="2">@Cliente.Direccion,.</td>
+                                </tr>
+                                <tr>
+                                    <td>Fono</td>
+                                    <td colspan="2">@Cliente.Fono</td>
+                                </tr>
+                                <tr>
+                                    <td>MicroChip</td>
+                                    <td colspan="2">NO REGISTRADO</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-md-3">
+                <div class="form-section" style="height: 100%;">
+                    <button class="btn-action btn-generate">
+                        <i class="fa fa-search"></i>
+                        Generar Glosas
+                    </button>
+                    <button class="btn-action btn-print" @onclick="ImprimeInforme">
+                        <i class="fa fa-print"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>
+
+@code{
+
+    private MascotasDto Mascota = new();
+    private Propietario Cliente = new();
+    private string IdMascota = "";
+    private string RutCliente = "";
+    private List<SeguUsuarios> Especialistas = new();
+    private SexoDto Sexo = new();
+    private EspecieDto Especie = new();
+    private RazaDto Raza = new();
+    private Rut rutFn = new Rut();
+    private ComunaDto Comuna = new();
+    private MedMascotaFotos MascotaFotos = new();
+    string urlFoto = "";
+    protected override async Task OnInitializedAsync()
+    {
+        urlFoto = $"{http.BaseAddress}api/imagenes/base/base/base/base_perfil.png"; 
+        IdMascota = mascotaNavigationData.IdMascota;
+        RutCliente = mascotaNavigationData.RutCliente;
+        if(!string.IsNullOrEmpty(IdMascota))
+        {
+            var result = await mascotaRepository.GetMascota(userLoged.Token,empresaData.Prefijo, IdMascota);
+            Console.WriteLine(result[0]);
+            var p = result[0];
+            var r = await razaRepository.GetRaza(userLoged.Token,empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            Console.WriteLine(r);
+            Console.WriteLine(x);
+            Mascota.IdMascota = p.idMascota;
+            Mascota.NombreMascota = p.nombreMascota;
+            Mascota.CodRaza = p.codRaza;
+            Mascota.Raza = x.raza;
+            Mascota.CodSexo = p.codSexo;
+            Mascota.Sexo = p.sexo;
+            Mascota.CodColor = p.codColor;
+            Mascota.FechaNacimiento = p.fechaNacimiento;
+            Mascota.EstadoReproductivo = p.estadoReproductivo;
+            Mascota.Microchip = p.microchip;
+            Mascota.IdEstado = p.idEstado;
+            Mascota.Estado = p.estado;
+            Mascota.FechaCreacion = p.fechaCreacion;
+            Mascota.Especie = p.especie;
+        }
+        if(!string.IsNullOrEmpty(RutCliente))
+        {
+            var resp = await propietarioRepository.GetPropietario(userLoged.Token, RutCliente, empresaData.Prefijo);
+            // Console.WriteLine(resp);
+            dynamic bandera = resp;
+            Cliente.Nombre = bandera.nombre;
+            Cliente.Rut = RutCliente;
+            Cliente.Email = bandera.email;
+            Cliente.Direccion = bandera.direccion;
+            Cliente.Fono = bandera.fono1;
+            Cliente.Cupo = bandera.cupo;
+            Cliente.Disponible = bandera.disponible;
+            Cliente.Bloqueo = bandera.bloqueo == 0 ? false : true;
+            Cliente.Plazo = bandera.plazo;
+        }
+        if (!string.IsNullOrEmpty(Mascota.IdFotoPerfil))
+        {
+            MascotaFotos = await mascotasFotosRepository.GetFotoMascota(userLoged.Token,empresaData.Prefijo, (string)Mascota.IdFotoPerfil);
+            urlFoto = $"{http.BaseAddress}api/imagenes/test/{Mascota.RutCliente}/{Mascota.IdMascota}/{MascotaFotos.Url}";
+            StateHasChanged();
+        }
+        else
+        {
+            MascotaFotos = new MedMascotaFotos();
+            urlFoto = $"{http.BaseAddress}api/imagenes/base/base/base/base_perfil.png";
+            StateHasChanged();
+        }
+        // var result = await comunasRepository.
+        //Especialistas = await especialistaRepository.GetMedicos(userLoged.Token,empresaData.Prefijo,"01");
+        StateHasChanged();
+
+    }
+
+    private async Task ImprimeInforme()
+    {
+        await JS.InvokeVoidAsync("printHtmlComponent", "CarnetSL");
+    }
+}

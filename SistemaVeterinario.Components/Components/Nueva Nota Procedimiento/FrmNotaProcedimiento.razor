@@ -1,0 +1,931 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject MascotaNavigationData data
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+@inject IRazaRepository razaRepository
+@inject ICentroCostoRepository centroCostoRepository
+@inject IProductoRepository productoRepository
+@inject IVentaRepository ventaRepository
+@inject IConsultasRepository consultasRepository
+@inject IEspecialistaRepository especialistaRepository
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject NavigationManager navigation
+<style>
+    .historial-container {
+    position: relative;
+    display: inline-block;
+    }
+
+    .historial-info {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.15);
+    z-index: 1050;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: all 0.3s ease;
+    max-height: 400px;
+    overflow-y: auto;
+    margin-top: 5px;
+    }
+
+    .historial-container:hover .historial-info,
+    .historial-info:hover {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    }
+
+    .historial-info::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+    }
+
+    .bg-light-blue {
+    background-color: #b3d9ff !important;
+    }
+
+    .bg-blue {
+    background-color: #4a90e2 !important;
+    }
+
+    .bg-yellow-light {
+    background-color: #fff3cd !important;
+    }
+
+    .text-blue {
+    color: #4a90e2 !important;
+    }
+
+    .form-control-sm {
+    height: calc(1.5em + 0.5rem + 2px);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    }
+
+    .table-sm th, .table-sm td {
+    padding: 0.3rem;
+    font-size: 0.8rem;
+    }
+
+    .modal-xl {
+    max-width: 95%;
+    }
+
+    .card-header-custom {
+    background-color: #b3d9ff;
+    font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0.5rem !important;
+    }
+
+    .card-header {
+    padding: 0.5rem !important;
+    }
+
+    .btn-custom {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    }
+
+    .patient-history {
+    max-height: 120px;
+    overflow-y: auto;
+    font-size: 0.75rem;
+    }
+
+    /* Improved inline labels for space optimization */
+    .input-group-sm .input-group-text {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    min-width: 60px;
+    background-color: #f8f9fa;
+    border-right: none;
+    }
+
+    .input-group-sm .form-control,
+    .input-group-sm .form-select {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-left: none;
+    }
+
+    .compact-row {
+    margin-bottom: 0.5rem;
+    }
+
+    .history-item {
+    padding: 0.25rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.7rem;
+    }
+
+    .history-item:last-child {
+    border-bottom: none;
+    }
+
+    .history-date {
+    color: #4a90e2;
+    font-weight: 500;
+    min-width: 70px;
+    display: inline-block;
+    }
+</style>
+
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@showModal" Title="Ayuda Producto" ShowChanged="@(value => showModal = value)">
+    <SistemaVeterinario.Components.Components.Ayudas.AyudaProducto ProductoSeleccionado="ProductoSeleccionado" />
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@ShowPrint" Title="Imprimiendo" ShowChanged="@(value => showModal = value)">
+    <SistemaVeterinario.Components.Components.Componentes_Globales.Preventa CabezaDto="LocalVentaCabezaDto" DetallesDto="VentaDetalleDtoRequest" Local="01" Mascotas="Mascota" Propietario="Propietario" Recargar="Recargar"  MaeEmpresasDatos="MaeEmpresasDatos"/>
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+<div class="row g-3">
+    <!-- Datos del Documento -->
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-header card-header-custom">
+                Datos del Documento
+            </div>
+            <div class="card-body p-2">
+                <!-- Optimized layout with inline labels -->
+                <div class="row compact-row">
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Box</span>
+                            <input type="text" class="form-control" @bind="cb.CajaDoc">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Número</span>
+                            <input type="text" class="form-control" @bind="cb.NumeroDoc" @oninput ="OnNumDocInput" @onkeydown="KeyEvent" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row compact-row">
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Fecha</span>
+                            <input type="text" class="form-control" @bind="cb.FechaEmision" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">N°Consulta</span>
+                            <input type="text" class="form-control bg-light-blue" value="@ConsultasDto.CodigoConsulta" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row compact-row">
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">N°Ficha</span>
+                            <input type="text" class="form-control" @bind-value="Mascota.IdMascota" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Nombre</span>
+                            <input type="text" class="form-control" @bind-value="Mascota.NombreMascota" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Datos del Cliente -->
+    <div class="col-md-5">
+        <div class="card h-100">
+            <div class="card-header card-header-custom">
+                Datos del Cliente
+            </div>
+            <div class="card-body p-2">
+                <!-- Optimized client data with inline labels -->
+                <div class="row compact-row">
+                    <div class="col-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Rut</span>
+                            <input type="text" class="form-control bg-yellow-light" value="@rutFormato" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Fono</span>
+                            <input type="text" class="form-control" @bind-value="Propietario.Fono" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Dcto.</span>
+                            <input type="text" class="form-control" @bind-value="Propietario.Descuento" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compact-row">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">Nombre</span>
+                        <input type="text" class="form-control bg-yellow-light" @bind-value="Propietario.Nombre" disabled="disabled">
+                    </div>
+                </div>
+
+                <div class="row compact-row">
+                    <div class="col-8">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Dirección</span>
+                            <input type="text" class="form-control bg-yellow-light" @bind-value="Propietario.Direccion" disabled="disabled">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Ciudad</span>
+                            <input type="text" class="form-control" @bind-value="Propietario.CodComuna" disabled="disabled">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row compact-row">
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Espec.</span>
+                            <select class="form-select" @bind="CodigoEspecialistaSeleccionado">
+
+                                <option selected >Seleccionar</option>
+                                @if(Especialistas.Count > 0)
+                                {
+                                    foreach(SeguUsuarios item in Especialistas)
+                                    {
+                                        <option value="@item.Codigoprofesional" @onclick="CambiarFoco">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Asistente</span>
+                            <select class="form-select" @bind="CodigoAsistenteSeleccionado">
+                                <option selected>Seleccionar</option>
+                                @if (Especialistas.Count > 0)
+                                {
+                                    foreach (SeguUsuarios item in Especialistas)
+                                    {
+                                        <option value="@item.Codigoprofesional" @onclick="CambiarFoco">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Descuentos y Promociones -->
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-header card-header-custom">
+                Descuentos y Promociones
+            </div>
+            <div class="card-body p-2">
+                <div class="bg-blue text-white text-center py-1 mb-2 rounded">
+                    <small>Afiliado Plan</small>
+                </div>
+
+                <div class="row compact-row">
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Período</span>
+                            <div class="bg-blue text-white text-center py-1 rounded flex-fill d-flex align-items-center justify-content-center">
+                                <small>Período</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Ahorro</span>
+                            <input type="text" class="form-control text-end" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="compact-row">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text">C. Costo</span>
+                        <select class="form-select" @bind="CCRC">
+                            <option selected>-- SELECCIONE UN CRCC --</option>
+                            @if (centroCostos.Count > 0)
+                            {
+                                foreach (CentroCosto item in centroCostos)
+                                {
+                                    <option value="@item.CodigoCrcc" @onclick="CambiarFoco">@item.Descripcion</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Enhanced hover modal for patient history -->
+                <div class="mb-2 historial-container">
+                    <div class="bg-blue text-white text-center py-2 mb-2 rounded" style="cursor: pointer;">
+                        <small><i class="fas fa-history me-1"></i>Histórico Paciente</small>
+                    </div>
+
+                    <!-- Enhanced hover modal -->
+                    <div class="historial-info">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 text-primary">Histórico del Paciente</h6>
+                            <small class="text-muted">@Mascota.NombreMascota</small>
+                        </div>
+                        <hr class="my-2">
+                        @if(Historials.Count > 0)
+                        {
+                            foreach(HistorialDtoResponse item in Historials)
+                            {
+                                <div class="history-item">
+                                    <span class="history-date">@item.Fecha</span>
+                                    <span>@item.Descripcion</span>
+                                </div>
+                            }
+                        }
+
+                        <div class="mt-2 pt-2 border-top">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Últimos 8 registros mostrados
+                            </small>
+                        </div>
+                    </div>
+
+                    <!-- Original compact history display -->
+                    @* <div class="patient-history border rounded p-2">
+                        <div class="row g-1 mb-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">SERVICIO HOSPITALIZACIÓN SIN</div>
+                        </div>
+                        <div class="row g-1 mb-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">SERVICIO HOSPITALIZACIÓN SIN</div>
+                        </div>
+                        <div class="row g-1 mb-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">SERVICIO HOSPITALIZACIÓN SIN</div>
+                        </div>
+                        <div class="row g-1 mb-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">SERVICIO CONTROL DE MÉDICA</div>
+                        </div>
+                        <div class="row g-1 mb-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">INSUMO DELMOR</div>
+                        </div>
+                        <div class="row g-1">
+                            <div class="col-4 text-blue">17-10-2020</div>
+                            <div class="col-8">INSUMOS TRIAMCOL</div>
+                        </div>
+                    </div> *@
+                </div>
+
+                <div class="bg-blue text-white text-center py-1 rounded">
+                    <small>Total: $0</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Insumos -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-blue text-white">
+                <small><i class="fas fa-list me-1"></i>Listado de Insumos</small>
+            </div>
+            <div class="card-body p-0">
+                <div style="max-height: 200px; overflow-y: auto;">
+                    <RadzenDataGrid @ref="grid" Data="@lstRollo" TItem="Rollo" PageSize="5" AllowPaging="true" AllowSorting="true" AllowFiltering="false"
+                    RowUpdate="OnUpdateRow" RowCancel="OnCancelEdit">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="Rollo" Property="CodigoBarra" Title="Código Barra">
+                                <EditTemplate Context="item">
+                                    <RadzenTextBox @bind-Value="item.CodigoBarra" Style="width:100%" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Rollo" Property="Descripcion" Title="Descripción">
+                                <EditTemplate Context="item">
+                                    <RadzenTextBox @bind-Value="item.Descripcion" Style="width:100%" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Rollo" Property="Cantidad" Title="Cantidad">
+                                <EditTemplate Context="item">
+                                    <RadzenNumeric @bind-Value="item.Cantidad" Style="width:100%" Min="1" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Rollo" Property="Precio" Title="Precio">
+                                <EditTemplate Context="item">
+                                    <RadzenNumeric @bind-Value="item.Precio" Style="width:100%" Min="0" Step="0.01" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Rollo" Property="Descuento" Title="Descuento (%)">
+                                <EditTemplate Context="item">
+                                    <RadzenNumeric @bind-Value="item.Descuento" Style="width:100%" Min="0" Max="100" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="Rollo" Property="Total" Title="Total" />
+                            <RadzenDataGridColumn TItem="Rollo" Title="Acciones">
+                                <Template Context="data">
+                                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="@(() => grid.EditRow(data))" />
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Click="@(() => EliminarItem(data))" />
+                                </Template>
+                                <EditTemplate Context="data">
+                                    <RadzenButton Icon="save" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Click="@(() => grid.UpdateRow(data))" />
+                                    <RadzenButton Icon="cancel" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@(() => grid.CancelEditRow(data))" />
+                                </EditTemplate>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formulario para agregar insumos -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-2">
+                <!-- Optimized add supplies form with inline labels -->
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-2">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Código</span>
+                            <input type="text" class="form-control" @onkeyup="AbrirModal" @bind-value="Item.CodigoBarra" @ref="codigo">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Descripción</span>
+                            <input type="text" class="form-control" @bind-value="Item.Descripcion" @ref="descripcion">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Cant.</span>
+                            <input type="number" class="form-control" min="1" @bind-value="Item.Cantidad" @ref="cantidad" @onkeydown="KeyEventCantidad">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Precio</span>
+                            <input type="number" class="form-control" @bind-value="Item.Precio" min="0" >
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text">Dcto%</span>
+                            <input type="number" class="form-control" @bind-value="Item.Descuento" min="0" max="100" @onkeydown="KeyEvent" @ref="descuento">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success btn-sm" @onclick="AgregarItem">
+                            <i class="fas fa-plus me-1"></i>Agregar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer d-flex justify-content-between">
+    <div>
+        <small class="text-muted">CLÍNICA VETERINARIA ARAUCANÍA</small>
+    </div>
+    <div>
+        <button type="button" class="btn btn-primary btn-custom me-2" @onclick="GrabarVenta">
+            <i class="fa fa-save me-1"></i>Grabar Datos
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-custom me-2">
+            <i class="fa fa-print me-1"></i>Imprimir
+        </button>
+        <button type="button" class="btn btn-outline-info btn-custom me-2">
+            <i class="fa fa-redo me-1"></i>Limpiar
+        </button>
+        <button type="button" class="btn btn-danger btn-custom" data-bs-dismiss="modal">
+            <i class="fa fa-times me-1"></i>Anular
+        </button>
+    </div>
+</div>
+
+@code {
+    private ElementReference codigo;
+    private ElementReference descripcion;
+    private ElementReference cantidad;
+    private ElementReference descuento;
+    private List<SeguUsuarios> Especialistas = new();
+    RadzenDataGrid<Rollo> grid;
+    List<Rollo> lstRollo = new();
+    List<LocalVentaDetalle01> detalle01s = new();
+    LocalVentaCabeza01 cb = new();
+    Rollo Item = new();
+    public MascotasDto? Mascota = new MascotasDto();
+    public Propietario? Propietario = new Propietario();
+    Rut rutFn = new Rut();
+    private List<CentroCosto> centroCostos = new List<CentroCosto>();
+    private string rutFormato { get => rutFn.FormatoRut(Propietario.Rut ?? "111111111"); }
+    public bool showModal = false;
+    int CodigoEspecialistaSeleccionado = 0;
+    int CodigoAsistenteSeleccionado = 0;
+    public string Glosa = "";
+    public string Glosa2 = "";
+    private string CCRC = "";
+    private double Neto = 0;
+    private double Iva = 0;
+    private double SubTotal = 0;
+    private bool ShowPrint = false;
+    private List<HistorialDtoResponse> Historials = new();
+    private VentaDetalleDtoRequest VentaDetalleDtoRequest = new();
+    private LocalVentaCabezaDto LocalVentaCabezaDto = new();
+    private ConsultasDto ConsultasDto = new();
+    private MaeEmpresasDatos MaeEmpresasDatos = new();
+    protected override async Task OnInitializedAsync()
+    {
+
+        await CargarDatos();
+
+    }
+
+    private void LimpiarForm()
+    {
+        Especialistas = new();
+        lstRollo = new();
+        CodigoEspecialistaSeleccionado = 0;
+        CodigoAsistenteSeleccionado = 0;
+        Historials = new();
+        VentaDetalleDtoRequest = new();
+        LocalVentaCabezaDto = new();
+        ConsultasDto = new();
+    }
+
+    private async Task CargarDatos()
+    {
+        string caja = "03";
+        var numero = await ventaRepository.GetNumeroPreventa(userLoged.Token, empresaData.Prefijo, empresaData.Local, caja);
+        cb.CajaDoc = caja;
+        cb.NumeroDoc = numero.PadLeft(10, '0');
+        cb.FechaEmision = DateTime.Now;
+        cb.Foliosii = numero.PadLeft(10, '0');
+
+        if (data.IdMascota != null)
+        {
+            var masc = await mascotaRepository.GetMascota(userLoged.Token, empresaData.Prefijo, data.IdMascota);
+            var p = masc[0];
+            var r = await razaRepository.GetRaza(userLoged.Token, empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            Mascota.IdMascota = p.idMascota;
+            Mascota.NombreMascota = p.nombreMascota;
+            Mascota.CodRaza = p.codRaza;
+            Mascota.Raza = x.raza;
+            Mascota.CodSexo = p.codSexo;
+            Mascota.Sexo = p.sexo;
+            Mascota.CodColor = p.codColor;
+            Mascota.FechaNacimiento = p.fechaNacimiento;
+            Mascota.EstadoReproductivo = p.estadoReproductivo;
+            Mascota.Microchip = p.microchip;
+            Mascota.IdEstado = p.idEstado;
+            Mascota.Estado = p.estado;
+            Mascota.FechaCreacion = p.fechaCreacion;
+            Mascota.Especie = p.especie;
+            Mascota.RutCliente = p.rutCliente;
+            Historials = await ventaRepository.GetHistorial(userLoged.Token, empresaData.Prefijo, empresaData.Local, (string)Mascota.IdMascota, caja);
+            StateHasChanged();
+            ConsultasDto = await consultasRepository.UltimaConsultaMascota(userLoged.Token, empresaData.Prefijo, (string)Mascota.IdMascota);
+        }
+        if (data.RutCliente is not null)
+        {
+            var cliente = await propietarioRepository.GetPropietario(userLoged.Token, data.RutCliente, empresaData.Prefijo);
+            Propietario = new Propietario
+                {
+                    Rut = data.RutCliente,
+                    Cupo = cliente.cupo,
+                    Bloqueo = cliente.bloqueo == 0 ? false : true,
+                    Direccion = cliente.direccion,
+                    Disponible = cliente.disponible,
+                    Email = cliente.email,
+                    Fono = cliente.celular,
+                    Nombre = cliente.nombre,
+                    Plazo = cliente.plazo
+                };
+        }
+
+        cb.RutCliente = Propietario.Rut;
+        cb.RutVendedor = userLoged.Login.rut;
+        centroCostos = await centroCostoRepository.GetCentros(userLoged.Token, empresaData.Prefijo);
+        StateHasChanged();
+        Especialistas = await especialistaRepository.GetEspecialistas(userLoged.Token, empresaData.Prefijo, empresaData.Local);
+        StateHasChanged();
+        MaeEmpresasDatos = await datosTributariosRepository.GetDatos(userLoged.Token, empresaData.Prefijo, empresaData.Local);
+        await codigo.FocusAsync();
+    }
+    private async Task KeyEvent(KeyboardEventArgs e)
+    {
+
+        if (e.Key == "Enter")
+        {
+
+            StateHasChanged();
+            AgregarItem();
+            await codigo.FocusAsync();
+        }
+    }
+    private async Task KeyEventCantidad(KeyboardEventArgs e)
+    {
+
+        if (e.Key == "Enter")
+        {
+
+            await descuento.FocusAsync();
+        }
+    }
+
+    private void OnNumDocInput(ChangeEventArgs e)
+    {
+
+        string entrada = e.Value.ToString() ?? "";
+        if (entrada.Length > 0)
+        {
+            cb.NumeroDoc = entrada.PadLeft(10,'0');
+        }
+
+    }
+    async Task OnUpdateRow(Rollo item)
+    {
+        item.Total = item.Cantidad * item.Precio * (1 - item.Descuento / 100.0);
+        await Task.CompletedTask;
+    }
+
+    void OnCancelEdit(Rollo item)
+    {
+        // Si quieres revertir o manejar cancelación
+    }
+
+    void EliminarItem(Rollo item)
+    {
+        lstRollo.Remove(item);
+        lstRollo = lstRollo.ToList();
+        StateHasChanged();
+    }
+
+    private async Task AbrirModal(KeyboardEventArgs e)
+    {
+        if (e.Key == "F2")
+        {
+            Console.WriteLine("abriendo modal");
+            AbrirModalAyuda();
+        }
+        if (e.Key == "Enter")
+        {
+            if (!string.IsNullOrEmpty(Item.CodigoBarra))
+            {
+                var resp = await productoRepository.GetProducto(userLoged.Token,empresaData.Prefijo, Item.CodigoBarra.PadLeft(13, '0'));
+                if (resp is not null)
+                {
+                    Item.CodigoBarra = resp.CodigoBarra;
+                    Item.Descripcion = resp.Descripcion;
+                    Item.Precio = double.Parse(resp.Precio);
+                    Item.Cantidad = 1;
+                    await cantidad.FocusAsync();
+                }
+
+            }
+        }
+    }
+
+    private void AbrirModalAyuda()
+    {
+        showModal = true;
+    }
+
+    private void AgregarItem()
+    {
+        var nuevoItem = new Rollo
+            {
+                CodigoBarra = Item.CodigoBarra,
+                Descripcion = Item.Descripcion,
+                Cantidad = Item.Cantidad,
+                Precio = Item.Precio,
+                Descuento = Item.Descuento,
+                Total = Item.Cantidad * Item.Precio * (1 - Item.Descuento / 100.0)
+            };
+        lstRollo.Add(nuevoItem);
+        lstRollo = lstRollo.ToList();
+        Item = new Rollo();
+        StateHasChanged();
+    }
+    private async void  CambiarFoco()
+    {
+        await codigo.FocusAsync();
+    }
+
+    private async Task ImprimirDocumento()
+    {
+        foreach(Rollo item in lstRollo)
+        {
+            detalle01s.Add(new LocalVentaDetalle01
+            {
+
+            });
+        }
+        // await ventaRepository.GenerarDocumento(Mascota,Propietario, );
+    }
+
+    private async Task ProductoSeleccionado(string id)
+    {
+        showModal = false;
+        StateHasChanged();
+        if (!string.IsNullOrEmpty(id))
+        {
+            var resp = await productoRepository.GetProducto(userLoged.Token,empresaData.Prefijo, id);
+            if (resp is not null)
+            {
+                Item.CodigoBarra = resp.CodigoBarra;
+                Item.Descripcion = resp.Descripcion;
+                Item.Precio = double.Parse(resp.Precio);
+                Item.Cantidad = 1;
+                await cantidad.FocusAsync();
+            }
+        }
+    }
+
+    private async Task GrabarVenta()
+    {
+        CalculaTotales(lstRollo);
+        LocalVentaCabezaDto cab = new LocalVentaCabezaDto
+            {
+                Abono = 0,
+                Acteco = "",
+                AhorraPlan = 0,
+                Ayudante = CodigoAsistenteSeleccionado.ToString(),
+                CajaDoc = cb.CajaDoc,
+                CodigoPlan = "",
+                Crcc = CCRC,
+                Dctoglobal = 0,
+                DespachoFolio = "",
+                DespachoHora = "",
+                DespachoPatente = "",
+                DireccionDestino = "",
+                EmailCliente = "",
+                Especialista = CodigoEspecialistaSeleccionado.ToString(),
+                FechaEmision = DateTime.Now,
+                Foliosii = cb.NumeroDoc,
+                FonoCliente = "",
+                Formapago = "",
+                GenerarDte = 0,
+                GlosaGuia = "",
+                HoraVendedor = "",
+                HoraVenta = DateTime.Now.ToString("HH:mm:ss"),
+                ImpCarne = 0,
+                ImpCerveza = 0,
+                ImpDiesel = 0,
+                ImpHarina = 0,
+                ImpLicores = 0,
+                ImpLight = 0,
+                ImpRefrescos = 0,
+                ImprimePorGrupos = 0,
+                ImpVinos = 0,
+                Local = "01",
+                LocalTraslado = "",
+                MontoDonacion = 0,
+                MontoExento = 0,
+                NombreCliente = Propietario.Nombre,
+                Nroconsulta = "",
+                NumeroDoc = cb.NumeroDoc,
+                NotaPedido = "",
+                NroMascota = Mascota.IdMascota,
+                RutVendedor = userLoged.Login.rut,
+                TipoDoc = "NPE",
+                NumeroImpresora = "",
+                Observacion = "",
+                OrdenDeCompra = "",
+                RutCliente = Propietario.Rut,
+                Procesada = 0,
+                TipoTraslado = "",
+                UsuarioFacturacion = userLoged.Login.usuario,
+                MontoIva = Iva,
+                MontoNeto = Neto,
+                MontoTotal = SubTotal,
+                MontoLey20956 = 0,
+                Plazo = "30",
+                Subtotal = SubTotal,
+                MontoPropina = 0,
+                RutCajera = userLoged.Login.rut,
+                PorceDescuento = 0,
+                Vencimiento = DateTime.Now.AddDays(30),
+                RefFecha = DateTime.MinValue,
+                DespachoFecha = DateTime.MinValue,
+                RefGlosa = "",
+                RefNumero = "",
+                RefTipo = "",
+                Revision1 = 0,
+                Revision2 = 0,
+                Revision3 = 0
+            };
+        List<LocalVentaDetalleDto> detalleDtos = new();
+        int i = 1;
+        foreach (Rollo item in lstRollo)
+        {
+            detalleDtos.Add(new LocalVentaDetalleDto
+                {
+                    Almacen = "00",
+                    ArtCantidad = item.Cantidad,
+                    ArtCodigo = item.CodigoBarra,
+                    ArtDescripcion = item.Descripcion,
+                    ArtDescuento = item.Descuento,
+                    ArtPrecio = item.Precio,
+                    CajaDoc = cab.CajaDoc,
+                    CodigoRelacion = "",
+                    Descuento = item.Descuento,
+                    DestinoCliente = "00",
+                    FechaEmision = DateTime.Now,
+                    Foliosii = cab.NumeroDoc,
+                    Horaventa = DateTime.Now.ToString("HH:mm:ss"),
+                    Impuesto = "000",
+                    LineaVenta = i.ToString().PadLeft(3, '0'),
+                    Local = cab.Local,
+                    NroConsulta = cab.Nroconsulta,
+                    TotalLinea = item.Total,
+                    TipoDoc = cab.TipoDoc,
+                    RutCliente = cab.RutCliente,
+                    NroMascota = cab.NroMascota,
+                    NumeroDoc = cab.NumeroDoc,
+                    RutVendedor = cab.RutVendedor,
+                    UsuarioFacturacion = cab.UsuarioFacturacion,
+                    Fechaviaje = "",
+                    MontoImpuesto = Iva,
+                    MontoRecargo = "",
+                    PorceDescuento = 0,
+                    PorceImpuesto = 19,
+                    PrecioCostoCiva = 0,
+                    RefFecha = "",
+                    RefNumero = "",
+                    RefTipo = "",
+
+
+                });
+        }
+        var result = await ventaRepository.PostVentaDetalle(userLoged.Token,empresaData.Prefijo, empresaData.Local, detalleDtos);
+        result = await ventaRepository.PostVentaCabeza(userLoged.Token,empresaData.Prefijo, empresaData.Local, cab);
+
+        LocalVentaCabezaDto = cab;
+        VentaDetalleDtoRequest = new VentaDetalleDtoRequest { Ventas = detalleDtos };
+        // navigation.NavigateTo("/ticket");
+        ShowPrint = true;
+        StateHasChanged();
+
+    }
+
+    private async Task OnEstadoChanged(ChangeEventArgs e)
+    {
+        await codigo.FocusAsync();
+    }
+
+    private void CalculaTotales(List<Rollo> rll)
+    {
+        var subtotal = rll.Sum(x => x.Total);
+
+        var neto = subtotal / 1.19;
+
+        var iva = subtotal - neto;
+
+        SubTotal = Convert.ToDouble(subtotal);
+        Neto = Convert.ToDouble(neto);
+        Iva = Convert.ToDouble(iva);
+
+    }
+
+    private async Task Recargar()
+    {
+        LimpiarForm();
+        ShowPrint = false;
+        StateHasChanged();
+        await CargarDatos();
+    }
+}

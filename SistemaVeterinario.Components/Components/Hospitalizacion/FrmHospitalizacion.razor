@@ -1,0 +1,351 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IMascotaRepository mascotasRepository
+@inject IPropietarioRepository propietarioRepository
+@inject MascotaNavigationData mascotaNavigationData
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IRazaRepository razaRepository
+@inject ISexoRepository sexoRepository
+@inject IEspecieRepository especieRepository
+@inject IDatosTributariosRepository datosTributariosRepository
+<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .purple-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .document-area {
+        background-color: white;
+        border: 1px solid #ddd;
+        min-height: 250px;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .paw-logo {
+        background-color: #e0e0e0;
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@ShowPrint" Title="Imprimiendo" ShowChanged="@(value => ShowPrint = value)">
+    <SistemaVeterinario.Components.Components.Componentes_Globales.ImprimirHospitalizacion Mascota="MascotaDto" Propietario="Propietario" MaeEmpresasDatos="MaeEmpresasDatos" />
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+
+<div class="container">
+    <!-- Window Header -->
+        <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 20%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Datos del Profesional -->
+            <div class="col-md-4">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos del Profesional</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Especialista</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>NO SELECCIONADO</option>
+                                    <option>Dr. Eduardo Vergara</option>
+                                    <option>Dra. Ana Martínez</option>
+                                    <option>Dr. Carlos Rodríguez</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>12-05-2025</option>
+                                    <option>11-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Mascota -->
+            <div class="col-md-5">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos de Mascota</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" style="background-color: #f0fff0;">
+                        </div>
+                        <div class="col-1">
+                            <input type="text" class="form-control" style="width: 40px;">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Cliente</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-1">
+                            <input type="text" class="form-control" style="width: 40px;">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <button class="action-button mb-3" id="btnGenerar">
+                        <i class="bi bi-search"></i>
+                        Generar Glosas
+                    </button>
+                    <button class="action-button" id="btnImprimir" @onclick="Imprimir">
+                        <i class="fa fa-print"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos del Documento -->
+        <div class="purple-section">
+            <h6 class="mb-3">Datos del Documento</h6>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="document-area paw-logo">
+                        <svg width="200" height="200" viewBox="0 0 200 200">
+                            <path d="M60,40 C70,20 90,20 100,40 C110,20 130,20 140,40 C150,60 150,80 140,100 C130,120 110,120 100,100 C90,120 70,120 60,100 C50,80 50,60 60,40 Z" fill="#32CD32" />
+                            <ellipse cx="50" cy="70" rx="25" ry="35" fill="#32CD32" />
+                            <ellipse cx="150" cy="70" rx="25" ry="35" fill="#32CD32" />
+                            <ellipse cx="80" cy="150" rx="30" ry="25" fill="#32CD32" />
+                            <ellipse cx="120" cy="150" rx="30" ry="25" fill="#32CD32" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="document-area" id="documentContent">
+                        <!-- Área para el contenido del documento -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>
+@code{
+    private MascotasDto MascotaDto { get; set; }
+    private Propietario Propietario { get; set; }
+    private SexoDto Sexo { get; set; }
+    private RazaDto Raza { get; set; }
+    private EspecieDto Especie { get; set; }
+    private MaeEmpresasDatos MaeEmpresasDatos = new();
+    string edad = "";
+    string rutFormtato = "";
+    private bool ShowPrint = false;
+    protected override async Task OnInitializedAsync()
+    {
+        MaeEmpresasDatos = await datosTributariosRepository.GetDatos(userLoged.Token,empresaData.Prefijo, empresaData.Local);
+        if (!string.IsNullOrEmpty(mascotaNavigationData.IdMascota) && !string.IsNullOrEmpty(mascotaNavigationData.RutCliente))
+        {
+            MascotaDto = new();
+            Propietario = new();
+            Raza = new();
+            Especie = new();
+            Sexo = new();
+            // MascotaDto = await mascotasRepository.GetMascota(userLoged.Token,empresaData.Prefijo,(string)mascotaNavigationData.IdMascota);
+            // Propietario = await propietarioRepository.GetPropietario("", (string)mascotaNavigationData.RutCliente,"test");
+            // Raza = await razaRepository.GetRaza(userLoged.Token,empresaData.Prefijo, (string)MascotaDto.CodEspecie, (string)MascotaDto.CodRaza);
+
+            var result = await mascotasRepository.GetMascota(userLoged.Token,empresaData.Prefijo, (string)mascotaNavigationData.IdMascota);
+            var p = result[0];
+            var r = await razaRepository.GetRaza(userLoged.Token,empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            MascotaDto.IdMascota = p.idMascota;
+            MascotaDto.NombreMascota = p.nombreMascota;
+            MascotaDto.CodRaza = p.codRaza;
+            Raza.Nombre = x.raza;
+            MascotaDto.CodSexo = p.codSexo;
+            Sexo.Nombre = p.sexo;
+            MascotaDto.CodColor = p.codColor;
+            MascotaDto.FechaNacimiento = p.fechaNacimiento;
+            MascotaDto.EstadoReproductivo = p.estadoReproductivo;
+            MascotaDto.Microchip = p.microchip;
+            MascotaDto.IdEstado = p.idEstado;
+            MascotaDto.FechaCreacion = p.fechaCreacion;
+            MascotaDto.CodEspecie = p.codEspecie;
+            MascotaDto.RutCliente = p.rutCliente;
+            var esp = await especieRepository.GetEspecie(userLoged.Token,empresaData.Prefijo, (string)MascotaDto.CodEspecie);
+            Especie.Nombre = esp[0].especie;
+            var resp = await propietarioRepository.GetPropietario(userLoged.Token, (string)mascotaNavigationData.RutCliente,empresaData.Prefijo);
+            // Console.WriteLine(resp);
+            MascotaDto.Especie = Especie.Nombre;
+            MascotaDto.Raza = Raza.Nombre;
+            MascotaDto.Sexo = Sexo.Nombre;
+            dynamic bandera = resp;
+            Propietario.Nombre = bandera.nombre;
+            Propietario.Rut = MascotaDto.RutCliente;
+            Propietario.Email = bandera.email;
+            Propietario.Direccion = bandera.direccion;
+            Propietario.Fono = bandera.fono1;
+            Propietario.Cupo = bandera.cupo;
+            Propietario.Disponible = bandera.disponible;
+            // Console.WriteLine($"bandera bloqueo: {bandera.bloqueo}");
+            Propietario.Bloqueo = bandera.bloqueo == 0 ? false : true;
+            // Console.WriteLine($"bloqueo: {Cliente.Bloqueo}");
+            Propietario.Plazo = bandera.plazo;
+            Rut rutfn = new Rut();
+            rutFormtato = rutfn.FormatoRut(Propietario.Rut);
+            int años = DateTime.Now.Year - Convert.ToDateTime(MascotaDto.FechaNacimiento).Year;
+            int meses = DateTime.Now.Month - Convert.ToDateTime(MascotaDto.FechaNacimiento).Month;
+            if (meses < 0) meses = meses * -1;
+            edad = $"{años}a {meses}m";
+        }
+
+
+    }
+
+    private void Imprimir()
+    {
+        ShowPrint = true;
+        StateHasChanged();
+    }
+}

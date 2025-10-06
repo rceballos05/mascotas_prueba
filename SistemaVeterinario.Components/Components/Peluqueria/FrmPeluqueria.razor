@@ -1,0 +1,834 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+@inject ISexoRepository sexoRepository
+@inject IRazaRepository razaRepository
+@inject IEspecieRepository especieRepository
+@inject IComunasRepository comunasRepository
+@inject IMascotasFotosRepository mascotasFotosRepository
+@inject IEspecialistaRepository especialistaRepository
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject MascotaNavigationData mascotaNavigationData
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject HttpClient http
+@inject IJSRuntime JS
+
+
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 1200px;
+    margin: 20px auto;
+    }
+
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .progress-bar-custom {
+    height: 20px;
+    background-color: #007bff;
+    border-radius: 0;
+    }
+
+    .progress-custom {
+    height: 20px;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    }
+
+    .purple-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8b8e0;
+    padding: 15px;
+    margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    }
+
+    .form-label {
+    margin-bottom: 2px;
+    font-size: 13px;
+    }
+
+    .action-button {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .action-button i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #007bff;
+    }
+
+    .dropdown-toggle::after {
+    position: absolute;
+    right: 10px;
+    top: 45%;
+    }
+
+    .input-with-dropdown {
+    position: relative;
+    }
+
+    .input-with-dropdown .form-select {
+    padding-right: 25px;
+    }
+
+    .footer-info {
+    font-size: 12px;
+    color: #0066cc;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    }
+
+    .document-area {
+    background-color: white;
+    border: 1px solid #ddd;
+    min-height: 250px;
+    padding: 15px;
+    margin-bottom: 10px;
+    }
+
+    .paw-logo {
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .form-check-label {
+    font-size: 13px;
+    }
+
+    .form-check-input {
+    margin-top: 0.2rem;
+    }
+
+    .section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 13px;
+    }
+
+    .form-textarea {
+    width: 100%;
+    min-height: 80px;
+    background-color: #f5f5f5;
+    border: 1px solid #ddd;
+    padding: 5px;
+    }
+
+    .value-label {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    font-size: 13px;
+    text-align: center;
+    }
+</style>
+
+
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@ShowPrint" Title="Imprimiendo" ShowChanged="@(value => ShowPrint = value)">
+    <SistemaVeterinario.Components.Components.Componentes_Globales.ImprimirFrmPeluqueria GlosaAlteraciones="@GlosaAlteraciones" GlosaCondiciones="@GlosaCondiciones" GlosaOidos="@GlosaOidos" GlosaParasitos="@GlosaParasitos" GlosaRequiere="@GlosaRequiere" Indicaciones="@Indicaciones" Tratamiento="@Tratamiento" MaeEmpresasDatos="MaeEmpresasDatos" Mascota="Mascota" Propietario="Cliente" Especialista="Especialista" />
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+
+<div class="container">
+    <!-- Window Header -->
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 20%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Datos del Recinto -->
+            <div class="col-md-4">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos del Recinto</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Profesional</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @onchange="ChangeEventMedico">
+                                    <option>NO SELECCIONADO</option>
+                                    @if(Especialistas.Count>0)
+                                    {
+                                        foreach(SeguUsuarios item in Especialistas)
+                                        {
+                                            <option value="@item.Codigoprofesional">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <input type="text" class="form-control" value="@DateTime.Now.ToString("dd-MM-yyyy")" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Mascota -->
+            <div class="col-md-5">
+                <div class="purple-section">
+                    <h6 class="mb-3">Datos de Mascota</h6>
+                    <div class="row mb-3">
+                        <div class="col-2">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" value="@Convert.ToInt32(Mascota.IdMascota)" readonly>
+                        </div>
+                        <div class="col-3">
+                            <input type="text" class="form-control" style="background-color: #f0fff0;" value="@Mascota.NombreMascota" readonly>
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" style="width: 60px;" value="@Edad" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <label class="form-label">Cliente</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" value="@RutFormato" readonly>
+                        </div>
+
+                        <div class="col-6">
+                            <input type="text" class="form-control" value="@Cliente.Nombre" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <button class="action-button mb-3" id="btnBuscar">
+                        <i class="fa fa-search"></i>
+                        Buscar Resultados
+                    </button>
+                    <button class="action-button" id="btnImprimir" @onclick="ImprimeInforme">
+                        <i class="fa fa-print"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Datos del Documento -->
+        <div class="row g-2">
+            <div class="col-md-3">
+                <div class="purple-section" style="height: 100%;">
+                    <h6 class="mb-3">Datos del Documento</h6>
+                    <div class="paw-logo">
+                        <img src="@urlFoto" asp-append-version="true" width="200" height="200" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="purple-section mb-2">
+                    <div class="section-title">Mascota recibida en las siguientes condiciones</div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="desenredada" @bind-value="CondicionDesenredada">
+                                <label class="form-check-label" for="desenredada">Desenredada</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="enredada" @bind-value="CondicionEnredada">
+                                <label class="form-check-label" for="enredada">Enredada</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="muyEnredada" @bind-value="CondicionMuyEnredada">
+                                <label class="form-check-label" for="muyEnredada">Muy Enredada</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otrosCondicion" @bind-value="CondicionOtro">
+                                <label class="form-check-label" for="otrosCondicion">Otros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" style="background-color: #e0ffe0;" @bind-value="CondicionOtroStr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="purple-section mb-2">
+                    <div class="section-title">Su mascota presenta las siguientes alteraciones de piel y pelaje</div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="dermatitis" @bind-value="Dermatitis">
+                                <label class="form-check-label" for="dermatitis">Dermatitis</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="heridas" @bind-value="Heridas">
+                                <label class="form-check-label" for="heridas">Heridas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cicatrices" @bind-value="Cicatrices">
+                                <label class="form-check-label" for="cicatrices">Cicatrices</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sinLesiones" @bind-value="SinLesiones">
+                                <label class="form-check-label" for="sinLesiones">Sin Lesiones</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otrosPiel" @bind-value="OtrasAletracionesPiel">
+                                <label class="form-check-label" for="otrosPiel">Otros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" style="background-color: #e0ffe0;" @bind-value ="OtrasAletracionesPielStr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="purple-section mb-2">
+                    <div class="section-title">Su mascota presenta las siguientes alteraciones de Oídos</div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otisBacterianaIzq" @bind-value="OtitisBacIzq">
+                                <label class="form-check-label" for="otisBacterianaIzq">Otitis Bacteriana Izquierda</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otisPorAcarosIzq" @bind-value="OtitisAcIzq">
+                                <label class="form-check-label" for="otisPorAcarosIzq">Otitis por Ácaros Izquierda</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sinLesionesOidos" @bind-value="SinLesionesOidos">
+                                <label class="form-check-label" for="sinLesionesOidos">Sin Lesiones</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otisBacterianaDer" @bind-value="OtitisBacDer">
+                                <label class="form-check-label" for="otisBacterianaDer">Otitis Bacteriana Derecha</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otisPorAcarosDer" @bind-value="OtitisAcDer">
+                                <label class="form-check-label" for="otisPorAcarosDer">Otitis por Ácaros Derecha</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otrosOidos" @bind-value="OtrasLesionesOidos">
+                                <label class="form-check-label" for="otrosOidos">Otros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" style="background-color: #e0ffe0;" @bind-value="OtrasLesionesOidosStr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="purple-section mb-2">
+                    <div class="section-title">Su mascota presenta los siguientes parásitos</div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pulgas" @bind-value="Pulgas">
+                                <label class="form-check-label" for="pulgas">Pulgas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="heridasParasitos" @bind-value="HeridasParasitos">
+                                <label class="form-check-label" for="heridasParasitos">Heridas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="garrapatas" @bind-value="Garrapatas">
+                                <label class="form-check-label" for="garrapatas">Garrapatas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gusanos" @bind-value="Gusanos">
+                                <label class="form-check-label" for="gusanos">Gusanos</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="sinParasitos" @bind-value="SinParasitos">
+                                <label class="form-check-label" for="sinParasitos">Sin Parásitos</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otrosParasitos" @bind-value="OtrosParasitos">
+                                <label class="form-check-label" for="otrosParasitos">Otros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <input type="text" class="form-control" style="background-color: #e0ffe0;" @bind-value="OtrosParasitosStr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="purple-section mb-2">
+                    <div class="section-title">Su mascota Requiere</div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="limpiezaDental" @bind-value="LimpiezaDental">
+                                <label class="form-check-label" for="limpiezaDental">Limpieza Dental</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="vacunas" @bind-value="Vacunas">
+                                <label class="form-check-label" for="vacunas">Vacunas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="antiparasitarioInterno" @bind-value="AntiparasitarioInterno">
+                                <label class="form-check-label" for="antiparasitarioInterno">Antiparasitario Interno</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="antipulgas" @bind-value="Antipulgas">
+                                <label class="form-check-label" for="antipulgas">Antipulgas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="otrosRequiere" @bind-value="OtrosRequerimientos">
+                                <label class="form-check-label" for="otrosRequiere">Otros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" style="background-color: #e0ffe0;" @bind-value="OtrosRequerimientosStr">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="purple-section">
+                    <div class="section-title">Otros</div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Indicaciones</label>
+                        </div>
+                        <div class="col-md-10">
+                            <textarea class="form-textarea" @bind="Indicaciones"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Tratamiento</label>
+                        </div>
+                        <div class="col-md-10">
+                            <textarea class="form-textarea" @bind="Tratamiento"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <!-- Espacio vacío -->
+                        </div>
+                        <div class="col-md-1">
+                            <div class="value-label">Valor</div>
+                        </div>
+                        <div class="col-md-1">
+                            <input type="text" class="form-control text-end" value="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private MascotasDto Mascota = new();
+    private Propietario Cliente = new();
+    private string IdMascota = "";
+    private string RutCliente = "";
+    private List<SeguUsuarios> Especialistas = new();
+    private SexoDto Sexo = new();
+    private EspecieDto Especie = new();
+    private RazaDto Raza = new();
+    private string Edad = "";
+    private string Tratamiento = "";
+    private string Indicaciones = "";
+
+    private bool CondicionDesenredada = false;
+    private bool CondicionEnredada = false;
+    private bool CondicionMuyEnredada = false;
+    private bool CondicionOtro = false;
+    private string CondicionOtroStr = "";
+
+    private bool Dermatitis = false;
+    private bool Heridas = false;
+    private bool Cicatrices = false;
+    private bool SinLesiones = false;
+    private bool OtrasAletracionesPiel = false;
+    private string OtrasAletracionesPielStr = "";
+
+    private bool OtitisBacDer = false;
+    private bool OtitisBacIzq = false;
+    private bool OtitisAcIzq = false;
+    private bool OtitisAcDer = false;
+    private bool SinLesionesOidos = false;
+    private bool OtrasLesionesOidos = false;
+    private string OtrasLesionesOidosStr = "";
+
+    private bool Pulgas = false;
+    private bool Garrapatas = false;
+    private bool HeridasParasitos = false;
+    private bool Gusanos = false;
+    private bool SinParasitos = false;
+    private bool OtrosParasitos = false;
+    private string OtrosParasitosStr = "";
+
+    private bool LimpiezaDental = false;
+    private bool Vacunas = false;
+    private bool AntiparasitarioInterno = false;
+    private bool Antipulgas = false;
+    private bool OtrosRequerimientos = false;
+    private string OtrosRequerimientosStr = "";
+
+    private string GlosaCondiciones = "";
+    private string GlosaAlteraciones = "";
+    private string GlosaOidos = "";
+    private string GlosaParasitos = "";
+    private string GlosaRequiere = "";
+    private MaeEmpresasDatos MaeEmpresasDatos = new();
+    private ComunaDto Comuna = new();
+    private MedMascotaFotos MascotaFotos = new();
+    private SeguUsuarios Especialista = new();
+    private bool ShowPrint = false;
+    private string RutFormato = "";
+    string urlFoto = "";
+    protected override async Task OnInitializedAsync()
+    {
+        Rut rutFn = new Rut();
+        urlFoto = $"{http.BaseAddress}api/imagenes/base/base/base/base_perfil.png";
+        IdMascota = mascotaNavigationData.IdMascota;
+        RutCliente = mascotaNavigationData.RutCliente;
+        if (!string.IsNullOrEmpty(IdMascota))
+        {
+            var result = await mascotaRepository.GetMascota(userLoged.Token,empresaData.Prefijo, IdMascota);
+            Console.WriteLine(result[0]);
+            var p = result[0];
+            var r = await razaRepository.GetRaza(userLoged.Token,empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            Console.WriteLine(r);
+            Console.WriteLine(x);
+            Mascota.IdMascota = p.idMascota;
+            Mascota.NombreMascota = p.nombreMascota;
+            Mascota.CodRaza = p.codRaza;
+            Mascota.Raza = x.raza;
+            Mascota.CodSexo = p.codSexo;
+            Mascota.Sexo = p.sexo;
+            Mascota.CodColor = p.codColor;
+            Mascota.FechaNacimiento = p.fechaNacimiento;
+            Mascota.EstadoReproductivo = p.estadoReproductivo;
+            Mascota.Microchip = p.microchip;
+            Mascota.IdEstado = p.idEstado;
+            Mascota.Estado = p.estado;
+            Mascota.FechaCreacion = p.fechaCreacion;
+            Mascota.Especie = p.especie;
+        }
+        if (!string.IsNullOrEmpty(RutCliente))
+        {
+            var resp = await propietarioRepository.GetPropietario(userLoged.Token, RutCliente, empresaData.Prefijo);
+            // Console.WriteLine(resp);
+            dynamic bandera = resp;
+            Cliente.Nombre = bandera.nombre;
+            Cliente.Rut = RutCliente;
+            Cliente.Email = bandera.email;
+            Cliente.Direccion = bandera.direccion;
+            Cliente.Fono = bandera.fono1;
+            Cliente.Cupo = bandera.cupo;
+            Cliente.Disponible = bandera.disponible;
+            Cliente.Bloqueo = bandera.bloqueo == 0 ? false : true;
+            Cliente.Plazo = bandera.plazo;
+            RutFormato = rutFn.FormatoRut(Cliente.Rut);
+            StateHasChanged();
+        }
+        if (!string.IsNullOrEmpty(Mascota.IdFotoPerfil))
+        {
+            MascotaFotos = await mascotasFotosRepository.GetFotoMascota(userLoged.Token,empresaData.Prefijo, (string)Mascota.IdFotoPerfil);
+            urlFoto = $"{http.BaseAddress}api/imagenes/test/{Mascota.RutCliente}/{Mascota.IdMascota}/{MascotaFotos.Url}";
+            StateHasChanged();
+        }
+        int años = DateTime.Now.Year - Convert.ToDateTime(Mascota.FechaNacimiento).Year;
+        int meses = DateTime.Now.Month - Convert.ToDateTime(Mascota.FechaNacimiento).Month;
+        if (meses < 0) meses = meses * -1;
+        Edad = $"{años}a {meses}m";
+        StateHasChanged();
+        // var result = await comunasRepository.
+        Especialistas = await especialistaRepository.GetMedicos(userLoged.Token,empresaData.Prefijo,empresaData.Local);
+        StateHasChanged();
+        urlFoto = $"{http.BaseAddress}api/imagenes/base/base/base/base_perfil.png";
+        if (!string.IsNullOrEmpty(Mascota.IdFotoPerfil))
+        {
+            MascotaFotos = await mascotasFotosRepository.GetFotoMascota(userLoged.Token,empresaData.Prefijo, (string)Mascota.IdFotoPerfil);
+            urlFoto = $"{http.BaseAddress}api/imagenes/test/{Mascota.RutCliente}/{Mascota.IdMascota}/{MascotaFotos.Url}";
+            StateHasChanged();
+        }
+        MaeEmpresasDatos = await datosTributariosRepository.GetDatos(userLoged.Token,empresaData.Prefijo, empresaData.Local);
+    }
+
+    private void ImprimeInforme()
+    {
+
+
+        string condicion = "";
+        if (CondicionDesenredada)
+        {
+            condicion += "Desenredada.";
+
+        }
+        if(CondicionEnredada)
+        {
+            condicion = condicion.Replace('.', ',');
+            condicion += " Enredada.";
+
+        }
+        if(CondicionMuyEnredada)
+        {
+            condicion = condicion.Replace('.', ',');
+            condicion += " Muy Enredada.";
+
+        }
+        if(CondicionOtro)
+        {
+            condicion = condicion.Replace('.', ',');
+            condicion += $" {CondicionOtroStr.ToUpper()}.";
+
+        }
+
+        Console.WriteLine(condicion.ToString());
+        GlosaCondiciones = condicion;
+        Console.WriteLine("ALTERACIONES DE PIEL: \n");
+        string alteracionesPiel = "";
+        if(Dermatitis)
+        {
+            alteracionesPiel += "Dermatitis.";
+        }
+        if(Heridas)
+        {
+            alteracionesPiel = alteracionesPiel.Replace('.',',');
+            alteracionesPiel += " Heridas.";
+        }
+        if(Cicatrices)
+        {
+            alteracionesPiel = alteracionesPiel.Replace('.', ',');
+            alteracionesPiel += " Cicatrices.";
+        }
+        if(SinLesiones)
+        {
+            alteracionesPiel = alteracionesPiel.Replace('.', ',');
+            alteracionesPiel += " Sin Lesiones.";
+        }
+        if(OtrasAletracionesPiel)
+        {
+            alteracionesPiel = alteracionesPiel.Replace('.', ',');
+            alteracionesPiel += $" {OtrasAletracionesPielStr}.";
+        }
+        Console.WriteLine(alteracionesPiel);
+        GlosaAlteraciones = alteracionesPiel;
+        Console.WriteLine("OIDOS : \n");
+        string oidos = "";
+        if(OtitisBacIzq)
+        {
+            oidos += "Otitis Bacteriana Izquierda.";
+        }
+        if(OtitisBacDer)
+        {
+            oidos = oidos.Replace('.',',');
+            oidos += " Otitis Bacteriana Derecha.";
+        }
+        if(OtitisAcIzq)
+        {
+            oidos = oidos.Replace('.', ',');
+            oidos += " Otitis por Ácaros Izquierda."; 
+        }
+        if(OtitisAcDer)
+        {
+            oidos = oidos.Replace('.', ',');
+            oidos += " Otitis por Ácaros Derecha.";
+        }
+        if(SinLesionesOidos)
+        {
+            oidos = oidos.Replace('.', ',');
+            oidos += " Sin Lesiones.";
+        }
+        if(OtrasLesionesOidos)
+        {
+            oidos = oidos.Replace('.', ',');
+            oidos += $" {OtrasLesionesOidosStr}.";
+        }
+        Console.WriteLine(oidos);
+        GlosaOidos = oidos;
+        Console.WriteLine("PARASITOS: \n");
+        string parasitos = "";
+        if(Pulgas)
+        {
+            parasitos = "Pulgas.";
+        }
+        if(HeridasParasitos)
+        {
+            parasitos = parasitos.Replace('.', ',');
+            parasitos += " Heridas.";
+        }
+        if(Garrapatas)
+        {
+            parasitos = parasitos.Replace('.', ',');
+            parasitos += " Garrapatas.";
+        }
+        if(Gusanos)
+        {
+            parasitos = parasitos.Replace('.', ',');
+            parasitos += " Gusanos.";
+        }
+        if(SinParasitos)
+        {
+            parasitos = parasitos.Replace('.', ',');
+            parasitos += " Sin Parasitos.";
+        }
+        if(OtrosParasitos)
+        {
+            parasitos = parasitos.Replace('.', ',');
+            parasitos += $" {OtrosParasitosStr}.";
+        }
+        Console.WriteLine(parasitos);
+        GlosaParasitos = parasitos;
+        Console.WriteLine("REQUIERE: ");
+
+        string requiere = "";
+        if(LimpiezaDental)
+        {
+            requiere += "Limpieza Dental.";
+        }
+        if(Vacunas)
+        {
+            requiere = requiere.Replace('.', ',');
+            requiere += " Vacunas.";
+        }
+        if(AntiparasitarioInterno)
+        {
+            requiere = requiere.Replace('.', ',');
+            requiere += " Antiparasitario Interno.";
+        }
+        if(Antipulgas)
+        {
+            requiere = requiere.Replace('.', ',');
+            requiere += " Antipulgas.";
+        }
+        if(OtrosRequerimientos)
+        {
+            requiere = requiere.Replace('.', ',');
+            requiere += $" {OtrosRequerimientosStr}.";
+        }
+        Console.WriteLine(requiere);
+        GlosaRequiere = requiere;
+        ShowPrint = true;
+        StateHasChanged();
+    }
+    private async void ChangeEventMedico(ChangeEventArgs e)
+    {
+
+        string medicoSeleccionado = e.Value?.ToString();
+        int codigo = int.Parse(medicoSeleccionado);
+        Especialista = await especialistaRepository.GetEspecialistaByCode(userLoged.Token,empresaData.Prefijo, empresaData.Local, codigo);
+
+    }
+}

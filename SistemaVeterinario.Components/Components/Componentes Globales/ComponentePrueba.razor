@@ -1,0 +1,56 @@
+﻿@page "/ticket"
+@inject IJSRuntime JS
+
+<div id="ticket" style="width:80mm; font-family:monospace; font-size:12pt; line-height:1.2;">
+    <h3>VETERINARIA ARAUCANIA LTDA.</h3>
+    <p>
+        ANTONIO MUÑOZ N° 635<br>
+        VILLARRICA, Chile<br>
+        RUT: 76.530.674-4<br>
+        Tel: 045 2410368
+    </p>
+
+    <p>
+        <strong>Información de la boleta</strong><br>
+        PREVENTA ELECTRÓNICA<br>
+        0000000001
+    </p>
+
+    <p>
+        Fecha: 03-09-2025 15:40:20<br>
+        Cajero: EDUARDO JAVIER VERGARA<br>
+        Cliente: CLIENTE VENTA
+    </p>
+
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th>CANT</th>
+                <th>DESCRIPCIÓN</th>
+                <th>PRECIO</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2</td>
+                <td>VACUNA</td>
+                <td>$20.000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>
+        SUBTOTAL: $20.000<br>
+        IVA (19%): $3.800<br>
+        TOTAL: $23.800
+    </p>
+</div>
+
+<button class="btn btn-primary" @onclick="GenerarPDF">Imprimir PDF</button>
+
+@code {
+    private async Task GenerarPDF()
+    {
+        await JS.InvokeVoidAsync("generarTicketPDF", "ticket");
+    }
+}

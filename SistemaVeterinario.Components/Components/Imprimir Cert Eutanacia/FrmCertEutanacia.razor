@@ -1,0 +1,353 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject IPropietarioRepository propietarioRepository
+@inject IMascotaRepository mascotaRepository
+@inject IRazaRepository razaRepository
+@inject IEspecialistaRepository especialistaRepository
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject MascotaNavigationData MascotaNavigationData
+@inject IJSRuntime JS
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 1200px;
+    margin: 20px auto;
+    }
+
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .progress-bar {
+    height: 20px;
+    background-color: #007bff;
+    }
+
+    .section-header {
+    background-color: #d8d8f0;
+    color: #000;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #b8c7dc;
+    }
+
+    .form-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8c7dc;
+    padding: 10px;
+    margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #f8f8f8;
+    }
+
+    .form-label {
+    font-size: 13px;
+    margin-bottom: 0;
+    padding-top: 5px;
+    }
+
+    .btn-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+    }
+
+    .btn-action i {
+    margin-right: 10px;
+    font-size: 20px;
+    }
+
+    .btn-generate i {
+    color: #0066cc;
+    }
+
+    .btn-print i {
+    color: #0066cc;
+    }
+
+    .footer-info {
+    font-size: 12px;
+    color: #0066cc;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    }
+
+    .document-area {
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    min-height: 150px;
+    }
+</style>
+
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@ShowPrint" Title="Imprimiendo" ShowChanged="@(value => ShowPrint = value)">
+    <SistemaVeterinario.Components.Components.Componentes_Globales.ImpresionCertEutanasia Especialista="Especialista" Glosa1="@Glosa1" Glosa2="@Glosa2" MaeEmpresasDatos="MaeEmpresasDatos" Mascota="Mascota" Propietario="Propietario"/>
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+
+<div class="container-fluid">
+    <!-- Window Header -->
+
+
+    <!-- Progress Bar -->
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 15%"></div>
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row">
+            <!-- Report Data Section -->
+            <div class="col-md-5">
+                <div class="section-header">Datos del Informe</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Médico</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select" @onchange="ChangeEventMedico">
+                                <option>Seleccionar</option>
+                                @if(Medicos.Count >0 )
+                                {
+                                    foreach(SeguUsuarios item in Medicos)
+                                    {
+                                        <option value="@item.Codigoprofesional">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="@DateTime.Now.ToString("dd-MM-yyyy")" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pet Data Section -->
+            <div class="col-md-7">
+                <div class="section-header">Datos de Mascota</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Mascota</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@Mascota.IdMascota" readonly>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" value="@Mascota.NombreMascota" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="form-label">Cliente</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="@rutFn.FormatoRut(Propietario.Rut)" readonly>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" value="@Propietario.Nombre" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <!-- Document Data Section -->
+            <div class="col-md-9">
+                <div class="section-header">Datos del Documento</div>
+                <div class="form-section">
+                    <div class="document-area">
+                        <div id="certificateContent">
+                            <!-- Aquí se generará el contenido del certificado -->
+                            <p>@Glosa1</p>
+                        </div>
+                    </div>
+                    <div class="document-area">
+                        <div id="additionalInfo">
+                            <!-- Aquí se generará información adicional -->
+                            <p>@Glosa2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="col-md-3">
+                <div class="form-section" style="height: 100%;">
+                    <button class="btn-action btn-generate" @onclick="GenerarGlosas">
+                        <i class="fa fa-search"></i>
+                        Generar Glosas
+                    </button>
+                    @if(string.IsNullOrEmpty(Glosa1))
+                    {
+                        <button class="btn-action btn-print" disabled="disabled">
+                            <i class="fa fa-print"></i>
+                            Imprimir Informe
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn-action btn-print" @onclick="Imprimir">
+                            <i class="fa fa-print"></i>
+                            Imprimir Informe
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>
+
+@code {
+    private MaeEmpresasDatos MaeEmpresasDatos = new();
+    private MascotasDto Mascota = new();
+    private SeguUsuarios Especialista = new();
+    private List<SeguUsuarios> Medicos = new();
+    private Propietario Propietario = new();
+    private Rut rutFn;
+    string Glosa1 = "";
+    string Glosa2 = "";
+    string IdMascota = "";
+    string RutCliente = "";
+    private bool ShowPrint = false;
+    protected override async Task OnInitializedAsync()
+    {
+        rutFn = new Rut();
+        MaeEmpresasDatos = await datosTributariosRepository.GetDatos(userLoged.Token,empresaData.Prefijo, empresaData.Local);
+        StateHasChanged();
+        await JS.InvokeVoidAsync("printHtmlComponent", "receipt");
+        IdMascota = MascotaNavigationData.IdMascota;
+        RutCliente = MascotaNavigationData.RutCliente;
+        if (!string.IsNullOrEmpty(IdMascota))
+        {
+            var result = await mascotaRepository.GetMascota(userLoged.Token,empresaData.Prefijo, IdMascota);
+            Console.WriteLine(result[0]);
+            var p = result[0];
+            var r = await razaRepository.GetRaza(userLoged.Token,empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+            var x = r[0];
+            Console.WriteLine(r);
+            Console.WriteLine(x);
+            Mascota.IdMascota = p.idMascota;
+            Mascota.NombreMascota = p.nombreMascota;
+            Mascota.CodRaza = p.codRaza;
+            Mascota.Raza = x.raza;
+            Mascota.CodSexo = p.codSexo;
+            Mascota.Sexo = p.sexo;
+            Mascota.CodColor = p.codColor;
+            Mascota.FechaNacimiento = p.fechaNacimiento;
+            Mascota.EstadoReproductivo = p.estadoReproductivo;
+            Mascota.Microchip = p.microchip;
+            Mascota.IdEstado = p.idEstado;
+            Mascota.Estado = p.estado;
+            Mascota.FechaCreacion = p.fechaCreacion;
+            Mascota.Especie = p.especie;
+        }
+        if (!string.IsNullOrEmpty(RutCliente))
+        {
+            var resp = await propietarioRepository.GetPropietario(userLoged.Token, RutCliente, empresaData.Prefijo);
+            // Console.WriteLine(resp);
+            dynamic bandera = resp;
+            Propietario.Nombre = bandera.nombre;
+            Propietario.Rut = RutCliente;
+            Propietario.Email = bandera.email;
+            Propietario.Direccion = bandera.direccion;
+            Propietario.Fono = bandera.fono1;
+            Propietario.Cupo = bandera.cupo;
+            Propietario.Disponible = bandera.disponible;
+            Propietario.Bloqueo = bandera.bloqueo == 0 ? false : true;
+            Propietario.Plazo = bandera.plazo;
+        }
+
+        Medicos = await especialistaRepository.GetMedicos(userLoged.Token,empresaData.Prefijo,empresaData.Local);
+        StateHasChanged();
+        //await JS.InvokeVoidAsync("window.print");
+    }
+
+    private void GenerarGlosas()
+    {
+        Glosa1 = $"Con fecha {DateTime.Now.ToString("dd-MM-yyyy")} El que Suscribe, Médico Veterinario Sr. {Especialista.Nombre} con domicilio ";
+        Glosa1 += $"comercial en la calle {MaeEmpresasDatos.Direccion}, de la ciudad de {MaeEmpresasDatos.Comuna}  certifica haber realizado ";
+        Glosa1 += $"Eutanasia a un {Mascota.Especie} de la Raza {Mascota.Raza} de Sexo {Mascota.Sexo}";
+
+        Glosa2 = $"Por considerar que las condiciones en las que se encuentra comprometen su estado general y por consiguiente no son compatibles ";
+        Glosa2 += $"con la vida. Se extiende el presente certificado para conformidad del propietario y para los fines que estime conveniente.";
+        StateHasChanged();
+    }
+    private async void ChangeEventMedico(ChangeEventArgs e)
+    {
+
+        string medicoSeleccionado = e.Value?.ToString();
+        int codigo = int.Parse(medicoSeleccionado);
+        Especialista = await especialistaRepository.GetEspecialistaByCode(userLoged.Token,empresaData.Prefijo,empresaData.Local,codigo);
+
+    }
+
+    private void Imprimir()
+    {
+        ShowPrint = true;
+        StateHasChanged();
+    }
+}

@@ -1,0 +1,122 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@using SistemaVeterinario.Web.Statics
+@inject MascotaNavigationData data
+@inject IMascotaRepository repository
+@inject UserNavgationData user
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager navigation
+@inject IRazaRepository razaRepository
+@inject IJSRuntime js
+
+<LoadingModal @ref="loadingModal" IsVisible="@loadingVisible" Message="Cargando información..." />
+
+<table class="table datatable" id="datatable_1">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Estado</th>
+            <th>Accion</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if(Mascotas.Count>0)
+        {
+            foreach(MascotasDto item in Mascotas)
+            {
+                <tr>
+                    <td>@item.IdMascota</td>
+                    <td>@item.NombreMascota</td>
+                    <td>@item.Especie</td>
+                    <td>@item.Estado</td>
+                    <td><button class="btn btn-success" @onclick="() => SeleccionarMascota(item.IdMascota)"><i class="fa-solid fa-check"></i></button></td>
+                </tr>
+            }
+        }
+
+
+
+    </tbody>
+</table>
+
+
+
+@code{
+    [Parameter]
+    public List<MascotasDto>? Mascotas { get; set; } 
+    [Parameter]
+    public EventCallback<bool> RecargaDatos { get; set; }
+
+    private LoadingModal? loadingModal;
+    private bool loadingVisible = false;
+
+    private async void SeleccionarMascota(string id)
+    {
+        loadingVisible = true;
+        StateHasChanged();
+        var result = await repository.GetMascota(user.Token,empresaData.Prefijo, id);
+        // Console.WriteLine(result[0]);
+        var p = result[0];
+        var r = await razaRepository.GetRaza(user.Token,empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+
+
+        var Mascota = new MascotasDto();
+        Mascota.IdMascota = p.idMascota;
+
+        Mascota.NombreMascota = p.nombreMascota;
+        Mascota.CodRaza = p.codRaza;
+        if(r is not null)
+        {
+            var x = r[0];
+            Mascota.Raza = x.raza;
+        }
+
+        Mascota.CodSexo = p.codSexo;
+        Mascota.Sexo = p.sexo;
+        Mascota.CodColor = p.codColor;
+        Mascota.FechaNacimiento = p.fechaNacimiento;
+        Mascota.EstadoReproductivo = p.estadoReproductivo;
+        Mascota.Microchip = p.microchip;
+        Mascota.IdEstado = p.idEstado;
+        Mascota.Estado = p.estado;
+        Mascota.FechaCreacion = p.fechaCreacion;
+        Mascota.Especie = p.especie;
+        Mascota.RutCliente = p.rutCliente;
+
+        await localStorage.SetItemAsync("mascota", new MascotasDto
+            {
+                CodColor = Mascota.CodColor,
+                CodEspecie = Mascota.CodEspecie,
+                CodEstadoReproductivo = Mascota.CodEstadoReproductivo,
+                CodRaza = Mascota.CodRaza,
+                CodSexo = Mascota.CodSexo,
+                Color = Mascota.Color,
+                Especie = Mascota.Especie,
+                Estado = Mascota.Estado,
+                EstadoReproductivo = Mascota.EstadoReproductivo,
+                FechaCreacion = Mascota.FechaCreacion,
+                UltimaModificacion = Mascota.UltimaModificacion,
+                FechaNacimiento = Mascota.FechaNacimiento,
+                IdEstado = Mascota.IdEstado,
+                IdFotoPerfil = Mascota.IdFotoPerfil,
+                IdMascota = Mascota.IdMascota,
+                Microchip = Mascota.Microchip,
+                NombreMascota = Mascota.NombreMascota,
+                NumeroHospitalizacion = Mascota.NumeroHospitalizacion,
+                Raza = Mascota.Raza,
+                RutCliente = Mascota.RutCliente,
+                Sexo = Mascota.Sexo
+            });
+
+        data.IdMascota = Mascota.IdMascota;
+        
+        await RecargaDatos.InvokeAsync(true);
+        loadingVisible = false;
+        StateHasChanged();
+        await js.InvokeVoidAsync("seleccionarTabMascota");
+    }
+}

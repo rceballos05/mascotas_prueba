@@ -1,0 +1,82 @@
+﻿<style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    padding: 30px;
+    }
+
+    .locales-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espacio entre tarjetas */
+    max-width: 450px;
+    margin: 0 auto;
+    }
+
+    .local-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .local-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .local-info {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    }
+
+    .btn-seleccionar {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    }
+
+    .btn-seleccionar:hover {
+    background-color: #43a047;
+    }
+</style>
+
+<div class="locales-lista">
+    @if(Empresas.Count > 0)
+    {
+        foreach (EmpresasDto item in Empresas)
+        {
+            <div class="local-card">
+                <div class="local-info">@item.localEmpresa - @item.nombreEmpresa</div>
+                <button class="btn-seleccionar" @onclick="()=> SeleccionarLocal(item)">Seleccionar</button>
+            </div>
+        }
+    }
+
+</div>
+
+@code{
+    [Parameter]
+    public List<EmpresasDto> Empresas { get; set; }
+    [Parameter] public EventCallback<EmpresasDto> RecargaDatos { get; set; }
+
+    private async Task SeleccionarLocal(EmpresasDto item)
+    {
+        Console.WriteLine(item.nombreEmpresa);
+        Console.WriteLine(item.prefijo);
+        await RecargaDatos.InvokeAsync(item);
+
+    }
+}

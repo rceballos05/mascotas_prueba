@@ -1,0 +1,347 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject UserNavgationData userData
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject IJSRuntime JS
+
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 20px;
+    }
+
+    .invoice-container {
+    width: 8.5in;
+    min-height: 11in;
+    margin: 0 auto;
+    background: white;
+    padding: 0.75in;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 20px;
+    }
+
+    .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    }
+
+    .logo {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    }
+
+    .logo-shape {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    }
+
+    .shape-1 {
+    background: #4a90e2;
+    top: 0;
+    left: 0;
+    border-radius: 50% 0 0 0;
+    }
+
+    .shape-2 {
+    background: #7ed321;
+    top: 0;
+    right: 0;
+    border-radius: 0 50% 0 0;
+    }
+
+    .shape-3 {
+    background: #f5a623;
+    bottom: 0;
+    left: 0;
+    border-radius: 0 0 0 50%;
+    }
+
+    .shape-4 {
+    background: #d0021b;
+    bottom: 0;
+    right: 0;
+    border-radius: 0 0 50% 0;
+    }
+
+    .company-info h1 {
+    color: #7ed321;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+
+    .contact-info {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+    }
+
+    .invoice-type {
+    text-align: right;
+    color: #888;
+    }
+
+    .invoice-type h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    }
+
+    .invoice-details {
+    font-size: 12px;
+    line-height: 1.6;
+    }
+
+    .client-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    }
+
+    .client-left {
+    flex: 1;
+    }
+
+    .client-right {
+    flex: 1;
+    text-align: right;
+    }
+
+    .invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    }
+
+    .invoice-table th {
+    background-color: #e8e8e8;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    }
+
+    .invoice-table td {
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    }
+
+    .invoice-table .description {
+    text-align: left;
+    padding-left: 15px;
+    }
+
+    .invoice-table .code {
+    font-family: monospace;
+    font-size: 11px;
+    }
+
+    .total-row {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    }
+
+    .total-section {
+    text-align: right;
+    margin-top: 20px;
+    }
+
+    .total-amount {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    }
+
+    .notice {
+    margin-top: 80px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-left: 4px solid #7ed321;
+    font-size: 12px;
+    color: #666;
+    }
+
+    .footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    }
+
+    @@media print {
+    body {
+    background: white;
+    padding: 0;
+    }
+
+    .invoice-container {
+    width: 8.5in;
+    min-height: 11in;
+    padding: 0.5in;
+    box-shadow: none;
+    border-radius: 0;
+    margin: 0;
+    }
+
+    @@page {
+    size: letter;
+    margin: 0.5in;
+    }
+    }
+
+    .contenedor-firmas {
+        display: flex;
+        gap: 60px; /* espacio horizontal entre firmas */
+    }
+    .firma {
+        text-align: center;
+    }
+
+        .firma hr {
+            width: 200px; /* ancho de la línea */
+            margin: 0 auto 8px; /* centrada y con margen inferior */
+            border: none;
+            border-top: 1px solid #000;
+        }
+
+        .firma p {
+            font-weight: bold;
+            margin: 0;
+        }
+</style>
+
+<div class="invoice-container" id="AutorizaProc">
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <img src="https://vetaraucania.cl/assets/img/logo2.png" height="50" >
+            </div>
+            <div class="company-info">
+                <h1>@MaeEmpresasDatos.RazonSocial</h1>
+                <div class="contact-info ms-3 mt-4">
+                    <div>Fono: @MaeEmpresasDatos.Fono</div>
+                    <div>Web: @MaeEmpresasDatos.Sitioweb</div>
+                    <div>E-mail: @MaeEmpresasDatos.Email</div>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-type">
+            <h2>
+                Autorización de Procedimientos Anastésicos
+                y Quirurjicos
+            </h2>
+            <div class="invoice-details">
+
+                <div>FECHA: @DateTime.Now.ToString("dd-MM-yyyy")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="client-info">
+        <div class="client-left">
+            <div>Propietario: @Propietario.Nombre</div>
+            <div>Rut: @rutFn.FormatoRut(Propietario.Rut)</div>
+            <div>Dirección: @Propietario.Direccion, comuna</div>
+            <div>Fono: @Propietario.Fono, comuna</div>
+            <div>Mascota: @Mascota.NombreMascota</div>
+            <div>Autorizo: AUTORIZACIÓN DE PROCEDIMIENTO</div>
+        </div>
+    </div>
+
+    <div class="">
+        
+            Con fecha @DateTime.Now.ToString("dd-MM-yyyy") Autorizo la realización de procedimientos quirúrgicos, bajo el conocimiento de los riesgos normales de
+            anestesia que pueden presentarse bajo ciertas alteraciones propias del paciente o a raiz de una patología subyacente y que se
+            enumeran en esta ficha para conocimiento del propietario.
+        
+    </div>
+    <div class="mt-2">
+        <ol>
+            <li>Reacción alergica a algún producto de la medicación o de la premedicación anestésica.</li>
+            <li>Condicón corporal alterada : Obesidad o estados caquécticos.</li>
+            <li>Alimentación o ingesta de agua previa a la cirugía.</li>
+            <li>Alteraciones propias por edad avanzada.</li>
+           <li> Patología o disfunción cardiovascular no detectable al exámen clínico de rutina solo con posibilidad de equipo avanzado,
+                como alteraciones en la conducción electrica o algunas malformaciones al miocardio o sus válvulas.
+            </li>
+            <li>Patología cardiovascular en conocimiento versus la irrevocable aplicación de la técnica quirúrgica debido al riesgo vital por
+                otra indole.
+            </li>
+            <li> Daño hepático, renal, pancreático, insuficiencia pulmonar o patología que haya producido daño subclínico o crónico anterior
+                y que impide al animal desintoxicar y eliminar la medicación en forma normal.
+            </li>
+           <li>Alteraciones hemodinámicas como hemorragias, alteraciones en la coagulación, hipertensión, ascitis,hidrotórax, derrame
+                pericárdico, anasarca, congestión venosa hepática, pulmonar, deshidratación severa o shock.
+            </li>
+            <li>Lesiones orgánicas evidentes de tipo mecánico, degenerativo o tumoral que sean incompatibles con la vida.</li>
+            <li> Cuadro sistémico infeccioso grave o shock endotóxico concomitante.</li>
+           <li>Medicación doméstica previa con fármacos no indicados por el médico veterinario, sobre todo del tipo sedante, ansiolítico,
+                vasoactivos, antiinflamatorios, analgésicos, antibióticos o cualquiera que pueda alterar de alguna forma los procedimientos.
+            </li>
+            <li>Para satisfacción de los propietarios, Veterinaria Araucanía Ltda. cuenta con archivo fotográfico detallado ante posibles
+            hallazgos clínicos durante las cirugías, así como la posibilidad de llevar a cabo mediante cancelación diferida, técnicas de
+                necropsi
+            </li>
+        </ol>
+    </div>
+
+    <div class="contenedor-firmas ms-5 mt-5">
+        <div class="firma">
+            <hr>
+            <p>@Especialista.Nombre</p>
+        </div>
+        <div class="firma">
+            <hr>
+            <p>@Propietario.Nombre</p>
+        </div>
+    </div>
+
+    <!-- Adding footer with specialist and page info -->
+    <div class="footer">
+        <p>Pag. 1 de 1. @DateTime.Now.ToString("dd-MM-yyyy HH:mm") por @userData.Login.nombres @userData.Login.apellidos</p>
+    </div>
+</div>
+@code{
+    [Parameter]
+    public Propietario Propietario { get; set; }
+    [Parameter]
+    public SeguUsuarios Especialista { get; set; }
+    [Parameter]
+    public MascotasDto Mascota { get; set; }
+        
+    [Parameter]
+    public MaeEmpresasDatos MaeEmpresasDatos { get; set; }
+    Rut rutFn = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+             await JS.InvokeVoidAsync("printHtmlComponent", "AutorizaProc");
+        }
+    }
+}

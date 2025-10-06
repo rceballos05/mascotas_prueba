@@ -1,0 +1,260 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .purple-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+    }
+
+    .criterio-btn {
+        background-color: #00b0f0;
+        color: white;
+        border: none;
+        padding: 5px 15px;
+        font-size: 13px;
+    }
+
+    .form-check-input {
+        width: 16px;
+        height: 16px;
+    }
+
+    .form-check-label {
+        font-size: 13px;
+        margin-left: 5px;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-clipboard2-pulse text-primary"></i>
+        <span class="window-title">Banco de Procedimientos Clínicos</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row g-2">
+            <!-- Rangos de Fecha -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <h6 class="mb-3">Rangos de Fecha</h6>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <label class="form-label">Desde</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>05-05-2025</option>
+                                    <option>04-05-2025</option>
+                                    <option>03-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Hasta</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>07-05-2025</option>
+                                    <option>08-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de Archivos -->
+            <div class="col-md-6">
+                <div class="purple-section">
+                    <h6 class="mb-3">Tipo de Archivos</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="imagenesCheck">
+                                <label class="form-check-label" for="imagenesCheck">
+                                    Imágenes
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="documentosCheck">
+                                <label class="form-check-label" for="documentosCheck">
+                                    Documentos
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="multimediaCheck">
+                                <label class="form-check-label" for="multimediaCheck">
+                                    Multimedia
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="todosCheck" checked>
+                                <label class="form-check-label" for="todosCheck">
+                                    Todos
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <button class="criterio-btn">Criterio</button>
+                        </div>
+                        <div class="col-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <button class="action-button mb-3" id="btnBuscar">
+                        <i class="bi bi-search"></i>
+                        Buscar Registros
+                    </button>
+                    <button class="action-button" id="btnImprimir">
+                        <i class="bi bi-printer"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Procedimientos -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm">
+                <thead>
+                    <tr>
+                        <th width="10%">Fecha</th>
+                        <th width="35%">Diagnóstico</th>
+                        <th width="35%">Observación</th>
+                        <th width="10%">Adj.</th>
+                        <th width="10%">Ver</th>
+                    </tr>
+                </thead>
+                <tbody id="procedimientosTable">
+                    <!-- Filas vacías para simular la tabla -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>

@@ -1,0 +1,4 @@
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\publish\SistemaVeterinario.Backend.dll
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\publish\SistemaVeterinario.Backend.deps.json
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\publish\SistemaVeterinario.Backend.pdb
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\publish\Newtonsoft.Json.dll

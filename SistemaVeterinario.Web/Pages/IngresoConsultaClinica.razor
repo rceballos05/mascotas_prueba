@@ -1,0 +1,21 @@
+﻿@page "/ingreso-consulta-clinica"
+@inject UserNavgationData userDataService
+
+<AppBarHome LoginUser="userLoged" />
+<NavigationBarFrm />
+<SistemaVeterinario.Components.Components.Ingreso_Consulta.FrmIngresoConsultaClinica/>
+@code {
+    private object user = new object();
+    private LoginResponse userLoged = new();
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine(userDataService);
+        userLoged.Token = userDataService.Token;
+        userLoged.Login = userDataService.Login;
+        userLoged.Empresas = userDataService.Empresas;
+
+        Console.WriteLine(userLoged);
+
+    }
+}

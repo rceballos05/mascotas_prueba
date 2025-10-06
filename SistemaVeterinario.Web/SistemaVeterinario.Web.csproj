@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+	<PropertyGroup>
+	    <TargetFramework>net8.0</TargetFramework>
+	    <Nullable>enable</Nullable>
+	    <ImplicitUsings>enable</ImplicitUsings>
+	    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+
+	    <!-- ✅ Desactivar WASM SIMD (para compatibilidad con más navegadores) -->
+	    <BlazorWebAssemblyEnableWasmSIMD>false</BlazorWebAssemblyEnableWasmSIMD>
+		<WasmEnableExceptionHandling>false</WasmEnableExceptionHandling>
+		<WasmEnableSIMD>false</WasmEnableSIMD>
+	    <!-- ✅ Opcional: desactivar Globalización si no usas culturas, fechas/lenguajes distintos -->
+	    <InvariantGlobalization>true</InvariantGlobalization>
+
+	    <!-- 🧪 Otros ajustes personalizados -->
+	    <EnableCompressionInStaticFiles>false</EnableCompressionInStaticFiles>
+	    <DisableBuildStaticWebAssetCompressManifest>true</DisableBuildStaticWebAssetCompressManifest>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.10" PrivateAssets="all" />
+    <PackageReference Include="QuestPDF" Version="2025.7.0" />
+    <PackageReference Include="Radzen.Blazor" Version="7.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaVeterinario.Components\SistemaVeterinario.Components.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Statics\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\docs\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\examples\" />
+    <Folder Include="wwwroot\assets\libs\gmaps\test\" />
+    <Folder Include="wwwroot\assets\libs\raphael\dev\test\" />
+    <Folder Include="wwwroot\assets\libs\simple-datatables\dts\column_filter\" />
+    <Folder Include="wwwroot\assets\libs\simple-datatables\dts\convert\" />
+    <Folder Include="wwwroot\assets\libs\simple-datatables\dts\editing\" />
+    <Folder Include="wwwroot\assets\libs\simple-datatables\dts\export\" />
+    <Folder Include="wwwroot\assets\libs\starability\starability-scss\starability\" />
+  </ItemGroup>
+
+</Project>

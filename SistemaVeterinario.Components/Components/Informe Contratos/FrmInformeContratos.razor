@@ -1,0 +1,275 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tab-header {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        display: inline-block;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .form-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+        background-color: #f0f0f0;
+    }
+
+    .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        background-color: #87CEEB;
+        color: black;
+        padding: 5px 10px;
+        margin-bottom: 0;
+        font-size: 13px;
+        display: block;
+        height: 100%;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .table td {
+        border: 1px solid #ddd;
+    }
+
+    .table-container {
+        background-color: white;
+        border: 1px solid #ddd;
+        height: 400px;
+        overflow-y: auto;
+    }
+
+    .main-content {
+        background-color: #e0e0e0;
+        border: 1px solid #ccc;
+        padding: 15px;
+        margin-top: 5px;
+    }
+
+    .search-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-file-earmark-text text-primary"></i>
+        <span class="window-title">Informe de Contratos</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <!-- Tab Header -->
+        <div class="tab-header">Detalle de Prestaciones</div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label class="form-label">Rut</label>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Nombre</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row mb-2">
+                            <div class="col-md-4">
+                                <label class="form-label">Inicio</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-with-dropdown">
+                                    <select class="form-select">
+                                        <option>14-05-2025</option>
+                                        <option>13-05-2025</option>
+                                        <option>12-05-2025</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Fin</label>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="input-with-dropdown">
+                                    <select class="form-select">
+                                        <option>14-05-2025</option>
+                                        <option>15-05-2025</option>
+                                        <option>16-05-2025</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <button class="action-button" id="btnGenerar">
+                                    <i class="bi bi-search"></i>
+                                    Generar Informe
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="action-button" id="btnLimpiar">
+                                    <i class="bi bi-brush"></i>
+                                    Limpiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-container">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th width="8%">Número</th>
+                            <th width="10%">Fecha</th>
+                            <th width="12%">Rut</th>
+                            <th width="20%">Nombre</th>
+                            <th width="15%">Plan</th>
+                            <th width="10%">Inicio</th>
+                            <th width="10%">Fin</th>
+                            <th width="8%">Monto</th>
+                            <th width="7%">Vigente</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contratosTable">
+                        <!-- Los contratos se cargarán dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA
+        </div>
+    </div>
+</div>

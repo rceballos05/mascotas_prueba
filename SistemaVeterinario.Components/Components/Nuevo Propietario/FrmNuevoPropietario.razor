@@ -1,0 +1,468 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@using SistemaVeterinario.Web.Statics
+@inject IJSRuntime js
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IPropietarioRepository repository
+@inject IComunasRepository comunasRepository
+@inject IJSRuntime js
+
+
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 800px;
+    margin: 20px auto;
+    }
+
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .form-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8b8e0;
+    padding: 15px;
+    margin-bottom: 10px;
+    }
+
+    .form-section-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #f8f8f8;
+    }
+
+    .form-label {
+    font-size: 13px;
+    margin-bottom: 0;
+    padding-top: 5px;
+    }
+
+    .buttons-container {
+    background-color: #d8d8f0;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    }
+
+    .btn-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 180px;
+    justify-content: center;
+    }
+
+    .btn-action i {
+    margin-right: 10px;
+    font-size: 20px;
+    }
+
+    .btn-modify i {
+    color: #0066cc;
+    }
+
+    .btn-delete {
+    background-color: #ff0000;
+    color: white;
+    }
+
+    .btn-delete i {
+    color: white;
+    }
+
+    .btn-clear i {
+    color: #0099cc;
+    }
+
+    .footer-info {
+    font-size: 12px;
+    color: #0066cc;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    }
+
+    .form-check-input {
+    width: 20px;
+    height: 20px;
+    }
+
+    .form-switch .form-check-input {
+    width: 40px;
+    height: 20px;
+    }
+
+    .input-group-text {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #e9ecef;
+    }
+
+    .number-input {
+    text-align: right;
+    }
+</style>
+
+<ModalAyuda Show ="@showModal" Title="Ayuda Propietario" ShowChanged="@(value => showModal = value)">
+
+    <SistemaVeterinario.Components.Components.Ayudas.AyudaPropietario PropietarioSeleccionado="PropietarioSeleccionado"/>
+</ModalAyuda>
+
+<div class="container">
+
+    <div class="container-fluid p-1">
+        <!-- Main Form -->
+        <div class="form-section">
+            <div class="form-section-title">Datos del Propietario</div>
+
+            <div class="row mb-2">
+                <div class="col-md-1">
+                    <label for="rut" class="form-label">Rut</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="rut" @bind-value="propietario.Rut" @onkeyup="FormatoRutTxt" @onfocusout="ValidaRut">
+                        <button class="btn btn-outline-primary" type="button" @onclick="AbrirModalAyuda" >
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2 offset-md-3">
+                    <label for="activo" class="form-label">Activo</label>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check form-switch mt-1">
+                        <input class="form-check-input" type="checkbox" id="activo" @bind="EsActivo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-1">
+                    <label for="nombre" class="form-label">Nombre</label>
+                </div>
+                <div class="col-md-11">
+                    <input type="text" class="form-control" id="nombre" @bind-value="propietario.Nombre">
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-1">
+                    <label for="direccion" class="form-label">Dirección</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="direccion" @bind-value="propietario.Direccion">
+                </div>
+                <div class="col-md-1">
+                    <label for="comuna" class="form-label">Comuna</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" id="comuna" @bind="propietario.CodComuna">
+                        <option></option>
+                        @if(Comunas.Count > 0)
+                        {
+                            foreach(ComunaDto item in Comunas)
+                            {
+                                <option value="@item.Codigo-@item.Nombre">@item.Nombre</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-1">
+                    <label for="fono1" class="form-label">Fono 1</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="fono1" @bind-value="propietario.Fono">
+                </div>
+                <div class="col-md-1">
+                    <label for="fono2" class="form-label">Fono 2</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="fono2" @bind-value="propietario.Fono2">
+                </div>
+                <div class="col-md-1">
+                    <label for="fono3" class="form-label">Fono 3</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="fono3" @bind-value="propietario.Fono3">
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-md-1">
+                    <label for="email" class="form-label">Email</label>
+                </div>
+                <div class="col-md-11">
+                    <input type="email" class="form-control" id="email" @bind-value="propietario.Email">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-check mt-1">
+                        <input class="form-check-input" type="checkbox" id="entidadProtectora">
+                        <label class="form-check-label" for="entidadProtectora">
+                            Entidad Protectora
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-3 offset-md-3">
+                    <label for="descuento" class="form-label">Descuento %</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="number" class="form-control number-input" id="descuento"  min="0" max="100" @bind-value="propietario.Descuento">
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="buttons-container">
+            @if(nuevo)
+            {
+                <button class="btn btn-primary" @onclick="GrabarCliente">
+                    <i class="fa fa-save"></i>
+                    Grabar
+                </button>
+            }
+            else
+            {
+                <button class="btn-action btn-modify">
+                    <i class="bi bi-save"></i>
+                    Modificar
+                </button>
+            }
+
+            <button class="btn-action btn-delete">
+                <i class="bi bi-x-lg"></i>
+                Eliminar Registro
+            </button>
+            <button class="btn-action btn-clear">
+                <i class="bi bi-eraser"></i>
+                Limpiar Formulario
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            PRESIONE F2 PARA OBTENER AYUDA
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public Propietario? PropietarioParam { get; set; }
+    private bool nuevo = true;
+    private bool EsActivo
+    {
+        get => !propietario.Bloqueo;
+        set => propietario.Bloqueo = !value;
+    }
+    private Propietario propietario = new Propietario();
+    private string rutFormato = "";
+    private bool showModal = false;
+
+    private List<ComunaDto> Comunas = new List<ComunaDto>();
+    protected override async Task OnInitializedAsync()
+    {
+        Comunas = await comunasRepository.GetComunas(userLoged.Token,empresaData.Prefijo);
+        propietario.Descuento = 0;
+    }
+
+    private async void GrabarCliente()
+    {
+
+        propietario.Rut = propietario.Rut.Replace(".", "").Replace("-", "").PadLeft(10, '0').ToUpper();
+        propietario.Nombre = propietario.Nombre.ToUpper();
+        propietario.Direccion = propietario.Direccion.ToUpper();
+        propietario.Email = propietario.Email.ToUpper();
+        propietario.Plazo = "30";
+
+        ClienteDto cliente = new ClienteDto();
+        cliente.Rut = propietario.Rut;
+        cliente.Nombre = propietario.Nombre;
+        cliente.Activo = Convert.ToSByte(EsActivo);
+        cliente.Email = propietario.Email;
+        cliente.Celular = propietario.Fono;
+        cliente.CodComuna = propietario.CodComuna.Split('-')[0];
+        cliente.Comuna = propietario.CodComuna.Split('-')[1];
+        cliente.Descuento = propietario.Descuento;
+        cliente.Bloqueo = "1";
+        cliente.Plazo = propietario.Plazo;
+        cliente.BloqueoFacturas = "1";
+        cliente.Ciudad = cliente.Comuna;
+        cliente.Fono1 = propietario.Fono2;
+        cliente.Fono2 = propietario.Fono3;
+        cliente.Direccion = propietario.Direccion;
+        cliente.Vendedor = userLoged.Login.rut;
+        cliente.Localcreacion = "00";
+        cliente.CodPrecio = "01";
+        cliente.Canalcliente = "01";
+        cliente.Tipocliente = "01";
+        cliente.Ingreso = DateTime.Now.ToString("yyyy-MM-dd");
+        cliente.Giro = "PARTICULAR";
+        var result = await repository.PostPropietario(userLoged.Token, cliente, empresaData.Prefijo);
+        if(result.statusCode == 200)
+        {
+            await js.InvokeVoidAsync("showMessageOk");
+        }
+        else
+        {
+            string mensaje = result.message;
+            mensaje = mensaje.Replace("'", "");
+            await js.InvokeVoidAsync("mostrarAlertaError", mensaje);
+        }
+    }
+
+    private async void ValidaRut()
+    {
+        if(propietario.Rut.Length > 3)
+        {
+            Rut rutFn = new Rut();
+            var res = rutFn.ValidaRut(propietario.Rut);
+            if (!res)
+            {
+                await js.InvokeAsync<string>("showAlertErrorRut");
+            }
+            Console.WriteLine($"RUT CORRECTO?: {res}");
+        }
+
+    }
+    private async Task FormatoRutTxt(KeyboardEventArgs e)
+    {
+        Console.WriteLine($"Login: {propietario.Rut}");
+
+        if (propietario.Rut == string.Empty)
+        {
+            rutFormato = string.Empty;
+        }
+        else if (e.Key.All(char.IsDigit) || e.Key.ToUpper() == "K")
+        {
+            var key = e.Key;
+            Rut rutFn = new Rut();
+
+
+
+            rutFormato += key;
+
+            var newRut = rutFn.FormatoRut(rutFormato);
+            Console.WriteLine($"nuevo rut: {newRut}");
+            await ActualizarInputRut(newRut);
+
+            Console.WriteLine($"Objeto Login: {propietario.Rut}");
+        }
+        else if (e.Key == "Backspace")
+        {
+            if (rutFormato.Length > 0)
+            {
+                rutFormato = rutFormato.Remove(rutFormato.Length - 1, 1);
+                Console.WriteLine($"nuevo rut: {rutFormato}");
+            }
+            else
+            {
+                rutFormato = string.Empty;
+            }
+
+        }
+        else if (e.Key == "F2")
+        {
+            Console.WriteLine("abriendo modal");
+            AbrirModalAyuda();
+        }
+
+
+    }
+    private async Task ActualizarInputRut(string palabra)
+    {
+        await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{palabra}'");
+    }
+    private async Task Modal()
+    {
+        AbrirModalAyuda();
+    }
+    private void AbrirModal(KeyboardEventArgs e)
+    {
+        if (e.Key == "F2")
+        {
+            Console.WriteLine("abriendo modal");
+            AbrirModalAyuda();
+        }
+    }
+    private void AbrirModalAyuda()
+    {
+        showModal = true;
+    }
+    private async Task PropietarioSeleccionado(string rut)
+    {
+        nuevo = false;
+        Rut rutFn = new Rut();
+        showModal = false;
+        // Console.WriteLine(rut);
+        var resp = await repository.GetPropietario(userLoged.Token, rut, empresaData.Prefijo);
+        // Console.WriteLine(resp);
+        dynamic bandera = resp[0];
+        propietario.Nombre = bandera.nombre;
+        propietario.Rut = rutFn.FormatoRut(rut.Remove(0, 1));
+        propietario.Email = bandera.email;
+        propietario.Direccion = bandera.direccion;
+        propietario.Fono = bandera.fono1;
+        propietario.Cupo = bandera.cupo;
+        propietario.Disponible = bandera.disponible;
+        // Console.WriteLine($"bandera bloqueo: {bandera.bloqueo}");
+        propietario.Bloqueo = bandera.bloqueo == 0 ? false : true;
+        // Console.WriteLine($"bloqueo: {Cliente.Bloqueo}");
+        propietario.Plazo = bandera.plazo;
+
+
+
+    }
+}

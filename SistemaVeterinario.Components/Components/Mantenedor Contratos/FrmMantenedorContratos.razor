@@ -1,0 +1,479 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+        background-color: #f0f0f0;
+    }
+
+    .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        background-color: #87CEEB;
+        color: black;
+        padding: 5px 10px;
+        margin-bottom: 0;
+        font-size: 13px;
+        display: block;
+        height: 100%;
+    }
+
+    .section-header {
+        color: #800000;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #87CEEB;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #87CEEB;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #ddd;
+        color: black;
+    }
+
+    .table td {
+        border: 1px solid #ddd;
+    }
+
+    .table-container {
+        background-color: white;
+        border: 1px solid #ddd;
+        height: 150px;
+        overflow-y: auto;
+    }
+
+    .description-textarea {
+        height: 80px;
+        resize: none;
+        background-color: #f0f0f0;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .toggle-slider {
+        background-color: #2196F3;
+    }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+    .btn-action {
+        border: 1px solid #ddd;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+        height: 50px;
+    }
+
+    .btn-save {
+        background-color: #f8f9fa;
+    }
+
+        .btn-save i {
+            color: #0066cc;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+    .btn-cancel {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-cancel i {
+            color: white;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+    .btn-clear {
+        background-color: #f8f9fa;
+    }
+
+        .btn-clear i {
+            color: #28a745;
+            font-size: 20px;
+            margin-right: 5px;
+        }
+
+    .footer-text {
+        font-size: 12px;
+        color: #666;
+        padding: 5px;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-file-earmark-text text-danger"></i>
+        <span class="window-title">Mantenedor de Contratos</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row g-2">
+            <!-- Datos del Contrato -->
+            <div class="col-md-6">
+                <div class="section-header">Datos del Contrato</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">N° Contrato</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="0000000002">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Inicio</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>12-05-2025</option>
+                                    <option>11-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Meses Pactados</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="12">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalle de Contrato -->
+            <div class="col-md-6">
+                <div class="section-header">Detalle de Contrato</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Plan</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre Plan</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Descripción</label>
+                        </div>
+                        <div class="col-md-9">
+                            <textarea class="form-control description-textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Datos del Propietario -->
+            <div class="col-md-6">
+                <div class="section-header">Datos del Propietario</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Rut</label>
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Dirección</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Comuna</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fono</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Email</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Listado de Ejemplares</label>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th width="20%">N°Ficha</th>
+                                    <th width="40%">Nombre Mascota</th>
+                                    <th width="20%">Edad</th>
+                                    <th width="20%">Cubrir</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ejemplaresTable">
+                                <!-- Los ejemplares se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="footer-text mt-2">
+                        Footer Text
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detalle de Cobertura y Costos Totales -->
+            <div class="col-md-6">
+                <div class="section-header">Detalle de Cobertura</div>
+                <div class="form-section" style="height: 250px; overflow-y: auto;">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th width="20%">Código</th>
+                                <th width="60%">Descripción</th>
+                                <th width="20%">-%</th>
+                            </tr>
+                        </thead>
+                        <tbody id="coberturaTable">
+                            <!-- La cobertura se cargará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section-header mt-2">Costos Totales</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Valor Plan/U</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="$0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Cant. Ejem Cubiertos</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="0">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Factor Adicional %</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Costo Total a Pagar</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" value="$0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <div class="d-flex">
+                    <button class="btn btn-action btn-save flex-grow-1">
+                        <i class="bi bi-save"></i>
+                        Guardar
+                    </button>
+                    <button class="btn btn-action btn-cancel flex-grow-1">
+                        <i class="bi bi-x-lg"></i>
+                        Anular Registro
+                    </button>
+                    <button class="btn btn-action btn-clear flex-grow-1">
+                        <i class="bi bi-brush"></i>
+                        Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info mt-2">
+            CLINICA VETERINARIA ARAUCANIA / USUARIO CONECTADO: EDUVERGARA
+        </div>
+    </div>
+</div>

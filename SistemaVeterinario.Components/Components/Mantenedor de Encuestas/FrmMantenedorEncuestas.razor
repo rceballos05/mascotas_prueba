@@ -1,0 +1,367 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .section-header {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .form-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        margin-bottom: 0;
+        font-size: 13px;
+        display: block;
+        height: 100%;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .table td {
+        border: 1px solid #ddd;
+    }
+
+    .table-container {
+        background-color: white;
+        border: 1px solid #ddd;
+        height: 300px;
+        overflow-y: auto;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 24px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 24px;
+    }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .toggle-slider {
+        background-color: #2196F3;
+    }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+    .description-textarea {
+        height: 80px;
+        resize: none;
+    }
+
+    .add-button {
+        background-color: #00b0f0;
+        color: white;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 3px;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-clipboard-data text-primary"></i>
+        <span class="window-title">Mantenedor de Encuestas</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 15%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Datos de la Encuesta -->
+            <div class="col-md-6">
+                <div class="section-header">Datos de la Encuesta</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Código</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" value="00003" style="background-color: #e0ffff;">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Nombre</label>
+                        </div>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" style="background-color: #e0e0e0;">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Descripción</label>
+                        </div>
+                        <div class="col-md-9">
+                            <textarea class="form-control description-textarea" style="background-color: #e0e0e0;"></textarea>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Inicio</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>12-05-2025</option>
+                                    <option>11-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha Fin</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>14-05-2025</option>
+                                    <option>15-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Activo</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Preguntar Antes</label>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="form-section">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button class="action-button" id="btnGrabar">
+                                <i class="bi bi-save"></i>
+                                Grabar Datos
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="action-button" id="btnEliminar">
+                                <i class="bi bi-x-lg"></i>
+                                Eliminar Registro
+                            </button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="action-button" id="btnNuevo">
+                                <i class="bi bi-brush"></i>
+                                Nuevo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opciones de Encuesta -->
+            <div class="col-md-6">
+                <div class="section-header">Opciones de Encuesta</div>
+                <div class="form-section" style="height: 420px;">
+                    <div class="table-container mb-2">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th width="20%">Nro</th>
+                                    <th width="80%">Opción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="opcionesTable">
+                                <!-- Las opciones se cargarán dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="form-label">Código</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="codigoOpcion">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Opción</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="textoOpcion">
+                        </div>
+                        <div class="col-md-1">
+                            <button class="add-button" id="btnAgregarOpcion">
+                                <i class="bi bi-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA
+        </div>
+    </div>
+</div>

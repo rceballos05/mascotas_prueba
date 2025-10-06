@@ -1,0 +1,153 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject IColorRepository colorRepository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Datos del Color</h5>
+                    <form id="speciesForm">
+
+                        <div class="mb-3">
+                            <label for="identifier" class="form-label">Identificador</label>
+                            <input type="text" class="form-control" id="identifier" @bind-value="Color.CodColor" >
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="name" @bind-value="Color.NombreColor">
+                        </div>
+                        <div class="d-flex gap-2">
+                            @if(Nuevo)
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" @onclick="AgregarEspecie">
+                                    <i class="fa fa-plus"></i> Agregar Registro
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm" @onclick="ActualizarEspecie">
+                                    <i class="fa fa-pencil"></i> Actualizar Registro
+                                </button>
+                            }
+                            <button type="button" class="btn btn-danger btn-sm" id="deleteBtn" @onclick="EliminarEspecie">
+                                <i class="fa fa-trash"></i> Eliminar Registro
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" id="clearBtn" @onclick="LimpiarForm">
+                                <i class="fa fa-arrow-counterclockwise"></i> Limpiar Formulario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Listado de Colores</h5>
+                    <div class="table-responsive">
+                        <RadzenDataGrid Data="@lst" TItem="MedColor" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar.">
+                            <Columns>
+                                <RadzenDataGridColumn TItem="MedColor" Property="CodColor" Title="CódigoColor" />
+                                <RadzenDataGridColumn TItem="MedColor" Property="NombreColor" Title="Nombre" />
+
+                                <RadzenDataGridColumn TItem="MedColor" Title="Acción">
+                                    <Template Context="data">
+                                        <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> SeleccionarColor(data)" />
+                                    </Template>
+                                </RadzenDataGridColumn>
+                            </Columns>
+                        </RadzenDataGrid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<MedColor> lst = new List<MedColor>();
+    private MedColor Color = new MedColor();
+    private bool Nuevo = true;
+    protected override async Task OnInitializedAsync()
+    {
+        var id = await colorRepository.GetNumeroColor(userLoged.Token,empresaData.Prefijo);
+        Console.WriteLine(id);
+        id = id[0];
+        int nuevo = Convert.ToInt32(id) + 1;
+        Color.CodColor = nuevo.ToString().PadLeft(3, '0');
+
+        var esp = await colorRepository.GetColores(userLoged.Token,empresaData.Prefijo);
+        if (esp != null)
+        {
+            if (esp.Count > 0)
+            {
+                lst = esp;
+            }
+        }
+
+    }
+
+    private async Task AgregarEspecie()
+    {
+        var result = await colorRepository.PostColor(userLoged.Token,empresaData.Prefijo, Color);
+        Console.WriteLine(result);
+        if (result)
+        {
+            ActualizarData();
+        }
+    }
+    private async Task ActualizarEspecie()
+    {
+        var result = await colorRepository.PutColor(userLoged.Token,empresaData.Prefijo, Color);
+        Console.WriteLine(result);
+        if (result)
+        {
+            ActualizarData();
+        }
+    }
+    private async Task EliminarEspecie()
+    {
+        var result = await colorRepository.DeleteColor(userLoged.Token,empresaData.Prefijo, Color.CodColor);
+        Console.WriteLine(result);
+        if (result)
+        {
+            ActualizarData();
+        }
+    }
+    private async Task SeleccionarColor(MedColor dto)
+    {
+        Color = dto;
+        Nuevo = false;
+        StateHasChanged();
+    }
+    private async Task LimpiarForm()
+    {
+        Color = new MedColor();
+        var id = await colorRepository.GetNumeroColor(userLoged.Token,empresaData.Prefijo);
+        Console.WriteLine(id);
+        id = id[0];
+        int nuevo = Convert.ToInt32(id) + 1;
+        Color.CodColor = nuevo.ToString().PadLeft(3, '0');
+        Nuevo = true;
+        StateHasChanged();
+    }
+    private async Task ActualizarData()
+    {
+        Nuevo = true;
+        lst = new List<MedColor>();
+        var esp = await colorRepository.GetColores(userLoged.Token,empresaData.Prefijo);
+        if (esp != null)
+        {
+            if (esp.Count > 0)
+            {
+                lst = esp;
+            }
+
+        }
+        await LimpiarForm();
+    }
+}

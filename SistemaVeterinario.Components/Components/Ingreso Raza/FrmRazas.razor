@@ -1,0 +1,222 @@
+﻿@inject IRazaRepository raza
+@inject IEspecieRepository especie
+@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<div class="container"
+    <div class="row p-3">
+        <!-- Left Column - Form -->
+        <div class="col-md-5">
+            <div class="form-container">
+                <div class="mb-3">
+                    <div class="blue-header">Datos de la Raza</div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Especie</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @onchange="DropdownEspecie">
+                                    <option></option>
+                                    @if (especies.Count > 0)
+                                    {
+                                        foreach (EspecieDto item in especies)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="raza" class="form-label blue-header w-100">Raza</label>
+                        <input type="text" class="form-control" id="raza" @bind-value="Raza.Nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label blue-header w-100">Activo</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="activo" @bind-value="Raza.Activo" checked="@Raza.Activo">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    @if(Nuevo)
+                    {
+                        <button class="btn btn-primary" @onclick="GuardarRaza">
+                            <i class="fa fa-plus-circle"></i> Agregar Raza
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="ActualizarRaza">
+                            <i class="bi bi-plus-circle"></i> Modificar Raza
+                        </button>
+                    }
+                    <button class="btn btn-danger" @onclick="EliminarRaza">
+                        <i class="fa fa-trash"></i> Eliminar Registro
+                    </button>
+                    <button class="btn btn-secondary" @onclick="NuevoItem">
+                        <i class="bi bi-plus-circle"></i> Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Table -->
+        <div class="col-md-7">
+            <div class="form-container">
+                <div class="blue-header">Listado Razas</div>
+                <RadzenDataGrid Data="@razas" TItem="RazaDto" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar." >
+                    <Columns>
+                        <RadzenDataGridColumn TItem="RazaDto" Property="Id" Title="Código" />
+                        <RadzenDataGridColumn TItem="RazaDto" Property="Nombre" Title="Nombre" />
+                        <RadzenDataGridColumn TItem="RazaDto" Title="Activo">
+                            <Template Context="data">
+                                <RadzenCheckBox TValue="bool" @bind-Value="data.Activo" Change="@(args => OnActivoChanged(data))" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="RazaDto" Title="Acción">
+                            <Template Context="data">
+                                <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> SeleccionarItem(data)" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private List<EspecieDto> especies = new List<EspecieDto>();
+    private List<RazaDto> razas = new List<RazaDto>();
+    private RazaDto Raza = new RazaDto();
+    private string Especie = "";
+    bool Nuevo = true;
+    private async Task GuardarRaza()
+    {
+        if(Raza.Nombre is not null)
+        {
+            var result = await raza.PostRaza(userLoged.Token,empresaData.Prefijo, Especie, Raza);
+            if(result)
+            {
+
+                Raza = new RazaDto();
+                Raza.Id = await raza.NumeroRaza(userLoged.Token,empresaData.Prefijo);
+                await RecargaData();
+            }
+        }
+    }
+
+    private async Task SeleccionarItem(RazaDto item)
+    {
+        Raza = item;
+        Nuevo = false;
+    }
+    private async Task DropdownEspecie(ChangeEventArgs e)
+    {
+        string v = e.Value?.ToString();
+        var especieSeleccionada = v;
+        Especie = especieSeleccionada;
+        if (string.IsNullOrEmpty(especieSeleccionada))
+        {
+            razas.Clear();
+            return;
+        }
+
+        var result = await raza.GetRazas(userLoged.Token,empresaData.Prefijo, especieSeleccionada);
+        result = result.OrderByDescending(i => i.Id).ToList();
+        razas = result?.Select(item => new RazaDto
+        {
+            Id = item.Id,
+            Nombre = item.Nombre,
+            Activo = item.Activo 
+        }).ToList() ?? new();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Raza.Id = await raza.NumeroRaza(userLoged.Token,empresaData.Prefijo);
+        var esp = await especie.GetEspecies(userLoged.Token,empresaData.Prefijo);
+        if (esp != null)
+        {
+            if(esp.Count > 0)
+            {
+                especies = esp;
+            }
+        }
+
+    }
+    private async Task OnActivoChanged(RazaDto item)
+    {
+        // Aquí puedes llamar a tu servicio para actualizar el valor en backend
+        Console.WriteLine($"Activo cambiado para Id={item.Id}: {item.Activo}");
+        var result = await raza.PutRaza(userLoged.Token,empresaData.Prefijo,Especie, item);
+        Console.WriteLine(result);
+        if(result)
+        {
+            await RecargaData();
+        }
+        // Ejemplo: await raza.ActualizarActivo(item.Id, item.Activo);
+    }
+
+    private async Task EliminarRaza()
+    {
+        if (Raza.Id is not null)
+        {
+            var result = await raza.DeleteRaza(userLoged.Token,empresaData.Prefijo, Especie, Raza.Id);
+            if (result)
+            {
+
+                Raza = new RazaDto();
+                Raza.Id = await raza.NumeroRaza(userLoged.Token,empresaData.Prefijo);
+                await RecargaData();
+            }
+        }
+    }
+
+    private async Task NuevoItem()
+    {
+        Raza = new RazaDto();
+        Raza.Id = await raza.NumeroRaza(userLoged.Token,empresaData.Prefijo);
+        Nuevo = true;
+
+    }
+    private async Task ActualizarRaza()
+    {
+        if (Raza.Nombre is not null)
+        {
+            var result = await raza.PutRaza(userLoged.Token,empresaData.Prefijo, Especie, Raza);
+            if (result)
+            {
+
+                Raza = new RazaDto();
+                Raza.Id = await raza.NumeroRaza(userLoged.Token,empresaData.Prefijo);
+                Nuevo = true;
+                await RecargaData();
+            }
+        }
+    }
+
+    private async Task RecargaData()
+    {
+        razas.Clear();
+        if (string.IsNullOrEmpty(Especie))
+        {
+            razas.Clear();
+            return;
+        }
+
+        var result = await raza.GetRazas(userLoged.Token,empresaData.Prefijo, Especie);
+        result = result.OrderByDescending(i => i.Id).ToList();
+        razas = result?.Select(item => new RazaDto
+        {
+            Id = item.Id,
+            Nombre = item.Nombre,
+            Activo = item.Activo 
+        }).ToList() ?? new();
+    }
+}

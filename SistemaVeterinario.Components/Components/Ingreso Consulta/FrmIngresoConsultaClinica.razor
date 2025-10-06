@@ -1,0 +1,423 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@inject MascotaNavigationData data
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+<style>
+    .header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .header-title {
+    color: #dc3545;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    }
+
+    .header-title i {
+    color: #dc3545;
+    margin-right: 5px;
+    }
+
+    .header-controls {
+    display: flex;
+    }
+
+    .header-controls button {
+    margin-left: 5px;
+    background: none;
+    border: none;
+    }
+
+    .section-header {
+    background-color: #0dcaf0;
+    color: white;
+    padding: 8px 15px;
+    font-weight: bold;
+    }
+
+    .info-header {
+    background-color: #e9ecef;
+    padding: 8px 15px;
+    }
+
+    .form-label {
+    background-color: #0dcaf0;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    display: block;
+    font-weight: bold;
+    }
+
+    .form-control-sm {
+    height: 30px;
+    padding: 0.25rem 0.5rem;
+    }
+
+    .form-group {
+    margin-bottom: 10px;
+    }
+
+    .textarea-container {
+    background-color: #cfe2ff;
+    padding: 10px;
+    margin-bottom: 10px;
+    }
+
+    .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    }
+
+    .action-button {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    border: 1px solid #dee2e6;
+    background-color: #f8f9fa;
+    margin-right: 5px;
+    }
+
+    .action-button.save {
+    background-color: #f8f9fa;
+    }
+
+    .action-button.delete {
+    background-color: #dc3545;
+    color: white;
+    }
+
+    .action-button.clear {
+    background-color: #f8f9fa;
+    }
+
+    .action-button i {
+    margin-right: 5px;
+    }
+
+    .vital-signs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    }
+
+    .vital-sign {
+    display: flex;
+    align-items: center;
+    }
+
+    .vital-sign label {
+    background-color: #0dcaf0;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    font-weight: bold;
+    }
+
+    .vital-sign input {
+    width: 60px;
+    height: 30px;
+    padding: 0.25rem 0.5rem;
+    }
+
+    .checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    }
+
+    .checkbox-label {
+    background-color: #0dcaf0;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    margin-right: 10px;
+    font-weight: bold;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <div class="row m-0">
+        <!-- Left Column -->
+        <div class="col-md-7 p-0">
+            <!-- Filtro de Consultas Section -->
+            <div class="section-header">Filtro de Consultas</div>
+
+            <div class="p-2" style="background-color: #cfe2ff;">
+                <!-- First Row -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label class="form-label">Nº Consulta</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Fecha</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" value="05-05-2025">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Second Row -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label class="form-label">Nº Ficha</label>
+                        <input type="text" class="form-control form-control-sm" @bind-value="IngresoConsulta.NumeroFicha">
+                    </div>
+                </div>
+
+                <!-- Third Row -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label class="form-label">Propietario</label>
+                        <input type="text" class="form-control form-control-sm" @bind-value = "RutFormato">
+                    </div>
+                </div>
+
+                <!-- Fourth Row -->
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Tipo Consulta</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fifth Row -->
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Lugar Consulta</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sixth Row -->
+                <div class="row mb-2">
+                    <div class="col-md-3">
+                        <label class="form-label">Edad</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="checkbox-container">
+                            <label class="checkbox-label">Solicita Hospitalización</label>
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anamnesis -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Anamnesis</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vital Signs -->
+                <div class="vital-signs">
+                    <div class="vital-sign">
+                        <label>Peso</label>
+                        <input type="text" class="form-control" value="0,0">
+                    </div>
+                    <div class="vital-sign">
+                        <label>Frec. Cardiaca</label>
+                        <input type="text" class="form-control" value="0,0">
+                    </div>
+                    <div class="vital-sign">
+                        <label>Frec. Respiratoria</label>
+                        <input type="text" class="form-control" value="0,0">
+                    </div>
+                    <div class="vital-sign">
+                        <label>Tº</label>
+                        <input type="text" class="form-control" value="0,0">
+                    </div>
+                </div>
+
+                <!-- Pre Diagnóstico -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Pre Diagnóstico</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complementario -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Complementario</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diagnóstico -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Diagnóstico</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tratamiento -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Tratamiento</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Observación -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Observación</label>
+                        <div class="textarea-container">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-5 p-0">
+            <!-- Información Multimedia Section -->
+            <div class="info-header">Información Multimedia</div>
+
+            <div class="p-2" style="background-color: #cfe2ff;">
+                <!-- Path and Size -->
+                <div class="row mb-2">
+                    <div class="col-md-6">
+                        <label class="form-label">Path</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Tamaño</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">...</label>
+                        <input type="text" class="form-control form-control-sm">
+                    </div>
+                </div>
+
+                <!-- File Size Warning -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <p class="text-danger">(*) El tamaño del archivo no puede ser superior a 10 mb.</p>
+                    </div>
+                </div>
+
+                <!-- File Table -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Observacion</th>
+                                    <th>Archivo</th>
+                                    <th>Ver</th>
+                                    <th>Eliminar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="4" style="height: 300px;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Specialist and Assistant -->
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Especialista</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" value="001 EDUARDO VERGARA">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <label class="form-label">Asistente</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-sm" value="001 EDUARDO VERGARA">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <div class="action-buttons">
+                            <div>
+                                <button class="action-button save">
+                                    <i class="bi bi-save"></i> Guardar Datos
+                                </button>
+                                <button class="action-button delete">
+                                    <i class="bi bi-x-lg"></i> Eliminar Registro
+                                </button>
+                                <button class="action-button clear">
+                                    <i class="bi bi-eraser"></i> Limpiar Formulario
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary rounded-circle">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary">
+                                    <i class="bi bi-file-text"></i> Receta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    
+    private IngresoConsultaDto IngresoConsulta = new IngresoConsultaDto();
+    private string RutFormato = "";
+    protected override async Task OnInitializedAsync()
+    {
+        if(data.IdMascota is not null)
+        {
+            var mascota = await mascotaRepository.GetMascota(userLoged.Token, empresaData.Prefijo, (string)data.IdMascota);
+            if(mascota is not null)
+            {
+                IngresoConsulta.NumeroFicha = mascota.idMascota;
+                IngresoConsulta.NombreMascota = mascota.nombre;
+            }
+        }
+    }
+}

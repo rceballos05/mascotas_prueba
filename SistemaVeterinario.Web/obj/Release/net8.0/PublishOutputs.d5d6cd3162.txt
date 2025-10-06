@@ -1,0 +1,1 @@
+C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Web\publish\web.config

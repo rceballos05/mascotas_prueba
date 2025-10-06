@@ -1,0 +1,647 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@using System.Net.Http.Json
+@inject IEspecieRepository especie
+@inject IEstadoReproductivoRepository estadoReproductivo
+@inject IRazaRepository raza
+@inject ISexoRepository sexo
+@inject IEstadoRepository estado
+@inject IMascotaRepository mascota
+@inject IMascotasFotosRepository mascotasFotosRepository
+@inject IJSRuntime js
+@inject NavigationManager navigation
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject HttpClient Http
+
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+
+
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+
+    .window-controls {
+    margin-left: auto;
+    }
+
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .tab-header {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    display: inline-block;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    }
+
+    .form-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8b8e0;
+    padding: 15px;
+    margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    }
+
+    .form-label {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    font-size: 13px;
+    display: block;
+    height: 100%;
+    }
+
+    .action-button {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 8px;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    }
+
+    .action-button i {
+    margin-right: 10px;
+    font-size: 20px;
+    color: #007bff;
+    }
+
+    .dropdown-toggle::after {
+    position: absolute;
+    right: 10px;
+    top: 45%;
+    }
+
+    .input-with-dropdown {
+    position: relative;
+    }
+
+    .input-with-dropdown .form-select {
+    padding-right: 25px;
+    }
+
+    .footer-info {
+    font-size: 12px;
+    color: #0066cc;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    }
+
+    .paw-container {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    padding: 15px;
+    }
+
+    .paw-image {
+    max-width: 100%;
+    max-height: 100%;
+    }
+
+    .search-icon {
+    text-align: right;
+    padding: 5px;
+    }
+
+    .search-icon i {
+    color: #007bff;
+    font-size: 24px;
+    cursor: pointer;
+    }
+
+    .buttons-container {
+    background-color: #c0c0d0;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    }
+
+    .btn-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 200px;
+    }
+
+    .btn-action i {
+    margin-right: 10px;
+    font-size: 20px;
+    }
+
+    .btn-save i {
+    color: #0066cc;
+    }
+
+    .btn-cancel i {
+    color: #dc3545;
+    }
+</style>
+
+
+<ModalAyuda Show ="@showModal" Title="Ayuda Propietario" ShowChanged="@(value => showModal = value)">
+
+    <SistemaVeterinario.Components.Components.Ayudas.AyudaPropietario PropietarioSeleccionado="PropietarioSeleccionado"/>
+</ModalAyuda>
+
+<div class="custom-container">
+
+    <div class="container-fluid p-1">
+        <!-- Tab Header -->
+        <div class="tab-header">Datos de la Mascota</div>
+
+        <!-- Main Form -->
+        <div class="form-section">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="paw-container">
+                        <img src="@UrlImagen" alt="Foto de perfil" width="200" />
+                    </div>
+                    <br />
+                    <InputFile OnChange="OnInputFileChange" accept="image/*" />
+                    @if (!string.IsNullOrEmpty(MensajeImagen))
+                    {
+                        <p class="text-muted">@MensajeImagen</p>
+                    }
+                </div>
+                <div class="col-md-7">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Identificador</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.IdMascota">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fech.Creación</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.FechaCreacion">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Nombre Mascota</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.NombreMascota">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Rut Propietario</label>
+                        </div>
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.RutCliente">
+                        </div>
+                        <div class="col-sm-1">
+                            <button class="btn btn-secondary" @onclick="AbrirModalAyuda">
+                                <i class="fa-solid fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Especie</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @onchange="DropdownEspecie">
+                                    <option></option>
+                                    @if(especies.Count > 0)
+                                    {
+                                        foreach(EspecieDto item in especies)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Raza</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @bind="MascotaDto.CodRaza">
+                                    <option></option>
+                                    @if (razas.Count > 0)
+                                    {
+                                        foreach (RazaDto item in razas)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Sexo</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @bind="MascotaDto.CodSexo">
+                                    <option></option>
+                                    @if (sexos.Count > 0)
+                                    {
+                                        foreach (SexoDto item in sexos)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Color</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.CodColor">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Estado</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @bind="MascotaDto.IdEstado">
+                                    <option></option>
+                                    @if (estados.Count > 0)
+                                    {
+                                        foreach (EstadoDto item in estados)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Fecha Nacimiento</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-with-dropdown">
+                                <input id="startDate" class="form-control" type="date" @bind-value="fechaNacimiento"/>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">MicroShip</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" @bind-value="MascotaDto.Microchip">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label class="form-label">Est.Reproductivo</label>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" @bind ="MascotaDto.EstadoReproductivo">
+                                    <option></option>
+                                    @if (estadoReproductivos.Count > 0)
+                                    {
+                                        foreach (EstadoReproductivoDto item in estadoReproductivos)
+                                        {
+                                            <option value="@item.Id">@item.Nombre</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 search-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="buttons-container">
+            <button class="btn-action btn-save" @onclick="GrabarMascota">
+                <i class="bi bi-save"></i>
+                Grabar Registro
+            </button>
+            <button class="btn-action btn-cancel">
+                <i class="bi bi-x-lg"></i>
+                Cancelar
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / PRESTACION DE SERVICIOS MEDICOS VETERINARIOS
+        </div>
+    </div>
+</div>
+
+
+@code{
+    private string ImagenBase = $"base_perfil.png"; // Imagen por defecto
+    private string UrlImagen = "";// Cache busting para refrescar
+    private string MensajeImagen = string.Empty;
+    private DateOnly fechaNacimiento = new DateOnly();
+    private MascotaDtoRequest MascotaDto = new MascotaDtoRequest();
+    private List<SexoDto> sexos = new List<SexoDto>();
+    private List<EstadoDto> estados = new List<EstadoDto>();
+    private List<EstadoReproductivoDto> estadoReproductivos = new List<EstadoReproductivoDto>();
+    private List<EspecieDto> especies = new List<EspecieDto>();
+    private List<RazaDto> razas = new List<RazaDto>();
+    MedMascotaFotos fotos = new MedMascotaFotos();
+    private async void DropdownEspecie(ChangeEventArgs e)
+    {
+        razas = [];
+        string especieSeleccionada = e.Value?.ToString();
+        MascotaDto.CodEspecie = especieSeleccionada!;
+        Console.WriteLine($"Seleccionaste: {especieSeleccionada}");
+        var raz = await raza.GetRazas(userLoged.Token, empresaData.Prefijo, especieSeleccionada!);
+        if (raz != null)
+        {
+            foreach (var item in raz)
+            {
+                //Console.WriteLine(item);
+                razas.Add(new RazaDto { Id = item.Id, Nombre = item.Nombre });
+                StateHasChanged();
+            }
+        }
+    }
+    private bool showModal = false;
+
+    private async Task GrabarMascota()
+    {
+        MascotaDto.FechaNacimiento = fechaNacimiento.ToString("yyyy-MM-dd");
+        MascotaDto.UltimaModificacion = "";
+        if(string.IsNullOrEmpty(MascotaDto.Microchip))
+        {
+            MascotaDto.Microchip = "";
+        }
+        Console.WriteLine(MascotaDto);
+        var result = await mascota.PostMascota(userLoged.Token, empresaData.Prefijo, MascotaDto);
+        Console.WriteLine(result);
+        if (result.statusCode == 200)
+        {
+            await js.InvokeVoidAsync("showMessageOk");
+
+            var res = await mascotasFotosRepository.PostFotoMascota(userLoged.Token, empresaData.Prefijo, fotos);
+            if(!res)
+            {
+                return;
+            }
+
+            var mascotas = await mascota.GetMascotaRutCliente(userLoged.Token, empresaData.Prefijo, MascotaDto.RutCliente);
+            List<MascotasDto> lst = new List<MascotasDto>();
+            foreach (var item in mascotas)
+            {
+                Console.WriteLine(item);
+                lst.Add(new MascotasDto
+                    {
+                        CodColor = item.codColor,
+                        CodEspecie = item.codEspecie,
+                        Sexo = item.sexo,
+                        CodEstadoReproductivo = item.codEstadoReproductivo,
+                        CodRaza = item.codRaza,
+                        CodSexo = item.codSexo,
+                        Color = item.color,
+                        Especie = item.especie,
+                        Estado = item.estado,
+                        EstadoReproductivo = item.estadoReproductivo,
+                        FechaCreacion = item.fechaCreacion,
+                        FechaNacimiento = item.fechaNacimiento,
+                        IdEstado = item.idEstado,
+                        IdFotoPerfil = item.idFotoPerfil,
+                        IdMascota = item.idMascota,
+                        Microchip = item.microchip,
+                        NombreMascota = item.nombreMascota,
+                        NumeroHospitalizacion = item.numeroHospitalizacion,
+                        Raza = item.raza,
+                        RutCliente = item.rutCliente,
+                        UltimaModificacion = item.ultimaModificacion
+                    });
+            }
+            await localStorage.SetItemAsync("mascotasPropietario", lst);
+
+            var m = await mascota.GetMascota(userLoged.Token, empresaData.Prefijo, MascotaDto.IdMascota);
+
+            if(m is not null)
+            {
+                Console.WriteLine(m);
+                await localStorage.SetItemAsync("mascota", new MascotasDto
+                    {
+                        CodColor = m[0].codColor,
+                        CodEspecie =  m[0].codEspecie,
+                        CodEstadoReproductivo =  m[0].estadoReproductivo,
+                        CodRaza =  m[0].codRaza,
+                        CodSexo =  m[0].codSexo,
+                        Color =  m[0].color,
+                        Especie =  m[0].especie,
+                        Estado =  m[0].estado,
+                        EstadoReproductivo =  m[0].estadoReproductivo,
+                        FechaCreacion =  m[0].fechaCreacion,
+                        UltimaModificacion =  m[0].ultimaModificacion,
+                        FechaNacimiento =  m[0].fechaNacimiento,
+                        IdEstado =  m[0].idEstado,
+                        IdFotoPerfil =  m[0].idFotoPerfil,
+                        IdMascota =  m[0].idMascota,
+                        Microchip =  m[0].microchip,
+                        NombreMascota =  m[0].nombreMascota,
+                        NumeroHospitalizacion =  m[0].numeroHospitalizacion,
+                        Raza =  m[0].raza,
+                        RutCliente =  m[0].rutCliente,
+                        Sexo =  m[0].sexo
+                    });
+            }
+
+
+            showModal = false;
+            navigation.Refresh();
+        }
+        else
+        {
+            string mensaje = result.message;
+            mensaje =  mensaje.Replace("'", "");
+            await js.InvokeVoidAsync("mostrarAlertaError", mensaje);
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        MascotaDto.FechaCreacion = DateTime.Now.ToString("yyyy-MM-dd");
+        MascotaDto.IdMascota = await mascota.GetNumeroMascota(userLoged.Token, empresaData.Prefijo);
+        MascotaDto.NumeroHospitalizacion = "";
+        fechaNacimiento = DateOnly.Parse(DateTime.Now.ToString().Split(" ")[0]);
+        MascotaDto.IdFotoPerfil = UrlImagen;
+        var id = await mascotasFotosRepository.IdFoto(userLoged.Token, empresaData.Prefijo);
+        UrlImagen = $"{Http.BaseAddress}api/imagenes/test/base/base/{ImagenBase}";
+        Console.WriteLine(UrlImagen);
+        int id_convertido = Convert.ToInt32(id) + 1;
+        fotos.IdFoto = Convert.ToString(id_convertido).PadLeft(10, '0');
+        var sx = await sexo.GetSexos(userLoged.Token, empresaData.Prefijo);
+        if(sx != null)
+        {
+            foreach( var item in sx)
+            {
+                sexos.Add(new SexoDto { Id = item.codSexo , Nombre= item.nombre});
+            }
+        }
+
+        var est = await estado.GetEstados(userLoged.Token, empresaData.Prefijo);
+        if (est != null)
+        {
+            foreach (var item in est)
+            {
+                //Console.WriteLine(item);
+                estados.Add(new EstadoDto { Id = item.codEstado, Nombre = item.nombreEstado });
+            }
+        }
+        var rep = await estadoReproductivo.GetEstadosReproductivos(userLoged.Token, empresaData.Prefijo);
+        if (rep != null)
+        {
+            foreach (var item in rep)
+            {
+                //Console.WriteLine(item);
+                estadoReproductivos.Add(new EstadoReproductivoDto { Id = item.codEstado, Nombre = item.nombre });
+            }
+        }
+        var esp = await especie.GetEspecies(userLoged.Token, empresaData.Prefijo);
+        if (esp != null)
+        {
+            if (esp.Count > 0)
+            {
+                especies = esp;
+            }
+        }
+        Console.WriteLine("url: " + Http.BaseAddress);
+        // var raz = await raza.GetRazas(userLoged.Token,empresaData.Prefijo);
+        // if (raz != null)
+        // {
+        //     foreach (var item in raz)
+        //     {
+        //         Console.WriteLine(item);
+        //         //estadoReproductivos.Add(new EstadoReproductivoDto { Id = item.codEstado, Nombre = item.nombre });
+        //     }
+        // }
+    }
+    private void AbrirModalAyuda()
+    {
+        showModal = true;
+    }
+    private async Task PropietarioSeleccionado(string rut)
+    {
+        //Rut rutFn = new Rut();
+        showModal = false;
+        // Console.WriteLine(rut);
+        MascotaDto.RutCliente = rut;
+
+    }
+
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        var archivo = e.File;
+
+        if (archivo == null)
+        {
+            MensajeImagen = "No seleccionaste archivo.";
+            return;
+        }
+
+        if (archivo.Size > 10 * 1024 * 1024)
+        {
+            MensajeImagen = "El archivo es muy grande. Máximo 5MB.";
+            return;
+        }
+
+        try
+        {
+            using var contenido = new MultipartFormDataContent();
+            var stream = archivo.OpenReadStream(5 * 1024 * 1024);
+            var streamContent = new StreamContent(stream);
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(archivo.ContentType);
+            contenido.Add(streamContent, "archivo", archivo.Name);
+
+            if (string.IsNullOrEmpty(MascotaDto.IdMascota) && string.IsNullOrEmpty(MascotaDto.RutCliente))
+            {
+                return;
+            }
+
+            var respuesta = await Http.PostAsync($"{Http.BaseAddress}api/imagenes/test/{MascotaDto.RutCliente}/{MascotaDto.IdMascota}/upload", contenido);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var json = await respuesta.Content.ReadFromJsonAsync<UploadResponse>();
+                if (json != null && !string.IsNullOrEmpty(json.nombreArchivo))
+                {
+                    ImagenBase = json.nombreArchivo;
+                    //MascotaDto.IdFotoPerfil = ImagenBase; // Guardamos el nombre para enviar a BD si quieres
+                    MensajeImagen = "Imagen subida correctamente.";
+                    MascotaDto.IdFotoPerfil = fotos.IdFoto;
+                    fotos.Url = ImagenBase;
+                    fotos.IdMascota = MascotaDto.IdMascota;
+                    fotos.IdCliente = MascotaDto.RutCliente;
+                    UrlImagen = $"{Http.BaseAddress}api/imagenes/test/{MascotaDto.RutCliente}/{MascotaDto.IdMascota}/{ImagenBase}";
+                    Console.WriteLine(UrlImagen);
+                    StateHasChanged();
+                }
+                else
+                {
+                    MensajeImagen = "Error procesando respuesta del servidor.";
+                }
+            }
+            else
+            {
+                MensajeImagen = $"Error al subir imagen: {respuesta.ReasonPhrase}";
+            }
+        }
+        catch (Exception ex)
+        {
+            MensajeImagen = $"Error: {ex.Message}";
+        }
+    }
+
+    private class UploadResponse
+    {
+        public string? nombreArchivo { get; set; }
+    }
+}

@@ -1,0 +1,302 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1000px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar {
+        height: 20px;
+        background-color: #007bff;
+    }
+
+    .section-header {
+        background-color: #00b0f0;
+        color: white;
+        padding: 8px 10px;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .form-section {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .info-label {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-size: 13px;
+        display: block;
+        height: 100%;
+    }
+
+    .info-value {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 5px 10px;
+        font-size: 13px;
+        height: 100%;
+    }
+
+    .table-container {
+        height: 350px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        background-color: white;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table th {
+            background-color: #f0f0f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-weight: normal;
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 5px;
+            font-size: 13px;
+        }
+
+        .table td {
+            border: 1px solid #ddd;
+            padding: 5px;
+            font-size: 13px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .pagination-button {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        width: 80px;
+        text-align: center;
+        padding: 3px;
+        font-size: 12px;
+    }
+</style>
+
+            <div class="container-fluid">
+        <!-- Window Header -->
+        
+
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 45%"></div>
+        </div>
+
+        <div class="container-fluid p-2">
+            <!-- Registered Reports Section -->
+            <div class="section-header">Informes Registrados</div>
+            
+            <div class="form-section">
+                <div class="row mb-2">
+                    <div class="col-md-2">
+                        <div class="info-label">Rut</div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="info-value">019478852</div>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="info-value text-center">5</div>
+                    </div>
+                    <div class="col-md-6"></div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-2">
+                        <div class="info-label">Nombre</div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="info-value">ARACELY PEREZ</div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Tipo Informe</th>
+                                <th>Mascota</th>
+                                <th>Fecha</th>
+                                <th>Usuario</th>
+                                <th>Adj 1</th>
+                                <th>Adj 2</th>
+                                <th>Adj 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Filas vacías para simular la tabla vacía -->
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination-container">
+                    <div class="pagination-button">Página 1 de 1</div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer-info">
+                CLINICA VETERINARIA ARAUCANIA / Usuario: EDUVERGARA
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,21 @@
+﻿@page "/acerca"
+@inject UserNavgationData userDataService
+
+<AppBarHome LoginUser="userLoged" />
+<NavigationBarFrm/>
+<FrmAcerca/>
+@code {
+    private object user = new object();
+    private LoginResponse userLoged = new();
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine(userDataService);
+        userLoged.Token = userDataService.Token;
+        userLoged.Login = userDataService.Login;
+        userLoged.Empresas = userDataService.Empresas;
+
+        Console.WriteLine(userLoged);
+
+    }
+}

@@ -1,0 +1,58 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IControlesRepository repository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card">
+
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <RadzenDataGrid Data="@Controls" TItem="ControlDto" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar." >
+                        <Columns>
+                            <RadzenDataGridColumn TItem="ControlDto" Property="CodigoControl" Title="N°" />
+                            <RadzenDataGridColumn TItem="ControlDto" Property="FechaControl" Title="Fecha"/>
+                            <RadzenDataGridColumn TItem="ControlDto" Property="Motivo" Title="Motivo" />
+                            <RadzenDataGridColumn TItem="ControlDto" Property="Observaciones" Title="Observaciones" />
+                            <RadzenDataGridColumn TItem="ControlDto" Property="Estado" Title="Estado" />
+
+                            <RadzenDataGridColumn TItem="ControlDto" Title="Acción">
+                                <Template Context="data">
+                                    <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> MostrarControl(data.CodigoControl)" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!--end col-->
+</div><!--end row-->
+
+@code{
+    [Parameter]
+    public List<ControlDto>? Controls { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        if (Controls.Count == 0)
+        {
+            var masc = await localStorage.GetItemAsync<MascotasDto>("mascota");
+            if (masc.IdMascota != null)
+            {
+
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+    private async Task MostrarControl(string id)
+    {
+        
+    }
+}

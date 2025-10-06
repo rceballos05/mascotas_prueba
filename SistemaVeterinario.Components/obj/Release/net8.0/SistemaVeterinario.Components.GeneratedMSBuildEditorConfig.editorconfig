@@ -1,0 +1,387 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows,browser
+build_property.RootNamespace = SistemaVeterinario.Components
+build_property.RootNamespace = SistemaVeterinario.Components
+build_property.ProjectDir = C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\dell\Desktop\proyectos\SistemaVeterinario\SistemaVeterinario.Components
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Acerca/FrmAcerca.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBY2VyY2FcRnJtQWNlcmNhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Agendar Consulta/FrmAgendarConsulta.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBZ2VuZGFyIENvbnN1bHRhXEZybUFnZW5kYXJDb25zdWx0YS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ayudas/AyudaPaciente.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBeXVkYXNcQXl1ZGFQYWNpZW50ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ayudas/AyudaProducto.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBeXVkYXNcQXl1ZGFQcm9kdWN0by5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ayudas/AyudaPropietario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBeXVkYXNcQXl1ZGFQcm9waWV0YXJpby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Banco Procedimientos Clinicos/BancoProcedimientosClinicos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xCYW5jbyBQcm9jZWRpbWllbnRvcyBDbGluaWNvc1xCYW5jb1Byb2NlZGltaWVudG9zQ2xpbmljb3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Cambiar Password/FrmCambiarPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDYW1iaWFyIFBhc3N3b3JkXEZybUNhbWJpYXJQYXNzd29yZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Certificado Eutanasia/CertificadoEutanacia.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDZXJ0aWZpY2FkbyBFdXRhbmFzaWFcQ2VydGlmaWNhZG9FdXRhbmFjaWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Certificado Salud/CertificadoSaludComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDZXJ0aWZpY2FkbyBTYWx1ZFxDZXJ0aWZpY2Fkb1NhbHVkQ29tcG9uZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Clientes/FrmIngresoCliente.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDbGllbnRlc1xGcm1JbmdyZXNvQ2xpZW50ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Colores/FrmIngresoColor.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb2xvcmVzXEZybUluZ3Jlc29Db2xvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/AppBarFicha.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xBcHBCYXJGaWNoYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/AppBarHome.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xBcHBCYXJIb21lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/Boleta.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xCb2xldGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ComponentePrueba.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xDb21wb25lbnRlUHJ1ZWJhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/Factura.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xGYWN0dXJhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ImpresionCertEutanasia.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbXByZXNpb25DZXJ0RXV0YW5hc2lhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ImprimirCertSalud.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbXByaW1pckNlcnRTYWx1ZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ImprimirFrmIngreso.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbXByaW1pckZybUluZ3Jlc28ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ImprimirFrmPeluqueria.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbXByaW1pckZybVBlbHVxdWVyaWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ImprimirHospitalizacion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbXByaW1pckhvc3BpdGFsaXphY2lvbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/InformeAutorizaProcedimientos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbmZvcm1lQXV0b3JpemFQcm9jZWRpbWllbnRvcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/InformeProxControles.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xJbmZvcm1lUHJveENvbnRyb2xlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/LoadingModal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xMb2FkaW5nTW9kYWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/ModalAyuda.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xNb2RhbEF5dWRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/NavigationBarFrm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xOYXZpZ2F0aW9uQmFyRnJtLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Componentes Globales/Preventa.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb21wb25lbnRlcyBHbG9iYWxlc1xQcmV2ZW50YS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Consultas/FrmNuevaConsulta.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDb25zdWx0YXNcRnJtTnVldmFDb25zdWx0YS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Especies/FrmEspecies.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xFc3BlY2llc1xGcm1Fc3BlY2llcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Formulario Hospitalizacion/FrmHospitalizacion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGb3JtdWxhcmlvIEhvc3BpdGFsaXphY2lvblxGcm1Ib3NwaXRhbGl6YWNpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Formulario Ingreso/FrmIngreso.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGb3JtdWxhcmlvIEluZ3Jlc29cRnJtSW5ncmVzby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Formulario Peluqueria/FrmPeluqueria.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xGb3JtdWxhcmlvIFBlbHVxdWVyaWFcRnJtUGVsdXF1ZXJpYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Home/DashboardHome.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb21lXERhc2hib2FyZEhvbWUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Home/GraficoDonutHome.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb21lXEdyYWZpY29Eb251dEhvbWUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Hospitalizacion/FrmHospitalizacion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb3NwaXRhbGl6YWNpb25cRnJtSG9zcGl0YWxpemFjaW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Imprime Autroizacion Procedimientos/FrmAutorizaProcedimiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbXByaW1lIEF1dHJvaXphY2lvbiBQcm9jZWRpbWllbnRvc1xGcm1BdXRvcml6YVByb2NlZGltaWVudG8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Imprime Carnet Salud/FrmCarnetSalud.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbXByaW1lIENhcm5ldCBTYWx1ZFxGcm1DYXJuZXRTYWx1ZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Imprime Listado Doc/FrmListadoDoc.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbXByaW1lIExpc3RhZG8gRG9jXEZybUxpc3RhZG9Eb2MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Imprimir Cert Eutanacia/FrmCertEutanacia.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbXByaW1pciBDZXJ0IEV1dGFuYWNpYVxGcm1DZXJ0RXV0YW5hY2lhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Imprimir Cert Salud/FrmCertSalud.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbXByaW1pciBDZXJ0IFNhbHVkXEZybUNlcnRTYWx1ZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Contratos/FrmInformeContratos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIENvbnRyYXRvc1xGcm1JbmZvcm1lQ29udHJhdG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Controles Pendientes/ControlesPendientes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIENvbnRyb2xlcyBQZW5kaWVudGVzXENvbnRyb2xlc1BlbmRpZW50ZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe de Consumo Insumos/InformeConusmo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIGRlIENvbnN1bW8gSW5zdW1vc1xJbmZvcm1lQ29udXNtby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe de Mascotas por Especies/FrmInformeMascotasEspecies.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIGRlIE1hc2NvdGFzIHBvciBFc3BlY2llc1xGcm1JbmZvcm1lTWFzY290YXNFc3BlY2llcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Detallado Encuestas/FrmInformeDetalladoEncuestas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIERldGFsbGFkbyBFbmN1ZXN0YXNcRnJtSW5mb3JtZURldGFsbGFkb0VuY3Vlc3Rhcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Encuestas/FrmInformeEncuestas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIEVuY3Vlc3Rhc1xGcm1JbmZvcm1lRW5jdWVzdGFzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Individual Prestaciones/InformeIndividualPrestaciones.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIEluZGl2aWR1YWwgUHJlc3RhY2lvbmVzXEluZm9ybWVJbmRpdmlkdWFsUHJlc3RhY2lvbmVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Medico y Asistente/MedicoAsistente.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIE1lZGljbyB5IEFzaXN0ZW50ZVxNZWRpY29Bc2lzdGVudGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Informe Visitas y Procedimientos/InformeVisitasProc.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lIFZpc2l0YXMgeSBQcm9jZWRpbWllbnRvc1xJbmZvcm1lVmlzaXRhc1Byb2MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/InformeIngresosPropietario/FrmInformeIngresosPropietario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmZvcm1lSW5ncmVzb3NQcm9waWV0YXJpb1xGcm1JbmZvcm1lSW5ncmVzb3NQcm9waWV0YXJpby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso Consulta/FrmIngresoConsultaClinica.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvIENvbnN1bHRhXEZybUluZ3Jlc29Db25zdWx0YUNsaW5pY2EucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso Controles/FrmIngresoControl.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvIENvbnRyb2xlc1xGcm1JbmdyZXNvQ29udHJvbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso Especie/FrmEspecies.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvIEVzcGVjaWVcRnJtRXNwZWNpZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso Hospitalizacion/FrmIngresoHospitalizacion.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvIEhvc3BpdGFsaXphY2lvblxGcm1JbmdyZXNvSG9zcGl0YWxpemFjaW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso Raza/FrmRazas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvIFJhemFcRnJtUmF6YXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Ingreso/FrmIngreso.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xJbmdyZXNvXEZybUluZ3Jlc28ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Login/FormLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMb2dpblxGb3JtTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Login/LogoLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMb2dpblxMb2dvTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Contratos/FrmMantenedorContratos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIENvbnRyYXRvc1xGcm1NYW50ZW5lZG9yQ29udHJhdG9zLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor de Encuestas/FrmMantenedorEncuestas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIGRlIEVuY3Vlc3Rhc1xGcm1NYW50ZW5lZG9yRW5jdWVzdGFzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/Component.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/FotoMascota.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xGb3RvTWFzY290YS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/FrmFichaPaciente.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xGcm1GaWNoYVBhY2llbnRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/FrmMascotasPropietario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xGcm1NYXNjb3Rhc1Byb3BpZXRhcmlvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/FrmPropietario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xGcm1Qcm9waWV0YXJpby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/TblConsultas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xUYmxDb25zdWx0YXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/TblControles.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xUYmxDb250cm9sZXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/TblHospitalizaciones.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xUYmxIb3NwaXRhbGl6YWNpb25lcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/TblIntervenciones.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xUYmxJbnRlcnZlbmNpb25lcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Fichas/TblRecetas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIEZpY2hhc1xUYmxSZWNldGFzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Mantenedor Plan Salud/FrmMantenedorPlanSalud.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNYW50ZW5lZG9yIFBsYW4gU2FsdWRcRnJtTWFudGVuZWRvclBsYW5TYWx1ZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Modificar Mascota/Component.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RpZmljYXIgTWFzY290YVxDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Modificar Mascota/FrmModificarMascota.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xNb2RpZmljYXIgTWFzY290YVxGcm1Nb2RpZmljYXJNYXNjb3RhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nueva Consulta/FrmNuevaConsulta.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2YSBDb25zdWx0YVxGcm1OdWV2YUNvbnN1bHRhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nueva Mascota/FrmNuevaMascota.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2YSBNYXNjb3RhXEZybU51ZXZhTWFzY290YS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nueva Nota Procedimiento/FrmNotaProcedimiento.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2YSBOb3RhIFByb2NlZGltaWVudG9cRnJtTm90YVByb2NlZGltaWVudG8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Certificado Eutanasia/CertificadoEutanacia.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBDZXJ0aWZpY2FkbyBFdXRhbmFzaWFcQ2VydGlmaWNhZG9FdXRhbmFjaWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Control/FrmIngresoControl.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBDb250cm9sXEZybUluZ3Jlc29Db250cm9sLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Evento Clinico/AddAppointmentPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBFdmVudG8gQ2xpbmljb1xBZGRBcHBvaW50bWVudFBhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Evento Clinico/EditAppointmentPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBFdmVudG8gQ2xpbmljb1xFZGl0QXBwb2ludG1lbnRQYWdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Evento Clinico/FrmNuevoEventoClinico.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBFdmVudG8gQ2xpbmljb1xGcm1OdWV2b0V2ZW50b0NsaW5pY28ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Nuevo Propietario/FrmNuevoPropietario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xOdWV2byBQcm9waWV0YXJpb1xGcm1OdWV2b1Byb3BpZXRhcmlvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Peluqueria/FrmPeluqueria.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQZWx1cXVlcmlhXEZybVBlbHVxdWVyaWEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Permisos Usuario/FrmPermisosUsuario.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQZXJtaXNvcyBVc3VhcmlvXEZybVBlcm1pc29zVXN1YXJpby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Prescripcion Medicamentos/FrmPrescripcionMedicamentos.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQcmVzY3JpcGNpb24gTWVkaWNhbWVudG9zXEZybVByZXNjcmlwY2lvbk1lZGljYW1lbnRvcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Razas/FrmRazas.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSYXphc1xGcm1SYXphcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Seleccionar Local/FrmSeleccionarLocal.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTZWxlY2Npb25hciBMb2NhbFxGcm1TZWxlY2Npb25hckxvY2FsLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Trazabilidad Usuarios/FrmTrazabilidadUsuarios.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xUcmF6YWJpbGlkYWQgVXN1YXJpb3NcRnJtVHJhemFiaWxpZGFkVXN1YXJpb3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Components/Usuarios/FrmUsuarios.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xVc3Vhcmlvc1xGcm1Vc3Vhcmlvcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Modificar Consulta Clinica/FrmModificarConsulta.razor]
+build_metadata.AdditionalFiles.TargetPath = TW9kaWZpY2FyIENvbnN1bHRhIENsaW5pY2FcRnJtTW9kaWZpY2FyQ29uc3VsdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/dell/Desktop/proyectos/SistemaVeterinario/SistemaVeterinario.Components/Component1.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50MS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-3bd99n8q7h

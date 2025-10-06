@@ -1,0 +1,58 @@
+﻿<div class="page-content mt-5 ml-3"
+    <div class="row p-3">
+        <!-- Left Column - Form -->
+        <div class="col-md-5">
+            <div class="form-container">
+                <div class="mb-3">
+                    <div class="blue-header">Datos de la Raza</div>
+                    <div class="mb-3">
+                        <label for="especie" class="form-label blue-header w-100">Especie</label>
+                        <input type="text" class="form-control" id="especie">
+                    </div>
+                    <div class="mb-3">
+                        <label for="raza" class="form-label blue-header w-100">Raza</label>
+                        <input type="text" class="form-control" id="raza">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label blue-header w-100">Activo</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="activo">
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Agregar Raza
+                    </button>
+                    <button class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Eliminar Registro
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="bi bi-plus-circle"></i> Nuevo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Table -->
+        <div class="col-md-7">
+            <div class="form-container">
+                <div class="blue-header">Listado Razas</div>
+                <div class="table-container">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Activo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be dynamically added here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

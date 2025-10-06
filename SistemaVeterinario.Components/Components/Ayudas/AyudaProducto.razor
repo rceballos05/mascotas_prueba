@@ -1,0 +1,76 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject IProductoRepository productosRepository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<div class="mb-3">
+    <label for="search" class="form-label">Criterios</label>
+    <div class="input-group">
+        <RadzenTextBox @bind-Value="busqueda" Placeholder="Buscar..." Style="margin-top: 10px;" Change="OnBusquedaChanged"  @ref="buscar"/>
+    </div>
+</div>
+<RadzenDataGrid TItem="ProductosDtoResponse"
+Data="@lst"
+Count="@totalRegistros"
+LoadData="@CargarDatos"
+AllowPaging="true"
+PageSize="5"
+ShowPagingSummary="true"
+AllowFiltering="false"
+AllowSorting="true"
+EmptyText="No hay registros para mostrar.">
+    <Columns>
+        <RadzenDataGridColumn TItem="ProductosDtoResponse" Property="CodigoBarra" Title="Código Barra" />
+        <RadzenDataGridColumn TItem="ProductosDtoResponse" Property="Descripcion" Title="Descripcion" />
+        <RadzenDataGridColumn TItem="ProductosDtoResponse" Property="Precio" Title="Precio" />
+        <RadzenDataGridColumn TItem="ProductosDtoResponse" Title="Acción">
+            <Template Context="data">
+                <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> SeleccionarProducto(data)" />
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+
+
+
+@code {
+    public List<ProductosDtoResponse> lst = new();
+    private int totalRegistros;
+    private RadzenTextBox buscar;
+    private string busqueda = "";
+    [Parameter] public EventCallback<string> ProductoSeleccionado { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await buscar.FocusAsync();
+        }
+    }
+
+
+
+    public async Task SeleccionarProducto(ProductosDtoResponse data)
+    {
+        await ProductoSeleccionado.InvokeAsync(data.CodigoBarra);
+    }
+    private async Task CargarDatos(LoadDataArgs args)
+    {
+        // Parámetros de paginado y búsqueda
+        var page = (args.Skip / args.Top) + 1;
+        var pageSize = args.Top ?? 5;
+
+        var respuesta = await productosRepository.GetProductoBusqueda(userLoged.Token, empresaData.Prefijo, busqueda, page ?? 1, pageSize);
+        lst = respuesta.Items;
+        totalRegistros = respuesta.TotalPages;
+        
+    }
+
+    private async Task OnBusquedaChanged(object value)
+    {
+        busqueda = value?.ToString() ?? "";
+        await CargarDatos(new LoadDataArgs { Skip = 0, Top = 5 });
+    }
+}

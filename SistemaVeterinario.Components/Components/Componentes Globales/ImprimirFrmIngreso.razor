@@ -1,0 +1,483 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IDatosTributariosRepository datosTributariosRepository
+@inject IMascotasFotosRepository mascotasFotosRepository
+@inject HttpClient http
+@inject IJSRuntime JS
+
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 20px;
+    }
+
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .logo {
+        width: 80px;
+        height: 80px;
+        position: relative;
+    }
+
+    .company-info h1 {
+        color: #7ed321;
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .contact-info {
+        font-size: 12px;
+        color: #666;
+        line-height: 1.4;
+    }
+
+    .invoice-type {
+        text-align: right;
+        color: #888;
+    }
+
+        .invoice-type h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+    .invoice-details {
+        font-size: 12px;
+        line-height: 1.6;
+    }
+
+    .client-info {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 25px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .client-left {
+        flex: 1;
+    }
+
+    .client-right {
+        flex: 1;
+        text-align: right;
+    }
+
+    .invoice-container {
+        width: 8.5in;
+        min-height: 11in;
+        margin: 0 auto;
+        background: white;
+        padding: 0.55in;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar {
+        height: 20px;
+        background-color: #007bff;
+    }
+
+    .section-header {
+        background-color: #d8d8f0;
+        color: #000;
+        padding: 10px;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid #b8c7dc;
+    }
+
+    .form-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8c7dc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+        background-color: #f8f8f8;
+    }
+
+    .form-label {
+        font-size: 13px;
+        margin-bottom: 0;
+        padding-top: 5px;
+    }
+
+    .btn-action {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+        .btn-action i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+    .btn-generate i {
+        color: #0066cc;
+    }
+
+    .btn-print i {
+        color: #0066cc;
+    }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .document-area {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+        min-height: 100px;
+    }
+
+    .authorization-text {
+        text-align: justify;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+        .info-table td {
+            padding: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .info-table tr td:first-child {
+            background-color: #f0f0f0;
+            width: 150px;
+        }
+
+        .info-table tr:last-child td:first-child {
+            background-color: #00b0f0;
+            color: white;
+        }
+
+    .table-container {
+        height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+    }
+    .progress-bar {
+        height: 20px;
+        background-color: #007bff;
+    }
+
+    
+
+    .paw-container {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 250px;
+    }
+
+    .form-container {
+        background: #fff;
+        padding: 40px;
+        width: 700px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+        text-transform: uppercase;
+        font-size: 16px;
+        margin-bottom: 40px;
+    }
+
+    .field {
+        margin-bottom: 20px;
+    }
+
+    .label {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .line {
+        display: inline-block;
+        border-bottom: 1px solid #000;
+        width: 80%;
+    }
+
+    .line-small {
+        display: inline-block;
+        border-bottom: 1px solid #000;
+        width: 30%;
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 14px;
+        margin: 30px 0 10px 0;
+        text-transform: uppercase;
+    }
+
+    /* === Tabla personalizada === */
+    table.pertenencias {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 25px 0; /* menos espacio horizontal */
+        margin-top: 10px;
+        table-layout: fixed;
+        margin-left: 0; /* pegada a la izquierda */
+    }
+
+        table.pertenencias td:first-child,
+        table.pertenencias th:first-child {
+            width: 80px; /* controla ancho de la primera columna */
+        }
+
+table.pertenencias thead th {
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding-bottom: 8px;
+}
+
+table.pertenencias tbody td {
+    border-bottom: 1px solid #000;  /* línea de escritura independiente */
+    padding: 16px 0;
+}
+    
+</style>
+<div class="invoice-container" id="FrmIngreso">
+    <div class="header">
+        <div class="logo-section">
+            <div class="logo">
+                <div class="logo-shape shape-1"></div>
+                <div class="logo-shape shape-2"></div>
+                <div class="logo-shape shape-3"></div>
+                <div class="logo-shape shape-4"></div>
+            </div>
+            <div class="company-info">
+                <h1>@MaeEmpresasDatos.RazonSocial</h1>
+                <div class="contact-info">
+                    <div>Fono: @MaeEmpresasDatos.Fono</div>
+                    <div>Web: @MaeEmpresasDatos.Sitioweb</div>
+                    <div>E-mail: @MaeEmpresasDatos.Email</div>
+                </div>
+            </div>
+        </div>
+        <div class="invoice-type">
+            <h2>
+               Formulario de Ingreso
+            </h2>
+            <div class="invoice-details">
+
+                <div>FECHA: @DateTime.Now.ToString("dd-MM-yyyy")</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-section">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="paw-container">
+                    @if (urlFoto is null)
+                    {
+                        <img src="../assets/images/wila.jpeg" asp-append-version="true" width="250" height="250" class="mt-2" />
+                    }
+                    else
+                    {
+                        <img src="@urlFoto" asp-append-version="true" width="200" height="200" class="mt-2" />
+                    }
+                </div>
+            </div>
+            <div class="col-md-8">
+                <table class="info-table">
+                    <tr>
+                        <td>Ficha Nº @Mascota.IdMascota</td>
+                        <td colspan="2">@Mascota.NombreMascota</td>
+                    </tr>
+                    <tr>
+                        <td>Especie</td>
+                        <td colspan="2">@Mascota.Especie, @Mascota.Raza, BLANCO.</td>
+                    </tr>
+                    <tr>
+                        <td>Sexo</td>
+                        <td colspan="2">@Mascota.Sexo</td>
+                    </tr>
+                    <tr>
+                        <td>Fech.Naci</td>
+                        <td colspan="2">@Mascota.FechaNacimiento.ToString("dd-MM-yyyy")</td>
+                    </tr>
+                    <tr>
+                        <td>Rut Propietario</td>
+                        <td colspan="2">@rutFn.FormatoRut(Propietario.Rut)</td>
+                    </tr>
+                    <tr>
+                        <td>Nombre</td>
+                        <td colspan="2">@Propietario.Nombre</td>
+                    </tr>
+                    <tr>
+                        <td>Dirección</td>
+                        <td colspan="2">@Propietario.Direccion,.</td>
+                    </tr>
+                    <tr>
+                        <td>Fono</td>
+                        <td colspan="2">@Propietario.Fono</td>
+                    </tr>
+                    
+                </table>
+            </div>
+
+        </div>
+        
+    </div>
+
+    <div class="form-container">
+        <h1>Ficha de Ingreso</h1>
+
+        <div class="field">
+            <span class="label">ASUNTO :</span>
+            <span class="line"></span>
+        </div>
+
+        <div class="field">
+            <span class="label">PESO :</span>
+            <span class="line-small"></span>
+        </div>
+
+        <h2>Pertenencias Registradas</h2>
+
+       
+                <table class="pertenencias mt-2">
+                    <thead>
+                        <tr>
+                            <th >Cantidad</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                        <tr><td></td><td></td></tr>
+                    </tbody>
+                </table>
+    </div>
+       
+
+
+
+</div>
+@code {
+    [Parameter]
+    public Propietario Propietario { get; set; }
+
+    [Parameter]
+    public MascotasDto Mascota { get; set; }
+    private string urlFoto = "";
+    private MedMascotaFotos MascotaFotos = new();
+    [Parameter]
+    public MaeEmpresasDatos MaeEmpresasDatos { get; set; }
+    Rut rutFn = new();
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("printHtmlComponent", "FrmIngreso");
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        urlFoto = $"{http.BaseAddress}api/imagenes/base/base/base/base_perfil.png";
+        if (!string.IsNullOrEmpty(Mascota.IdFotoPerfil))
+        {
+            MascotaFotos = await mascotasFotosRepository.GetFotoMascota(userLoged.Token,empresaData.Prefijo, (string)Mascota.IdFotoPerfil);
+            if(MascotaFotos.Url is not null)
+            {
+                urlFoto = $"{http.BaseAddress}api/imagenes/test/{Mascota.RutCliente}/{Mascota.IdMascota}/{MascotaFotos.Url}";
+            }
+            
+            StateHasChanged();
+        }
+        
+    }
+}

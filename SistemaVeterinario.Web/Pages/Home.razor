@@ -1,0 +1,51 @@
+﻿@page "/home"
+@using SistemaVeterinario.Backend.Entities.Dtos
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject EmpresaSeleccionadaNavigationData empresaSeleccionadaNavigationData
+@inject UserNavgationData userDataService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+<PageTitle>Home</PageTitle>
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@ShowModal" Title="Seleccion de Local" ShowChanged="@(value => ShowModal = value)">
+    <SistemaVeterinario.Components.Components.Seleccionar_Local.FrmSeleccionarLocal Empresas="userLoged.Empresas" RecargaDatos="SeleccionarLocal" />
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+<AppBarHome LoginUser="userLoged"/>
+<NavigationBarFrm/>
+<DashboardHome/>
+
+@code {
+    private object user = new object();
+    private LoginResponse userLoged = new();
+    private bool ShowModal = false;
+    protected override async Task OnInitializedAsync()
+    {
+        if(userDataService.Login == null)
+        {
+            var data = await localStorage.GetItemAsync<LoginResponse>("login");
+            if( data is not null)
+            {
+                userDataService.Login = data.Login;
+                userDataService.Token = data.Token;
+                userDataService.Empresas = data.Empresas;
+                StateHasChanged();
+            }
+        }
+        Console.WriteLine(userDataService);
+        userLoged.Token = userDataService.Token;
+        userLoged.Login = userDataService.Login;
+        userLoged.Empresas = userDataService.Empresas;
+
+        Console.WriteLine(userLoged);
+        ShowModal = true;
+        StateHasChanged();
+    }
+
+    public void SeleccionarLocal(EmpresasDto item)
+    {
+        ShowModal = false;
+        empresaSeleccionadaNavigationData.Local = item.localEmpresa;
+        empresaSeleccionadaNavigationData.Nombre = item.nombreEmpresa;
+        empresaSeleccionadaNavigationData.Prefijo = item.prefijo;
+        empresaSeleccionadaNavigationData.RutEmpresa = item.rutEmpresa;
+    }
+}

@@ -1,0 +1,137 @@
+﻿@inject IJSRuntime Js
+
+<div class="page-content mt-5 ml-3">
+    <!-- Header Navigation -->
+    <div class="calendar-header">
+        <ul class="nav nav-tabs calendar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Vista diaria</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Vista semanal</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Vista Mensual</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Timeline</a>
+            </li>
+            <li class="nav-item">
+                <div class="form-check ms-3 mt-2">
+                    <input class="form-check-input" type="checkbox" id="showWeekend" @bind="ShowWeekend">
+                    <label class="form-check-label" for="showWeekend">
+                        Mostrar Fin de Semana
+                    </label>
+                </div>
+            </li>
+            <li class="nav-item ms-3 mt-1">
+                <select class="form-select form-select-sm">
+                    <option>(UTC-04:00) Santiago</option>
+                </select>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Date Navigation -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="btn-group">
+                <button class="btn btn-outline-secondary" @onclick="()=> NavigateCalendar(-1)">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                <button class="btn btn-outline-secondary" @onclick="()=> NavigateCalendar(1)">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                <span class="btn btn-outline-secondary">@CalendarRange</span>
+                <button class="btn btn-outline-secondary" @onclick="ResetToCurrentMonth">
+                    <i class="bi bi-calendar3"></i> Mes Actual
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div id="calendar-grid" class="calendar-grid">
+        <div class="fw-bold text-center p-2">Dom</div>
+        <div class="fw-bold text-center p-2">Lun</div>
+        <div class="fw-bold text-center p-2">Mar</div>
+        <div class="fw-bold text-center p-2">Mié</div>
+        <div class="fw-bold text-center p-2">Jue</div>
+        <div class="fw-bold text-center p-2">Vie</div>
+        <div class="fw-bold text-center p-2">Sáb</div>
+
+        @foreach (var cell in CalendarCells)
+        {
+            <div class="calendar-cell @(cell.IsWeekend && !ShowWeekend ? "d-none" : "")">
+                @if (cell.Day > 0)
+                {
+                    <div class="calendar-date">@cell.Day</div>
+                }
+            </div>
+        }
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-3 text-muted">
+        <small>CLINICA VETERINARIA ARAUCANIA</small>
+    </div>
+</div>
+
+@code {
+    private DateTime CurrentDate = DateTime.Now;
+    private string CalendarRange = string.Empty;
+    private List<CalendarCell> CalendarCells = new();
+    private bool ShowWeekend = true;
+
+    protected override void OnInitialized()
+    {
+        GenerateCalendar(CurrentDate.Year, CurrentDate.Month);
+    }
+
+    private void NavigateCalendar(int direction)
+    {
+        CurrentDate = CurrentDate.AddMonths(direction);
+        GenerateCalendar(CurrentDate.Year, CurrentDate.Month);
+    }
+
+    private void ResetToCurrentMonth()
+    {
+        CurrentDate = DateTime.Now;
+        GenerateCalendar(CurrentDate.Year, CurrentDate.Month);
+    }
+
+    private void GenerateCalendar(int year, int month)
+    {
+        CalendarCells.Clear();
+        var firstDayOfMonth = new DateTime(year, month, 1);
+        var daysInMonth = DateTime.DaysInMonth(year, month);
+
+        // Fill empty cells at the start
+        for (int i = 0; i < (int)firstDayOfMonth.DayOfWeek; i++)
+        {
+            CalendarCells.Add(new CalendarCell { Day = 0 });
+        }
+
+        // Fill days of the month
+        for (int day = 1; day <= daysInMonth; day++)
+        {
+            var date = new DateTime(year, month, day);
+            CalendarCells.Add(new CalendarCell
+                {
+                    Day = day,
+                    IsWeekend = date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday
+                });
+        }
+
+        // Update calendar range
+        var startDate = new DateTime(year, month, 1).ToString("yyyy-MM-dd");
+        var endDate = new DateTime(year, month, daysInMonth).ToString("yyyy-MM-dd");
+        CalendarRange = $"{startDate} - {endDate}";
+    }
+
+    private class CalendarCell
+    {
+        public int Day { get; set; }
+        public bool IsWeekend { get; set; }
+    }
+}

@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\dell\\.nuget\\packages\\chartjs.blazor.fork\\2.0.2\\contentFiles\\any\\netstandard2.1\\wwwroot\\ChartJsBlazorInterop.js",
+      "PackagePath": "staticwebassets\\ChartJsBlazorInterop.js"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Desktop\\proyectos\\SistemaVeterinario\\SistemaVeterinario.Components\\obj\\Release\\net8.0\\scopedcss\\projectbundle\\SistemaVeterinario.Components.bundle.scp.css",
+      "PackagePath": "staticwebassets\\SistemaVeterinario.Components.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Desktop\\proyectos\\SistemaVeterinario\\SistemaVeterinario.Components\\wwwroot\\background.png",
+      "PackagePath": "staticwebassets\\background.png"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Desktop\\proyectos\\SistemaVeterinario\\SistemaVeterinario.Components\\wwwroot\\exampleJsInterop.js",
+      "PackagePath": "staticwebassets\\exampleJsInterop.js"
+    },
+    {
+      "Id": "C:\\Users\\dell\\Desktop\\proyectos\\SistemaVeterinario\\SistemaVeterinario.Components\\wwwroot\\img\\logo_chico.png",
+      "PackagePath": "staticwebassets\\img\\logo_chico.png"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.SistemaVeterinario.Components.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.SistemaVeterinario.Components.props",
+      "PackagePath": "build\\SistemaVeterinario.Components.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.SistemaVeterinario.Components.props",
+      "PackagePath": "buildMultiTargeting\\SistemaVeterinario.Components.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.SistemaVeterinario.Components.props",
+      "PackagePath": "buildTransitive\\SistemaVeterinario.Components.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

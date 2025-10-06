@@ -1,0 +1,617 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject MascotaNavigationData data
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IMascotaRepository mascotaRepository
+@inject IPropietarioRepository propietarioRepository
+@inject IConsultasRepository consultasRepository
+<style>
+    body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    }
+    .window-container {
+    border: 1px solid #999;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background-color: #f0f0f0;
+    max-width: 1200px;
+    margin: 20px auto;
+    }
+    .window-header {
+    background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+    border-bottom: 1px solid #999;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    }
+    .window-title {
+    font-weight: bold;
+    color: #333;
+    margin-left: 5px;
+    }
+    .window-controls {
+    margin-left: auto;
+    }
+    .window-button {
+    background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+    border: 1px solid #999;
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+    margin-left: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    }
+    .progress-bar {
+    height: 20px;
+    background-color: #007bff;
+    }
+    .section-header {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    font-weight: bold;
+    font-size: 14px;
+    }
+    .form-section {
+    background-color: #d8d8f0;
+    border: 1px solid #b8b8e0;
+    padding: 10px;
+    margin-bottom: 10px;
+    }
+    .form-control, .form-select {
+    height: 30px;
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: #f8f8f8;
+    }
+    .form-label {
+    background-color: #00b0f0;
+    color: white;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    font-size: 13px;
+    display: block;
+    height: 100%;
+    }
+    .buttons-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    }
+    .btn-action {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    width: 180px;
+    justify-content: center;
+    }
+    .btn-action i {
+    margin-right: 10px;
+    font-size: 20px;
+    }
+    .btn-save i {
+    color: #0066cc;
+    }
+    .btn-delete {
+    background-color: #ff0000;
+    color: white;
+    }
+    .btn-delete i {
+    color: white;
+    }
+    .btn-clear i {
+    color: #0099cc;
+    }
+    .btn-control {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    }
+    .btn-control i {
+    color: #0066cc;
+    font-size: 20px;
+    }
+    .btn-recipe {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    }
+    .btn-recipe i {
+    color: #0066cc;
+    font-size: 20px;
+    }
+    .textarea-container {
+    position: relative;
+    }
+    .textarea-scroll {
+    height: 80px;
+    resize: none;
+    }
+    .scroll-indicator {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    }
+    .scroll-indicator i {
+    color: #999;
+    font-size: 12px;
+    }
+    .table-container {
+    height: 200px;
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ddd;
+    }
+    .table {
+    margin-bottom: 0;
+    }
+    .table th, .table td {
+    padding: 5px;
+    font-size: 13px;
+    }
+    .file-info {
+    color: #0066cc;
+    font-size: 12px;
+    margin-top: 5px;
+    }
+    .numeric-input {
+    text-align: right;
+    }
+    .hospitalization-checkbox {
+    width: 20px;
+    height: 20px;
+    }
+</style>
+
+<div class="container">
+    <!-- Window Header -->
+
+    <!-- Progress Bar -->
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 15%"></div>
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row">
+            <!-- Left Section -->
+            <div class="col-md-7">
+                <!-- Consultation Filter Section -->
+                <div class="section-header">Filtro de Consultas</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Nº Consulta</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" readonly @bind-value="IngresoConsulta.NumeroConsulta">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Fecha</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" class="form-control" readonly @bind-value="IngresoConsulta.Fecha">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Nº Ficha</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" readonly @bind-value="IngresoConsulta.NumeroFicha">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" readonly @bind-value="IngresoConsulta.NombreMascota">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Propietario</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control"  readonly @bind-value="RutFormato">
+                        </div>
+
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" @bind-value="IngresoConsulta.NombrePropietario" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Tipo Consulta</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select" @bind="IngresoConsulta.TipoConsulta">
+                                <option></option>
+                                @if(TiposConsultas.Count > 0)
+                                {
+                                    foreach(TipoConsulta item in TiposConsultas)
+                                    {
+                                        <option value="@item.ID">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Lugar Consulta</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select" @bind="IngresoConsulta.LugarConsulta">
+                                <option></option>
+                                @if(LocacionesConsultas.Count > 0)
+                                {
+                                    foreach(LocacionesConsulta item in LocacionesConsultas)
+                                    {
+                                        <option value="@item.ID">@item.Nombre</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Edad</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" @bind-value="IngresoConsulta.Edad" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label bg-info">Solicita Hospitalización</label>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center justify-content-center">
+                            <input type="checkbox" class="hospitalization-checkbox" @bind-value="IngresoConsulta.Hospitalizacion">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Anamnesis</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.Anamnesis"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Peso</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control numeric-input" @bind-value="IngresoConsulta.Peso">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Frec.Cardiaca</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control numeric-input" @bind-value="IngresoConsulta.FrecuenciaCardiaca">
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Tº</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control numeric-input" @bind-value="IngresoConsulta.Temperatura">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Frec.Respiratoria</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control numeric-input" @bind-value="IngresoConsulta.FrecRespiratoria">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Pre Diagnóstico</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.PreDiagnostico"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Complementario</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.Complementario"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Diagnóstico</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.Diagnostico"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Tratamiento</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.Tratamiento"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Observación</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="textarea-container">
+                                <textarea class="form-control textarea-scroll" @bind="IngresoConsulta.Observacion"></textarea>
+                                <div class="scroll-indicator">
+                                    <i class="bi bi-caret-up-fill"></i>
+                                    <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="col-md-5">
+                <!-- Multimedia Information Section -->
+                <div class="section-header">Información Multimedia</div>
+                <div class="form-section">
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Path</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Tamaño</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="fileInput">
+                                <button class="btn btn-outline-secondary" type="button">...</button>
+                            </div>
+                            <div class="file-info">(*) El tamaño del archivo no puede ser superior a 10 mb.</div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <div class="table-container">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Observacion</th>
+                                            <th>Archivo</th>
+                                            <th>Ver</th>
+                                            <th>Eliminar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Especialista</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select">
+                                <option>001 EDUARDO VERGARA</option>
+                                <option>002 MARIA RODRIGUEZ</option>
+                                <option>003 CARLOS MENDEZ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Asistente</label>
+                        </div>
+                        <div class="col-md-9">
+                            <select class="form-select">
+                                <option>001 EDUARDO VERGARA</option>
+                                <option>002 MARIA RODRIGUEZ</option>
+                                <option>003 CARLOS MENDEZ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="buttons-container">
+                                <button class="btn-action btn-save" @onclick="CrearConsulta">
+                                    <i class="bi bi-save"></i>
+                                    Guardar Datos
+                                </button>
+                                <button class="btn-action btn-delete">
+                                    <i class="bi bi-x-lg"></i>
+                                    Eliminar Registro
+                                </button>
+                                <button class="btn-action btn-clear">
+                                    <i class="bi bi-eraser"></i>
+                                    Limpiar Formulario
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="buttons-container">
+                                <button class="btn-control">
+                                    <i class="bi bi-plus-circle"></i>
+                                    Control
+                                </button>
+                            </div>
+                            <div class="buttons-container">
+                                <button class="btn-recipe">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    Receta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    
+    private class TipoConsulta
+    {
+        public string ID { get; set; }
+        public string Nombre { get; set; }
+    }
+    private class LocacionesConsulta
+    {
+        public string ID { get; set; }
+        public string Nombre { get; set; }
+    }
+    [Parameter] public EventCallback<bool> RecargaDatos { get; set; }
+    List<TipoConsulta> TiposConsultas = new List<TipoConsulta>();
+    List<LocacionesConsulta> LocacionesConsultas = new List<LocacionesConsulta>();
+    private IngresoConsultaDto IngresoConsulta = new IngresoConsultaDto();
+    private string RutFormato = "";
+    protected override async Task OnInitializedAsync()
+    {
+        var num = await consultasRepository.NumeroConsulta(userLoged.Token, empresaData.Prefijo);
+        if(num is not null)
+        {
+            IngresoConsulta.NumeroConsulta = num;
+        }
+        IngresoConsulta.Fecha = DateTime.Now;
+        if (data.IdMascota is not null)
+        {
+            var mascota = await mascotaRepository.GetMascota(userLoged.Token, empresaData.Prefijo, (string)data.IdMascota);
+            if (mascota is not null)
+            {
+                var p = mascota[0];
+                IngresoConsulta.NumeroFicha = p.idMascota;
+                IngresoConsulta.NombreMascota = p.nombreMascota;
+                var fecha = p.fechaNacimiento;
+                var fechaNacimiento = DateTime.Parse((string)fecha);
+                int años = DateTime.Now.Year - fechaNacimiento.Year;
+                int meses = DateTime.Now.Month - fechaNacimiento.Month;
+                if (meses < 0) meses= meses * -1;
+                IngresoConsulta.Edad = $"{años}a y {meses}m";
+
+            }
+            var prop = await propietarioRepository.GetPropietario(userLoged.Token, (string)data.RutCliente, empresaData.Prefijo);
+            if(prop is not null)
+            {
+                Rut rutFn = new Rut();
+                IngresoConsulta.RutPropietario = data.RutCliente;
+                IngresoConsulta.NombrePropietario = prop.nombre;
+                RutFormato = rutFn.FormatoRut((string)data.RutCliente);
+            }
+            var tipos = await consultasRepository.Consultas(userLoged.Token, empresaData.Prefijo);
+            if(tipos is not null)
+            {
+                if (tipos.Count > 0)
+                {
+                    foreach(var item in tipos)
+                    {
+                        TiposConsultas.Add(new TipoConsulta
+                        {
+                            ID = item.ID,
+                            Nombre = item.Nombre
+                        });
+                    }
+                }
+            }
+            var loc = await consultasRepository.LocacionesConsultas(userLoged.Token, empresaData.Prefijo);
+            if(loc is not null)
+            {
+                foreach (var item in loc)
+                {
+                    Console.WriteLine(item);
+                    LocacionesConsultas.Add(new LocacionesConsulta { ID = item.codido, Nombre = item.nombre });
+                }
+            }
+        }
+    }
+
+    private async void CrearConsulta()
+    {
+        var res = await consultasRepository.IngresarConsulta(userLoged.Token, empresaData.Prefijo, IngresoConsulta);
+        if(res == true)
+        {
+            await RecargaDatos.InvokeAsync(true);
+        }
+        
+    }
+}

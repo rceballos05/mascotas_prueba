@@ -1,0 +1,23 @@
+﻿@page "/ingreso-control"
+
+@inject UserNavgationData userDataService
+
+<AppBarHome LoginUser="userLoged" />
+<NavigationBarFrm/>
+<SistemaVeterinario.Components.Components.Ingreso_Controles.FrmIngresoControl/>
+
+@code {
+    private object user = new object();
+    private LoginResponse userLoged = new();
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine(userDataService);
+        userLoged.Token = userDataService.Token;
+        userLoged.Login = userDataService.Login;
+        userLoged.Empresas = userDataService.Empresas;
+
+        Console.WriteLine(userLoged);
+
+    }
+}

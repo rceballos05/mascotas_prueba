@@ -1,0 +1,265 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .purple-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+    }
+
+    .periodo-label {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-size: 13px;
+    }
+
+    .table-container {
+        border: 1px solid #ddd;
+        background-color: white;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-clipboard2-data text-primary"></i>
+        <span class="window-title">Informe de Consumo de Insumos</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 15%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Recinto -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <h6 class="mb-3">Recinto</h6>
+                    <div class="mb-3">
+                        <div class="input-with-dropdown">
+                            <select class="form-select">
+                                <option>01 CLINICA VETERINARIA ARAUCANIA</option>
+                                <option>02 CLINICA CENTRAL</option>
+                                <option>03 CLINICA NORTE</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-with-dropdown">
+                            <select class="form-select">
+                                <option>TODOS</option>
+                                <option>MEDICAMENTOS</option>
+                                <option>ALIMENTOS</option>
+                                <option>ACCESORIOS</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Código -->
+            <div class="col-md-6">
+                <div class="purple-section">
+                    <h6 class="mb-3">Código</h6>
+                    <div class="row mb-3">
+                        <div class="col-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-8">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <div class="periodo-label">Período</div>
+                        </div>
+                        <div class="col-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>05-05-2025</option>
+                                    <option>04-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-1 text-center">
+                            <span>al</span>
+                        </div>
+                        <div class="col-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>07-05-2025</option>
+                                    <option>08-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Acciones -->
+            <div class="col-md-3">
+                <div class="purple-section">
+                    <button class="action-button mb-3" id="btnGenerar">
+                        <i class="bi bi-search"></i>
+                        Generar Informe
+                    </button>
+                    <div class="row">
+                        <div class="col-6">
+                            <button class="action-button" id="btnImprimir">
+                                <i class="bi bi-printer"></i>
+                                Imprimir
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button class="action-button" id="btnLimpiar">
+                                <i class="bi bi-eraser"></i>
+                                Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Insumos -->
+        <div class="table-container">
+            <table class="table table-bordered table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th width="5%"></th>
+                        <th width="15%">Código</th>
+                        <th width="40%">Descripción</th>
+                        <th width="10%">Cant.</th>
+                        <th width="15%">P.Promedio</th>
+                        <th width="15%">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="insumosTable">
+                    <!-- Filas vacías para simular la tabla -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA USUARIO CONECTADO: EDUVERGARA
+        </div>
+    </div>
+</div>

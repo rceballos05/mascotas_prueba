@@ -1,0 +1,87 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IConsultasRepository repository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show="@showModal" Title="Modificar Consulta" ShowChanged="@(value => showModal = value)">
+    <SistemaVeterinario.Components.Modificar_Consulta_Clinica.FrmModificarConsulta RecargaDatos="RecargaMascotas" ConsultaDto="@IdConsulta"/>
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                   <RadzenDataGrid Data="@Consulta" TItem="ConsultasDto" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar." >
+                    <Columns>
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="CodigoConsulta" Title="N°" />
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="FechaConsulta" Title="Fecha" FormatString="{0:dd-MM-yyyy}" />
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="Edad" Title="Edad" />
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="Peso" Title="Peso" />
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="TipoExamen" Title="Tipo Examen"/>
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="Diagnostico" Title="Diagnostico"/>
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="Tratamiento" Title="Tratamiento"/>
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="Observaciones" Title="Obs."/>
+                            <RadzenDataGridColumn TItem="ConsultasDto" Property="FechaConsulta" Title="Adj."/>
+                            
+                            <RadzenDataGridColumn TItem="ConsultasDto" Title="Acción">
+                            <Template Context="data">
+                                    <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> MostrarConsulta(data.CodigoConsulta)" />
+                            </Template>
+                        </RadzenDataGridColumn>
+                    </Columns>
+                </RadzenDataGrid>
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!--end col-->
+</div><!--end row-->
+
+
+@code{
+    [Parameter] public EventCallback<bool> RecargaDatos { get; set; }
+    [Parameter]
+    public List<ConsultasDto> Consulta { get; set; }
+    public string IdConsulta = "";
+    public async Task MostrarConsulta(string id)
+    {
+        Console.WriteLine(id);
+        showModal = true;
+        StateHasChanged();
+        IdConsulta = id;
+    }
+    public bool showModal = false;
+    protected override async Task OnInitializedAsync()
+    {
+        if (Consulta.Count == 0)
+        {
+            var masc = await localStorage.GetItemAsync<MascotasDto>("mascota");
+            if (masc.IdMascota != null)
+            {
+                var con = await repository.ConsultasMascota(userLoged.Token,empresaData.Prefijo,masc.IdMascota);
+                if(con is not null)
+                {
+                   
+                }
+
+
+            }
+        }
+        else
+        {
+
+        }
+    }
+
+
+    private async Task RecargaMascotas(bool value)
+    {
+        showModal = false;
+        StateHasChanged();
+        if(value)
+        {
+            await RecargaDatos.InvokeAsync(true);
+        }
+    }
+}

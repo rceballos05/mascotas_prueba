@@ -1,0 +1,284 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .section-header {
+        background-color: #87CEEB;
+        color: black;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #ddd;
+    }
+
+    .table td {
+        border: 1px solid #ddd;
+    }
+
+    .table-container {
+        background-color: white;
+        border: 1px solid #ddd;
+        height: 400px;
+        overflow-y: auto;
+    }
+
+    .export-section {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 10px;
+        padding: 5px;
+    }
+
+    .export-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 5px 15px;
+        display: flex;
+        align-items: center;
+        margin-left: 10px;
+    }
+
+        .export-button i {
+            margin-right: 5px;
+            font-size: 18px;
+            color: #007bff;
+        }
+
+    .excel-icon {
+        color: #217346;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-bar-chart-fill text-primary"></i>
+        <span class="window-title">Informe Ingresos por Propietario</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row g-2 mb-2">
+            <!-- Rangos de Fecha -->
+            <div class="col-md-4">
+                <div class="form-section">
+                    <div class="section-header">Rangos de Fecha</div>
+                    <div class="row mb-2">
+                        <div class="col-md-2">
+                            <label class="form-label">Desde</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2024</option>
+                                    <option>12-05-2024</option>
+                                    <option>11-05-2024</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Hasta</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>13-05-2025</option>
+                                    <option>14-05-2025</option>
+                                    <option>15-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ordenado Por -->
+            <div class="col-md-4">
+                <div class="form-section">
+                    <div class="section-header">Ordenado Por</div>
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ordenadoPor" id="nombrePropietario" value="nombre">
+                                <label class="form-check-label" for="nombrePropietario">Nombre Propietario</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="ordenadoPor" id="monto" value="monto" checked>
+                                <label class="form-check-label" for="monto">Monto</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="soloProtectoras">
+                                <label class="form-check-label" for="soloProtectoras">Solo entidades Protectoras</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="col-md-4">
+                <div class="form-section">
+                    <button class="action-button mb-2" id="btnGenerar">
+                        <i class="bi bi-search"></i>
+                        Generar Informe
+                    </button>
+                    <button class="action-button" id="btnImprimir">
+                        <i class="bi bi-printer"></i>
+                        Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Resultados -->
+        <div class="table-container">
+            <table class="table table-sm mb-0">
+                <thead>
+                    <tr>
+                        <th width="10%">Rut</th>
+                        <th width="25%">Nombre</th>
+                        <th width="15%">Comuna</th>
+                        <th width="10%">Fono</th>
+                        <th width="15%">Email</th>
+                        <th width="10%">Atenciones</th>
+                        <th width="15%">Total</th>
+                    </tr>
+                </thead>
+                <tbody id="propietariosTable">
+                    <!-- Los datos se cargarán dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección de Exportación -->
+        <div class="export-section">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="formatoExport" id="excel" value="excel" checked>
+                <label class="form-check-label" for="excel">Excel</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="formatoExport" id="csv" value="csv">
+                <label class="form-check-label" for="csv">CSV</label>
+            </div>
+            <button class="export-button" id="btnExportar">
+                <i class="bi bi-file-earmark-excel excel-icon"></i>
+                Exportar
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>

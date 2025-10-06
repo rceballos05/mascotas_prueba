@@ -1,0 +1,402 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .purple-section {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .white-section {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        margin-bottom: 2px;
+        font-size: 13px;
+    }
+
+    .nav-tabs .nav-link {
+        background-color: #e9ecef;
+        border: 1px solid #dee2e6;
+        margin-right: 2px;
+        padding: 5px 15px;
+        font-size: 13px;
+    }
+
+        .nav-tabs .nav-link.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .blue-panel {
+        background-color: #d6e4f0;
+        height: 100%;
+    }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-clipboard2-pulse text-primary"></i>
+        <span class="window-title">Informe de Médico y Asistente</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 15%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Left Section -->
+            <div class="col-md-4">
+                <div class="purple-section">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>01 CLINICA VETERINARIA ARAUCANIA</option>
+                                    <option>02 CLINICA CENTRAL</option>
+                                    <option>03 CLINICA NORTE</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <label class="form-label">Desde</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>05-05-2025</option>
+                                    <option>04-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <label class="form-label">Hasta</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>07-05-2025</option>
+                                    <option>08-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Section -->
+            <div class="col-md-5">
+                <div class="white-section">
+                    <h6 class="mb-3">Datos del Profesional</h6>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Profesional</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option></option>
+                                    <option>Dr. Juan Pérez</option>
+                                    <option>Dra. María González</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-3">
+                            <label class="form-label">Centro de Costo</label>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>-- TODOS LOS CRCC --</option>
+                                    <option>Centro 1</option>
+                                    <option>Centro 2</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="individualCheck">
+                                <label class="form-check-label" for="individualCheck">
+                                    Individual
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6 text-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agruparCheck">
+                                <label class="form-check-label" for="agruparCheck">
+                                    Agrupar Informe Hospitalización
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="col-md-3">
+                <div class="white-section">
+                    <button class="action-button mb-3">
+                        <i class="bi bi-search"></i>
+                        Buscar Registros
+                    </button>
+                    <button class="action-button">
+                        <i class="bi bi-printer"></i>
+                        Imprimir Informe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs and Table -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="resultados-tab" data-bs-toggle="tab" data-bs-target="#resultados" type="button" role="tab">
+                    Resultados del Informe
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="presupuestos-tab" data-bs-toggle="tab" data-bs-target="#presupuestos" type="button" role="tab">
+                    Detalle de Presupuestos
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="hospitalizaciones-tab" data-bs-toggle="tab" data-bs-target="#hospitalizaciones" type="button" role="tab">
+                    Detalle de Hospitalizaciones
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade" id="resultados" role="tabpanel" aria-labelledby="resultados-tab">
+                <!-- Contenido de Resultados -->
+            </div>
+            <div class="tab-pane fade show active" id="presupuestos" role="tabpanel" aria-labelledby="presupuestos-tab">
+                <div class="row g-0">
+                    <div class="col-md-9">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th width="5%"></th>
+                                        <th width="25%">Crcc</th>
+                                        <th width="30%">Especialista</th>
+                                        <th width="25%">Asistente</th>
+                                        <th width="5%">Cant.</th>
+                                        <th width="10%">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Filas vacías para simular la tabla -->
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="checkbox" class="form-check-input"></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="blue-panel" style="height: 100%; min-height: 400px;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="hospitalizaciones" role="tabpanel" aria-labelledby="hospitalizaciones-tab">
+                <!-- Contenido de Hospitalizaciones -->
+            </div>
+        </div>
+    </div>
+</div>

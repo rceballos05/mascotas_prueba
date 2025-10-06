@@ -1,0 +1,273 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Web.Statics
+@inject UserNavgationData userDataService
+@inject ILoginRepository loginRepository
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject MascotaNavigationData mascotaData
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+<EditForm Model="Login">
+    <DataAnnotationsValidator/>
+    <form class="my-4" action="index.html">
+        <div class="form-group mb-2">
+            <label class="form-label" for="username">Rut</label>
+            @* <input type="text" class="form-control" id="rut" name="rut" placeholder="Enter Rut" @bind-value = "@Login.rut" @onkeyup="FormatoRutTxt" @onfocusout ="ValidaRut"> *@
+            <input type="text" class="form-control" id="rut" name="rut" placeholder="Enter Rut" @bind-value="@_rut" @oninput="OnRutInput" @onkeydown="KeyEventRut" @ref="RutRef">
+            <ValidationMessage For="@(() => Login.rut)" />
+        </div><!--end form-group-->
+
+        <div class="form-group">
+            <label class="form-label" for="userpassword">Password</label>
+            <input type="password" @ref="pass" class="form-control" name="password" id="userpassword" placeholder="Enter password" @oninput="OnPassInput" @onkeydown="KeyEvent">
+            <ValidationMessage For="@(() => Login.password)" />
+
+        </div><!--end form-group-->
+
+        <div class="form-group row mt-3">
+            <div class="col-sm-6">
+                <div class="form-check form-switch form-switch-success">
+                    <input class="form-check-input" type="checkbox" id="customSwitchSuccess">
+                    <label class="form-check-label" for="customSwitchSuccess">Remember me</label>
+                </div>
+            </div><!--end col-->
+            <div class="col-sm-6 text-end">
+                <a href="auth-recover-pw.html" class="text-muted font-13"><i class="dripicons-lock"></i> Forgot password?</a>
+            </div><!--end col-->
+        </div><!--end form-group-->
+
+        <div class="form-group mb-0 row">
+            <div class="col-12">
+                <div class="d-grid mt-3">
+                    @if (loading)
+                    {
+                        <div class="d-flex align-items-center">
+                            <strong>Cargando...</strong>
+                            <div class="text-center ms-auto">
+                                <i class="la la-spinner text-primary la-spin progress-icon-spin"></i>
+                            </div>
+                        </div>
+                    }
+                    else{
+                        <button class="btn btn-primary" @onclick="IniciarSesion" type="button">Log In <i class="fas fa-sign-in-alt ms-1"></i></button>
+                    }
+
+                </div>
+            </div><!--end col-->
+        </div> <!--end form-group-->
+    </form><!--end form-->
+
+</EditForm>
+
+@code{
+    private ElementReference pass;
+    private ElementReference RutRef;
+    private EditContext editContext = null!;
+    [Parameter]
+    [EditorRequired]
+    public LoginRequest Login {get;set;} = null!;
+    private string rutFormato="";
+    private string _rut="";
+    [Parameter]
+    [EditorRequired]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormPostedSuccessfully { get; set; }
+    public bool loading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        editContext = new(Login);
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await RutRef.FocusAsync();
+        }
+    }
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formwasmofied = editContext.IsModified();
+        if (!formwasmofied || FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        // var result = await Swal.FireAsync(new SweetAlertOptions
+        //     {
+        //         Title = "confirmación",
+        //         Text = "¿deseas abandonar la página y perder los cambios?",
+        //         Icon = SweetAlertIcon.Question,
+        //         ShowCancelButton = true,
+        //         CancelButtonText = "no",
+        //         ConfirmButtonText = "si"
+        //     });
+
+        // var confirm = !string.IsNullOrEmpty(result.Value);
+        // if (confirm)
+        // {
+        //     return;
+        // }
+
+        context.PreventNavigation();
+    }
+    private void KeyEvent(KeyboardEventArgs e)
+    {
+
+        if (e.Key == "Enter")
+        {
+            loading = true;
+            StateHasChanged();
+            IniciarSesion();
+        }
+    }
+    private async void KeyEventRut(KeyboardEventArgs e)
+    {
+
+        if (e.Key == "Enter")
+        {
+            await pass.FocusAsync();
+        }
+    }
+    private void OnRutInput(ChangeEventArgs e)
+    {
+
+        string entrada = e.Value.ToString() ?? "";
+        if(entrada.Length > 0)
+        {
+            string rutLimpio = new string(entrada
+           .Where(c => char.IsDigit(c) || c == 'K' || c == 'k')
+           .ToArray()
+
+            ).ToUpper();
+            Rut rutFn = new Rut();
+            _rut = rutFn.FormatoRut(rutLimpio);
+            Login.rut = rutLimpio.PadLeft(10,'0');
+            Console.WriteLine($"rut ----> {Login.rut}");
+        }
+
+    }
+
+    private void OnPassInput(ChangeEventArgs e)
+    {
+
+        string entrada = e.Value.ToString() ?? "";
+        if (entrada.Length > 0)
+        {
+            Login.password = entrada;
+        }
+
+    }
+
+    private async Task FormatoRutTxt(KeyboardEventArgs e)
+    {
+        Console.WriteLine($"Login: {Login.rut}");
+
+        if (Login.rut == string.Empty)
+        {
+            rutFormato = string.Empty;
+        }
+        else if (e.Key.All(char.IsDigit) || e.Key.ToUpper() == "K")
+        {
+            var key = e.Key;
+            Rut rutFn = new Rut();
+
+
+
+            rutFormato += key;
+
+            var newRut = rutFn.FormatoRut(rutFormato);
+            Console.WriteLine($"nuevo rut: {newRut}");
+            await ActualizarInputRut(newRut);
+
+            Console.WriteLine($"Objeto Login: {Login.rut}");
+        }
+        else if (e.Key == "Backspace")
+        {
+            if(rutFormato.Length > 0)
+            {
+                rutFormato = rutFormato.Remove(rutFormato.Length - 1, 1);
+                Console.WriteLine($"nuevo rut: {rutFormato}");
+            }
+            else
+            {
+                rutFormato = string.Empty;
+            }
+
+        }
+
+
+    }
+    private async Task ActualizarInputRut(string palabra)
+    {
+        await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{palabra}'");
+    }
+    private async void ValidaRut()
+    {
+        Rut rutFn = new Rut();
+        var res = rutFn.ValidaRut(Login.rut);
+        if(!res)
+        {
+            await js.InvokeAsync<string>("showAlertErrorRut");
+        }
+        Console.WriteLine($"RUT CORRECTO?: {res}");
+    }
+    private async void IniciarSesion()
+    {
+        loading = true;
+        var rut = Login.rut.Replace(".", "").Replace("-", "");
+        Login.rut = rut.PadLeft(10, '0');
+        var response = await loginRepository.IniciarSesion(Login);
+        if(response != null)
+        {
+            dynamic prueba = response.items;
+            var admUser = JsonSerializer.Deserialize<AdmUser>(Convert.ToString(prueba[0].login));
+
+            List<EmpresasDto> empresas = [];
+            foreach (var item in prueba[0].empresas)
+            {
+                empresas.Add(JsonSerializer.Deserialize<EmpresasDto>(Convert.ToString(item)));
+            }
+
+            string token = prueba[0].token;
+            userDataService.Login = admUser;
+            userDataService.Token = token;
+            userDataService.Empresas = empresas;
+            mascotaData.IdMascota = null;
+            mascotaData.RutCliente = null;
+            await js.InvokeAsync<string>("showAlertSuccessLogin");
+            await localStorage.SetItemAsync("login", new LoginResponse{ Empresas = empresas, Login = admUser, Token = token} );
+            await localStorage.SetItemAsync("mascota", new MascotasDto
+                {
+                    
+                });
+            await localStorage.SetItemAsync("propietario", new Propietario
+                {
+                    
+                });
+            List<MascotasDto> lst = new List<MascotasDto>();
+            await localStorage.SetItemAsync("mascotasPropietario", lst);
+
+            navigationManager.NavigateTo("/home");
+
+        }
+        else
+        {
+            var rutTemp = Login.rut.Remove(0,1);
+            Rut rutFn = new Rut();
+            loading = false;
+
+            rutTemp = rutFn.FormatoRut(rutTemp);
+            StateHasChanged();
+            Login.rut = rutTemp;
+            await js.InvokeAsync<string>("showAlertErrorLogin");
+            
+            //Login.rut = rutFn.FormatoRut(Login.rut.Remove(0));
+            await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{Login.rut}'");
+        }
+    }
+}

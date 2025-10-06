@@ -1,0 +1,65 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject IRecetasRepository recetasRepository
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <RadzenDataGrid Data="@Recetas" TItem="RecetasDto" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar." >
+                        <Columns>
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="Numero" Title="N°" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="BoxCreacion" Title="Box" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="FechaCreacion" Title="Fecha" FormatString="{0:dd-MM-yyyy}" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="HoraCreacion" Title="Hora" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="NombreProfesional" Title="Especialista" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="TipoOrigen" Title="Origen" />
+                            <RadzenDataGridColumn TItem="RecetasDto" Property="Receta" Title="Receta" />
+
+                            <RadzenDataGridColumn TItem="RecetasDto" Title="Acción">
+                                <Template Context="data">
+                                    <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> MostarReceta(data.Numero.ToString())" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!--end col-->
+</div><!--end row-->
+
+
+@code{
+    [Parameter]
+    public List<RecetasDto> Recetas { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Recetas = [];
+        var masc = await localStorage.GetItemAsync<MascotasDto>("mascota");
+        if(masc!.IdMascota is not null)
+        {
+            var lst = await recetasRepository.GetRecetas(userLoged.Token,empresaData.Prefijo,(string) masc.RutCliente,(string) masc.IdMascota);
+            if(lst is not null)
+            {
+                if(lst.Count >0)
+                {
+                    Recetas = lst;
+                }
+            }
+
+        }
+
+   
+    }
+
+    private async Task MostarReceta(string id)
+    {
+
+    }
+}

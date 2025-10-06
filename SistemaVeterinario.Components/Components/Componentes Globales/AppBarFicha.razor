@@ -1,0 +1,703 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@inject IJSRuntime js
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject MascotaNavigationData data
+@inject IMascotaRepository mascotaRepository
+@inject IHospitalizacionesRepository hospitalizacionesRepository
+@inject IPropietarioRepository propietarioRepository
+@inject IConsultasRepository consultasRepository
+@inject IControlesRepository controlesRepository
+@inject IRecetasRepository recetasRepository
+@inject IEspecieRepository especieRepository
+@inject IEstadoRepository estadoRepository
+@inject IRazaRepository razaRepository
+<style>
+    .dropdown-submenu {
+    position: relative;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+    display: none;
+    position: absolute;
+    }
+
+    /* Mostrar submenú al hacer hover */
+    .dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+    }
+</style>
+@switch (modalName)
+{
+    case "cliente":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Cliente">
+            <SistemaVeterinario.Components.Components.Nuevo_Propietario.FrmNuevoPropietario/>
+        </ModalAyuda>
+        break;
+    case "ingresoNota":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Programa de Consultas Visitas y Procedimientos">
+            <SistemaVeterinario.Components.Components.Nueva_Nota_Procedimiento.FrmNotaProcedimiento/>
+        </ModalAyuda>
+        break;
+    case "nuevoPaciente":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Nueva Mascota">
+            <SistemaVeterinario.Components.Components.Nueva_Mascota.FrmNuevaMascota/>
+        </ModalAyuda>
+        break;
+    case "consultas":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Consultas">
+            <SistemaVeterinario.Components.Components.Consultas.FrmNuevaConsulta />
+        </ModalAyuda>
+        break;
+    case "razas":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Ingreso Raza">
+            <SistemaVeterinario.Components.Components.Ingreso_Raza.FrmRazas/>
+        </ModalAyuda>
+        break;
+    case "especies":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Ingreso Especies">
+            <SistemaVeterinario.Components.Components.Ingreso_Especie.FrmEspecies />
+        </ModalAyuda>
+        break;
+    case "ingreso-consulta":
+        <ModalAyuda Show ="@showModal" ShowChanged="@(value => showModal = value)" Title ="Ingreso Consulta">
+            <SistemaVeterinario.Components.Components.Nueva_Consulta.FrmNuevaConsulta RecargaDatos="Recargar" />
+        </ModalAyuda>
+        break;
+    case "agendar-evento":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Agendar Evento Clinico">
+            <SistemaVeterinario.Components.Components.Nuevo_Evento_Clinico.FrmNuevoEventoClinico />
+        </ModalAyuda>
+        break;
+    case "carnet-sl":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Imprimir Carnet SL">
+            <SistemaVeterinario.Components.Components.Imprime_Carnet_Salud.FrmCarnetSalud />
+        </ModalAyuda>
+        break;
+    case "eutanasia":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Imprimir Certificado Eutanasia">
+            <SistemaVeterinario.Components.Components.Imprimir_Cert_Eutanacia.FrmCertEutanacia/>
+        </ModalAyuda>
+        break;
+    case "cert-salud":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Imprimir Certificado Salud">
+            <SistemaVeterinario.Components.Components.Imprimir_Cert_Salud.FrmCertSalud/>
+        </ModalAyuda>
+        break;
+    case "cert-eutanasia":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Certificado Eutanasia">
+            <SistemaVeterinario.Components.Components.Nuevo_Certificado_Eutanasia.CertificadoEutanacia/>
+        </ModalAyuda>
+        break;
+    case "autoriza-proc":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Autoriza Procedimientos Clinicos">
+            <SistemaVeterinario.Components.Components.Imprime_Autroizacion_Procedimientos.FrmAutorizaProcedimiento/>
+        </ModalAyuda>
+        break;
+    case "prox-controles":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Imprime Controles Pendientes">
+
+        </ModalAyuda>
+        break;
+    case "list-doc":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Listado Documentos">
+            <SistemaVeterinario.Components.Components.Imprime_Listado_Doc.FrmListadoDoc />
+        </ModalAyuda>
+        break;
+    case "frm-ingreso":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Ingreso">
+            <SistemaVeterinario.Components.Components.Ingreso.FrmIngreso/>
+        </ModalAyuda>
+        break;
+    case "frm-hospitalizacion":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Hospitalizacion">
+            <SistemaVeterinario.Components.Components.Hospitalizacion.FrmHospitalizacion/>
+        </ModalAyuda>
+        break;
+    case "frm-peluqueria":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Peluqueria">
+            <SistemaVeterinario.Components.Components.Peluqueria.FrmPeluqueria/>
+        </ModalAyuda>
+        break;
+    case "examen-biopsia":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Ficha Biopsia y Patología">
+
+        </ModalAyuda>
+        break;
+    case "examen-otros":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Listado Documentos">
+            <SistemaVeterinario.Components.Components.Imprime_Listado_Doc.FrmListadoDoc />
+        </ModalAyuda>
+        break;
+    case "examen-concentimiento":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Listado Documentos">
+            <SistemaVeterinario.Components.Components.Imprime_Listado_Doc.FrmListadoDoc />
+        </ModalAyuda>
+        break;
+    case "frm-compromiso":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Listado Documentos">
+
+        </ModalAyuda>
+        break;
+    case "ingreso-hospitalizacion":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Ingreso Hospitalizacion">
+            <SistemaVeterinario.Components.Components.Ingreso_Hospitalizacion.FrmIngresoHospitalizacion/>
+        </ModalAyuda>
+        break;
+    case "color":
+        <ModalAyuda Show="@showModal" ShowChanged="@(value => showModal = value)" Title="Formulario Nuevo Color">
+            <SistemaVeterinario.Components.Components.Colores.FrmIngresoColor/>
+        </ModalAyuda>
+        break;
+    default:
+        break;
+}
+
+
+<div class="topbar d-print-none">
+    <div class="container-fluid">
+
+        <nav class="topbar-custom navbar-expand-lg" id="topbar-custom">
+
+
+            <button class="navbar-toggler mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent3" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <ul class="navbar-nav me-2 mb-3 mb-lg-0">
+                <li class="nav-item mt-3">
+                    <button @onclick="CallInitVerticalMenu" class="nav-link mobile-menu-btn nav-icon" id="togglemenu">
+                        <i class="iconoir-menu"></i>
+                    </button>
+                </li>
+                <li class="nav-item mt-3">
+                    <a class="nav-link" aria-current="page" href="/home">Home</a>
+                </li>
+
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Maestros <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="Maestros">
+                        <li><a class="dropdown-item" @onclick="AbrirModalNuevoPaciente">Nuevo Paciente</a></li>
+                        @* <li><hr class="dropdown-divider"></li> *@
+                        <li><a class="dropdown-item" @onclick="AbrirModalCliente">Nuevo Propietario</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalConsultas">Nuevo Tipo de Consulta</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalRazas">Nueva Raza</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalEspecies">Nueva Especie</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalColor">Nuevo Color</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Ingresos <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="Ingresos">
+                        <li><a class="dropdown-item" @onclick="AbrirModalIngresoConsultas">Nueva Consulta</a></li>
+                        <li><a class="dropdown-item"@onclick="AbrirModalIngresoControl">Nota de Procedimientos</a></li>
+                        @* <li><hr class="dropdown-divider"></li> *@
+                        <li><a class="dropdown-item" @onclick="AbrirModalAgendarEventoClinico">Agendar Evento Clínico</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Informes <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="Informes">
+                        <li><a class="dropdown-item" @onclick="AbrirModalImprimeCarnetSL">Imprime Carnet SL</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalImprimeEutanasia">Imprime Certificado de Eutanasia</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalImprimeCertSalud">Imprime Certificado de Salud</a></li>
+                       @*  <li><a class="dropdown-item" @onclick="AbrirModalCertEutanasia">Certificado de Eutanasia</a></li> *@
+                        <li><a class="dropdown-item" @onclick="AbrirModalAutorizaProcedimientos">Autoriza Procedimientos</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalProxControles">Imprime Próximos Controles</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalListDoc">Listado de Documentos</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Formularios <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="Formularios">
+                        <li><a class="dropdown-item" @onclick="AbrirModalFrmIngreso">Formulario de Ingreso</a></li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalFrmHospitalizacion">Formulario de Hospitalizacion</a></li>
+                        @* <li><hr class="dropdown-divider"></li> *@
+                        <li><a class="dropdown-item" @onclick="AbrirModalFrmPeluqueria">Formulario de Peluqueria</a></li>
+                        <li class="dropdown-submenu">
+                            <a class="dropdown-item dropdown-toggle" href="#">Exámenes</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" @onclick="AbrirModalExamenBiopsia">Ficha de Biopsia y Patología</a></li>
+                                <li><a class="dropdown-item" @onclick="AbrirModalExamenOtros">Ficha de Otros Exámenes</a></li>
+                                <li><a class="dropdown-item" @onclick="AbrirModalExamenConcentimiento">Ficha y Concentimiento</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="dropdown-item" @onclick="AbrirModalFrmCompromisoClinico">Formulario de Compromiso Clínico</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Cuidados de Pacientes <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="Cuidados de Pacientes">
+                        <li><a class="dropdown-item" href="#">Cuidados a Inmobilizacion Con Vendaje</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Post Operatorio</a></li>
+                        @* <li><hr class="dropdown-divider"></li> *@
+                        <li><a class="dropdown-item" href="#">Cuidados Post Amputación</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Sometidos Osteosintesis</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Post Limpieza Dental</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Pacientes Gastroentericos</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Fracturas de Cadera</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Dermatitis</a></li>
+                        <li><a class="dropdown-item" href="#">Consideraciones antes de Esterilizar</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Fractura Mandibula</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Post Operatorio de Enterotomía</a></li>
+                        <li><a class="dropdown-item" href="#">Cuidados Dentales</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-item dropdown mt-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Hospitalización <i class="la la-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu mt-3" aria-labelledby="Hospitalización">
+                        <li><a class="dropdown-item" @onclick="AbrirModalFrmIngresoHospitalizacion">Ingreso de Hospitalización</a></li>
+                        <li><a class="dropdown-item" href="#">Concentimiento de Hospitalización</a></li>
+                        @* <li><hr class="dropdown-divider"></li> *@
+                        <li><a class="dropdown-item" href="#">Informe Diario de Pacientes</a></li>
+                        <li><a class="dropdown-item" href="#">Ficha de Hospitalización</a></li>
+                    </ul>
+                </li>
+                <div class="topbar-item list-unstyled d-inline-flex align-items-top me-4 ms-auto">
+
+                    <li class="topbar-item">
+                        <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode" @onclick="CambiarModo">
+                            <i class="iconoir-half-moon dark-mode"></i>
+                            <i class="iconoir-sun-light light-mode"></i>
+                        </a>
+                    </li>
+
+                    <li class="dropdown topbar-item">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
+                            <i class="iconoir-bell"></i>
+                            <span class="alert-badge"></span>
+                        </a>
+                        <div class="dropdown-menu stop dropdown-menu-end dropdown-lg py-0">
+
+                            <h5 class="dropdown-item-text m-0 py-3 d-flex justify-content-between align-items-center">
+                                Notifications <a href="#" class="badge text-body-tertiary badge-pill">
+                                    <i class="iconoir-plus-circle fs-4"></i>
+                                </a>
+                            </h5>
+                            <ul class="nav nav-tabs nav-tabs-custom nav-success nav-justified mb-1" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0 active" data-bs-toggle="tab" href="#All" role="tab" aria-selected="true">
+                                        All <span class="badge bg-primary-subtle text-primary badge-pill ms-1">24</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0" data-bs-toggle="tab" href="#Projects" role="tab" aria-selected="false" tabindex="-1">
+                                        Projects
+                                    </a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link mx-0" data-bs-toggle="tab" href="#Teams" role="tab" aria-selected="false" tabindex="-1">
+                                        Team
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="ms-0" style="max-height:230px;" data-simplebar>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade show active" id="All" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-wolf fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing and industry.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">10 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-apple-swift fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Meeting with designers</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">40 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-birthday-cake fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">UX 3 Task complete.</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                    <div class="tab-pane fade" id="Projects" role="tabpanel" aria-labelledby="projects-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">40 min ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-birthday-cake fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">UX 3 Task complete.</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                    <div class="tab-pane fade" id="Teams" role="tabpanel" aria-labelledby="teams-tab" tabindex="0">
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">1 hr ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-drone fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Your order is placed</h6>
+                                                    <small class="text-muted mb-0">It is a long established fact that a reader.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                        <!-- item-->
+                                        <a href="#" class="dropdown-item py-3">
+                                            <small class="float-end text-muted ps-2">2 hrs ago</small>
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 bg-primary-subtle text-primary thumb-md rounded-circle">
+                                                    <i class="iconoir-user fs-4"></i>
+                                                </div>
+                                                <div class="flex-grow-1 ms-2 text-truncate">
+                                                    <h6 class="my-0 fw-normal text-dark fs-13">Payment Successfull</h6>
+                                                    <small class="text-muted mb-0">Dummy text of the printing.</small>
+                                                </div><!--end media-body-->
+                                            </div><!--end media-->
+                                        </a><!--end-item-->
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- All-->
+                            <a href="pages-notifications.html" class="dropdown-item text-center text-dark fs-13 py-2">
+                                View All <i class="fi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </li>
+
+                    <li class="dropdown topbar-item">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false" data-bs-offset="0,19">
+                            <img src="@ImageStreamSource" alt="" class="thumb-md rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end py-0">
+                            <div class="d-flex align-items-center dropdown-item py-2 bg-secondary-subtle">
+                                <div class="flex-shrink-0">
+                                    @if (ImageStreamSource is null)
+                                    {
+                                        <img src="https://i.pinimg.com/736x/61/f7/5e/61f75ea9a680def2ed1c6929fe75aeee.jpg" alt="" class="thumb-md rounded-circle">
+                                    }
+                                    else
+                                    {
+                                        <img src="@ImageStreamSource" alt="" class="thumb-md rounded-circle">
+                                    }
+                                </div>
+                                <div class="flex-grow-1 ms-2 text-truncate align-self-center">
+                                    @if (LoginUser.Login is null)
+                                    {
+                                        <h6 class="my-0 fw-medium text-dark fs-13">""</h6>
+                                        <small class="text-muted mb-0">""</small>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="my-0 fw-medium text-dark fs-13">@LoginUser.Login!.nombres </h6>
+                                        <small class="text-muted mb-0">@LoginUser.Login.cargo</small>
+                                    }
+                                </div><!--end media-body-->
+                            </div>
+                            <div class="dropdown-divider mt-0"></div>
+                            <small class="text-muted px-2 pb-1 d-block">Cuenta</small>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-user fs-18 me-1 align-text-bottom"></i> Perfil</a>
+                            <small class="text-muted px-2 py-1 d-block">Configuraciones</small>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-key fs-18 me-1 align-text-bottom"></i>Cambiar Contraseña</a>
+                            <a class="dropdown-item" href="pages-profile.html"><i class="las la-cog fs-18 me-1 align-text-bottom"></i>Configuración</a>
+                            <div class="dropdown-divider mb-0"></div>
+                            <a class="dropdown-item text-danger" href="auth-login.html"><i class="las la-power-off fs-18 me-1 align-text-bottom"></i> Cerrar Sesión</a>
+                        </div>
+                    </li>
+                </div>
+
+            </ul>
+
+
+
+        </nav> <!--end nav-->
+    </div><!--end container-->
+</div>
+
+@code{
+    [Parameter] public EventCallback<bool> Recarga { get; set; }
+    private EditContext editContext = null!;
+    [Parameter]
+    public LoginResponse LoginUser { get; set; } = null!;
+    private string ImageStreamSource;
+    private bool showModal = false;
+    private string modalName = "";
+    private void AbrirModalCliente()
+    {
+        showModal = true;
+        modalName = "cliente";
+    }
+    private async void AbrirModalIngresoControl()
+    {
+        if (data.IdMascota is null)
+        {
+            string mensaje = "DEBE SELECCIONAR UN PACIENTE";
+            string tipo = "Error";
+            string icono = "error";
+            await js.InvokeVoidAsync("mostrarAlerta", mensaje, tipo, icono);
+            return;
+        }
+        showModal = true;
+        modalName = "ingresoNota";
+    }
+    private void AbrirModalNuevoPaciente()
+    {
+        showModal = true;
+        modalName = "nuevoPaciente";
+    }
+    private void AbrirModalEspecies()
+    {
+        showModal = true;
+        modalName = "especies";
+    }
+    private void AbrirModalColor()
+    {
+        showModal = true;
+        modalName = "color";
+    }
+    private void AbrirModalRazas()
+    {
+        showModal = true;
+        modalName = "razas";
+    }
+    // }
+    private void AbrirModalConsultas()
+    {
+        showModal = true;
+        modalName = "consultas";
+    }
+    private async void AbrirModalIngresoConsultas()
+    {
+        if(data.IdMascota is null)
+        {
+            string mensaje = "DEBE SELECCIONAR UN PACIENTE";
+            string tipo = "Error";
+            string icono = "error";
+            await js.InvokeVoidAsync("mostrarAlerta", mensaje, tipo, icono);
+            return;
+        }
+        showModal = true;
+        modalName = "ingreso-consulta";
+    }
+    private void AbrirModalAgendarEventoClinico()
+    {
+        showModal = true;
+        modalName = "agendar-evento";
+    }
+    private void AbrirModalImprimeCarnetSL()
+    {
+        showModal = true;
+        modalName = "carnet-sl";
+    }
+    private void AbrirModalImprimeEutanasia()
+    {
+        showModal = true;
+        modalName = "eutanasia";
+    }
+    private void AbrirModalImprimeCertSalud()
+    {
+        showModal = true;
+        modalName = "cert-salud";
+    }
+    private void AbrirModalCertEutanasia()
+    {
+        showModal = true;
+        modalName = "cert-eutanasia";
+    }
+    private void AbrirModalAutorizaProcedimientos()
+    {
+        showModal = true;
+        modalName = "autoriza-proc";
+    }
+    private void AbrirModalProxControles()
+    {
+        showModal = true;
+        modalName = "prox-controles";
+    }
+    private void AbrirModalListDoc()
+    {
+        showModal = true;
+        modalName = "list-doc";
+    }
+    private void AbrirModalFrmIngreso()
+    {
+        showModal = true;
+        modalName = "frm-ingreso";
+    }
+    private void AbrirModalFrmHospitalizacion()
+    {
+        showModal = true;
+        modalName = "frm-hospitalizacion";
+    }
+    private void AbrirModalFrmPeluqueria()
+    {
+        showModal = true;
+        modalName = "frm-peluqueria";
+    }
+    private void AbrirModalExamenBiopsia()
+    {
+        showModal = true;
+        modalName = "examen-biopsia";
+    }
+    private void AbrirModalExamenOtros()
+    {
+        showModal = true;
+        modalName = "examen-otros";
+    }
+    private void AbrirModalExamenConcentimiento()
+    {
+        showModal = true;
+        modalName = "examen-concentimiento";
+    }
+
+    private void AbrirModalFrmCompromisoClinico()
+    {
+        showModal = true;
+        modalName = "frm-compromiso";
+    } 
+    private void AbrirModalFrmIngresoHospitalizacion()
+    {
+        showModal = true;
+        modalName = "ingreso-hospitalizacion";
+    }
+    private async Task CallInitVerticalMenu()
+    {
+        // Invocar la función initVerticalMenu de JavaScript
+        await js.InvokeVoidAsync("CambiarAtributoBody");
+    }
+    private async Task CambiarModo()
+    {
+        // Invocar la función initVerticalMenu de JavaScript
+        await js.InvokeVoidAsync("CambiarModoPantalla");
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("\n\n\n usuario appbar");
+
+
+        Console.WriteLine(LoginUser!.Login);
+        if (LoginUser.Login == null)
+        {
+            var data = await localStorage.GetItemAsync<LoginResponse>("login");
+            if (data is not null)
+            {
+                LoginUser = data;
+                ImageStreamSource = ConvertBytesToImageSource(LoginUser!.Login!.imgPerfil);
+                editContext = new(LoginUser!);
+            }
+        }
+        else
+        {
+            editContext = new(LoginUser!);
+            ImageStreamSource = ConvertBytesToImageSource(LoginUser!.Login!.imgPerfil);
+        }
+
+    }
+    public async Task Recargar(bool value)
+    {
+        if(value)
+        {
+            showModal = false;
+            StateHasChanged();
+            await this.Recarga.InvokeAsync(true);
+        }
+    }
+    private string ConvertBytesToImageSource(byte[] imageBytes)
+    {
+        using var stream = new MemoryStream(imageBytes);
+        // Codificar en Base64 para que sea compatible con Blazor
+        return $"data:image/jpeg;base64,{Convert.ToBase64String(stream.ToArray())}";
+    }
+}

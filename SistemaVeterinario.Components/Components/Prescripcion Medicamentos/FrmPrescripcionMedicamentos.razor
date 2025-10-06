@@ -1,0 +1,471 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-section {
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        background-color: #87CEEB;
+        color: black;
+        padding: 5px;
+        margin-bottom: 0;
+        font-size: 13px;
+        display: block;
+        height: 100%;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        padding: 8px;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+        .action-button i {
+            margin-right: 10px;
+            font-size: 20px;
+            color: #007bff;
+        }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+
+    .footer-info {
+        font-size: 12px;
+        color: #0066cc;
+        padding: 5px;
+        border-top: 1px solid #ddd;
+    }
+
+    .actions-panel {
+        background-color: #d8d8f0;
+        border: 1px solid #b8b8e0;
+        padding: 15px;
+    }
+
+    .form-row {
+        margin-bottom: 5px;
+    }
+
+    .input-group-text {
+        padding: 0 5px;
+        font-size: 12px;
+    }
+</style>
+
+<div class="window-container">
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-capsule text-primary"></i>
+        <span class="window-title">Formulario de Prescripción de Medicamentos</span>
+        
+    </div>
+
+    <div class="container-fluid p-2">
+        <div class="row g-2">
+            <!-- Formulario Principal -->
+            <div class="col-md-9">
+                <!-- Información de Plan -->
+                <div class="form-section">
+                    <div class="section-title">Información de Plan</div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Recinto</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" value="01 CLINICA VETERINARIA ARAUCANIA" readonly style="background-color: #e0e0e0;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Número</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" value="0000000003" style="background-color: #e0ffff;">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Fecha Emisión</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>06-05-2025</option>
+                                    <option>05-05-2025</option>
+                                    <option>04-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identificación del Médico Veterinario -->
+                <div class="form-section">
+                    <div class="section-title">Identificación del Médico Veterinario que Prescribe</div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Rut</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control">
+                                <span class="input-group-text">-</span>
+                                <input type="text" class="form-control" style="width: 40px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Nombre Completo</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Dirección</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" style="background-color: #e0e0e0;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Comuna</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" style="background-color: #e0e0e0;">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Región</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" style="background-color: #e0e0e0;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Sector</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identificación de Predio o Centro de Cultivo -->
+                <div class="form-section">
+                    <div class="section-title">Identificación de Predio o Centro de Cultivo en los cuales se mantienen los Animales que sería sujeto de aplicación</div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Nombre Predio</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Rut</label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control">
+                                <span class="input-group-text">-</span>
+                                <input type="text" class="form-control" style="width: 40px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Razón Social</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Dirección</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" style="background-color: #e0e0e0;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Comuna</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-with-dropdown">
+                                <select class="form-select" style="background-color: #e0e0e0;">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">Región</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" style="background-color: #e0e0e0;">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Sector</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-md-2">
+                            <label class="form-label">N° RUP</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">N° Código Centro Cultivo</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel Lateral -->
+            <div class="col-md-3">
+                <!-- Botones de Acción -->
+                <div class="actions-panel mb-2">
+                    <button class="action-button mb-3" id="btnGuardar">
+                        <i class="bi bi-save"></i>
+                        Guardar
+                    </button>
+                    <button class="action-button mb-3" id="btnImprimir">
+                        <i class="bi bi-printer"></i>
+                        Imprimir Informe
+                    </button>
+                    <button class="action-button" id="btnLimpiar">
+                        <i class="bi bi-eraser"></i>
+                        Limpiar
+                    </button>
+                </div>
+
+                <!-- Identificación de los Animales -->
+                <div class="form-section">
+                    <div class="section-title">Identificación de los Animales</div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Especie</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Raza</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Cod. o N° identificación</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-8">
+                            <label class="form-label">N° Dispositivo (DIIO)</label>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label">N° Animales</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-8">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" class="form-control" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RP -->
+                <div class="form-section">
+                    <div class="section-title">RP</div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Nombre Producto</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Cant.Prescrita por Unidad de Venta</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Dosis Por Animal</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Duración Tratamiento</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Período de Resguardo</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Identificación del Propietario -->
+                <div class="form-section">
+                    <div class="section-title">Identificación del Propietario de los Animales</div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Rut</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-10">
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <label class="form-label">Nombre Completo</label>
+                        </div>
+                    </div>
+                    <div class="row form-row">
+                        <div class="col-12">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-info">
+            CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+        </div>
+    </div>
+</div>

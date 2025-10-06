@@ -1,0 +1,187 @@
+﻿@page "/fichas" 
+@using SistemaVeterinario.Components.Components.Mantenedor_Fichas
+@* @page "/" *@
+<PageTitle>Mantenedor Ficha Pacientes</PageTitle>
+
+<div class="page-content">
+    <div class="container-fluid">
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body p-4  rounded text-center img-bg">
+                    </div>
+                    <div class="card-body mt-n6">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <div class="d-flex align-items-center">
+                                    <div class="position-relative">
+                                        <img src="https://www.purina.es/sites/default/files/styles/ttt_image_510/public/2024-02/sitesdefaultfilesstylessquare_medium_440x440public2022-09golden20retriever.jpg?itok=48StbVfe" alt="" class="rounded-circle img-fluid" width="200" height="200">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col mt-4">
+                                            <div class="flex-grow-1 text-truncate ms-3 align-self-end">
+                                                <h5 class="m-0 fs-3 fw-bold">Wila</h5>
+                                                <p class="text-muted mb-0">4A 11M</p>
+                                            </div><!--end media body-->
+                                        </div>
+                                    </div>
+                                    
+                                </div><!--end media-->
+                                <div class="mt-3">
+                                    <div class="text-body mb-2  d-flex align-items-center"><i class="iconoir-language fs-20 me-1 text-muted"></i><span class="text-body fw-semibold">Sexo :</span> Hembra</div>
+                                    <div class="text-muted mb-2 d-flex align-items-center"><i class="iconoir-mail-out fs-20 me-1"></i><span class="text-body fw-semibold">Raza : </span><a href="#" class="text-primary text-decoration-underline">Golden</a></div>
+                                    <div class="text-body mb-3 d-flex align-items-center"><i class="iconoir-phone fs-20 me-1 text-muted"></i><span class="text-body fw-semibold">Estado Reproductivo :</span> Esterilizada</div>
+                                    
+                                </div>
+                            </div><!--end col-->
+                        </div><!--end row-->
+                    </div><!--end card-body-->
+                </div><!--end card-->
+
+            </div> <!--end col-->
+            <div class="col-lg-8">
+                
+                
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#paciente" role="tab" aria-selected="true">Paciente</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#propietario" role="tab" aria-selected="false">Propietario</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-bs-toggle="tab" href="#mascotas" role="tab" aria-selected="false">Mascotas Propietario</a>
+                                    </li>
+                                
+                                </ul>
+
+                            </div><!--end col-->
+                            
+                        </div>  <!--end row-->
+                    </div><!--end card-header-->
+                    <div class="card-body pt-0">
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane p-3 active" id="paciente" role="tabpanel">
+                                <FrmFichaPaciente />
+                            </div>
+                            <div class="tab-pane p-3" id="propietario" role="tabpanel">
+                                <FrmPropietario />
+                            </div>
+                            <div class="tab-pane p-3" id="mascotas" role="tabpanel">
+                                <FrmMascotasPropietario />
+                            </div>
+                           
+                        </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link active" data-bs-toggle="tab" href="#consultas" role="tab" aria-selected="true">Listado de Consultas</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#controles" role="tab" aria-selected="false">Listado de Controles</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#intervenciones" role="tab" aria-selected="false">Presupuestos e Intervenciones</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#recetas" role="tab" aria-selected="false">Recetas Médicas</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-bs-toggle="tab" href="#hospitalizaciones" role="tab" aria-selected="false">Hospitalizaciones Clinicas</a>
+                                            </li>
+                                        </ul>
+
+                                    </div><!--end col-->
+
+                                </div>  <!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body pt-0">
+                                <!-- Tab panes -->
+                                <div class="tab-content">
+                                    <div class="tab-pane p-3 active" id="consultas" role="tabpanel">
+                                        <TblConsultas />
+                                    </div>
+                                    <div class="tab-pane p-3" id="controles" role="tabpanel">
+                                        <TblControles />
+                                    </div>
+                                    <div class="tab-pane p-3" id="intervenciones" role="tabpanel">
+                                        <TblIntervenciones />
+                                    </div>
+                                    <div class="tab-pane p-3" id="recetas" role="tabpanel">
+                                        <TblRecetas />
+                                    </div>
+                                    <div class="tab-pane p-3" id="hospitalizaciones" role="tabpanel">
+                                        <TblHospitalizaciones />
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            
+                            <div class="col align-items-center">
+                                <button class="btn btn-outline-primary">Guardar</button>
+                                <button class="btn btn-outline-danger">Eliminar</button>
+                                <button class="btn btn-outline-warning">Limpiar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- end col -->
+        </div><!--end row-->
+    </div><!-- container -->
+    <!--Start Rightbar-->
+    <!--Start Rightbar/offcanvas-->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="Appearance" aria-labelledby="AppearanceLabel">
+        <div class="offcanvas-header border-bottom justify-content-between">
+            <h5 class="m-0 font-14" id="AppearanceLabel">Appearance</h5>
+            <button type="button" class="btn-close text-reset p-0 m-0 align-self-center" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <h6>Account Settings</h6>
+            <div class="p-2 text-start mt-3">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch1">
+                    <label class="form-check-label" for="settings-switch1">Auto updates</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch2" checked>
+                    <label class="form-check-label" for="settings-switch2">Location Permission</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="settings-switch3">
+                    <label class="form-check-label" for="settings-switch3">Show offline Contacts</label>
+                </div><!--end form-switch-->
+            </div><!--end /div-->
+            <h6>General Settings</h6>
+            <div class="p-2 text-start mt-3">
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch4">
+                    <label class="form-check-label" for="settings-switch4">Show me Online</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" id="settings-switch5" checked>
+                    <label class="form-check-label" for="settings-switch5">Status visible to all</label>
+                </div><!--end form-switch-->
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="settings-switch6">
+                    <label class="form-check-label" for="settings-switch6">Notifications Popup</label>
+                </div><!--end form-switch-->
+            </div><!--end /div-->
+        </div><!--end offcanvas-body-->
+    </div>
+    <!--end Rightbar/offcanvas-->
+    <!--end Rightbar-->
+   
+    <!--end footer-->
+</div>

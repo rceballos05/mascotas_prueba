@@ -1,0 +1,158 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@inject IAyudaRepository repository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IPropietarioRepository propietarioRepository
+@inject IEspecieRepository especieRepository
+
+<LoadingModal @ref="loadingModal" IsVisible="@loadingVisible" Message="Cargando información..." />
+<form>
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="petName" class="form-label">Nombre de Mascota</label>
+            <input type="text" class="form-control" id="petName" @bind-value="request.Nombre">
+        </div>
+        <div class="col-md-6">
+            <label for="petType" class="form-label">Tipo de Mascota</label>
+            <input type="text" class="form-control" id="petType" @bind-value="request.Tipo">
+        </div>
+        <div class="col-md-6">
+            <label for="breed" class="form-label">Nombre de Raza</label>
+            <input type="text" class="form-control" id="breed" @bind-value="request.Raza">
+        </div>
+        <div class="col-md-6">
+            <label for="ownerName" class="form-label">Nombre de Propietario</label>
+            <input type="text" class="form-control" id="ownerName" @bind-value="request.NombrePropietario">
+        </div>
+        <div class="col-md-6">
+            <label for="microchip" class="form-label">MicroChip</label>
+            <input type="text" class="form-control" id="microchip" @bind-value="request.Microchip">
+        </div>
+        <div class="col-md-6">
+            <label for="sex" class="form-label">Sexo (M/H)</label>
+            <select class="form-select" id="sex">
+                <option value="">Seleccionar</option>
+                <option value="M">Macho</option>
+                <option value="H">Hembra</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="city" class="form-label">Ciudad</label>
+            <input type="text" class="form-control" id="city" @bind-value="request.ciudad">
+        </div>
+        <div class="col-md-6">
+            <label for="color" class="form-label">Color</label>
+            <input type="text" class="form-control" id="color" @bind-value="request.Color">
+        </div>
+        <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="todos" checked>
+                <label class="form-check-label" for="todos">
+                    Todos
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="esterilizado">
+                <label class="form-check-label" for="esterilizado">
+                    Esterilizado/Castrado
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="fertil">
+                <label class="form-check-label" for="fertil">
+                    Fértil
+                </label>
+            </div>
+           <div class="row">
+                <div class="col-lg-3 mt-2">
+                    <button class="btn btn-primary" type="button" @onclick="FiltrarMascotas">Filtrar</button>
+                </div>
+                <div class="col-lg-3 mt-2">
+                    <button class="btn btn-danger" type="button" @onclick="LimpiarForm">Limpiar</button>
+                </div>
+           </div>
+        </div>
+    </div>
+</form>
+
+<!-- Table -->
+<div class="table-responsive mt-3">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cod.Mascota</th>
+                <th>Nombre</th>
+                <th>Propietario</th>
+                <th>Especie</th>
+                <th>Color</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(filtroMascotas.Count > 0)
+            {
+                foreach(FiltroMascotasDto item in filtroMascotas)
+                {
+                    <tr>
+                        <td>@item.IdMascota</td>
+                        <td>@item.Nombre</td>
+                        <td>@item.NombrePropietario</td>
+                        <td>@item.Especie</td>
+                        <td>@item.Color</td>
+                        <td><button class="btn btn-success" @onclick="() => SeleccionarPaciente(item.IdMascota)"><i class="fa-solid fa-check"></i></button></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code{
+    private AyudaPacienteDtoRequest request = new AyudaPacienteDtoRequest();
+    private List<FiltroMascotasDto> filtroMascotas = new List<FiltroMascotasDto>();
+    [Parameter] public EventCallback<string> PacienteSeleccionado { get; set; }
+    private LoadingModal? loadingModal;
+    private bool loadingVisible = false;
+    private void LimpiarForm()
+    {
+        request = new AyudaPacienteDtoRequest();
+        filtroMascotas = new List<FiltroMascotasDto>();
+    }
+    private async Task FiltrarMascotas()
+    {
+        if(request.Nombre.Length > 0)
+        {
+            loadingVisible = true;
+            StateHasChanged();
+            var result = await repository.AyudaPaciente(userLoged.Token, empresaData.Prefijo, request);
+            Console.WriteLine(result);
+            //var list = JsonSerializer.Deserialize<List<MedMascota>>(result.toString());
+            filtroMascotas = [];
+            foreach (var item in result[0])
+            {
+                MedMascota med = JsonSerializer.Deserialize<MedMascota>(item.ToString());
+                Console.WriteLine("ITEM:\n");
+                Console.WriteLine(item);
+                // Console.WriteLine($"\n\n Rut Cliente: {item.rutCliente}");
+                Console.WriteLine($"\n token: {userLoged.Token}");
+                // string rut = item.rutCliente;
+                // Console.WriteLine($"RUT EN STRING: {rut}");
+                var cliente = await propietarioRepository.GetPropietario(userLoged.Token, med.rutCliente, empresaData.Prefijo);
+                var especie = await especieRepository.GetEspecie(userLoged.Token, empresaData.Prefijo, (string)item.codEspecie);
+                especie = especie[0];
+                filtroMascotas.Add(new FiltroMascotasDto((string)item.idMascota, (string)item.nombreMascota, (string)item.codEspecie, (string)item.codRaza, (string)item.rutCliente, (string)cliente.nombre, (string)item.microchip, (string)item.codSexo, "", (string)item.codColor, (string) especie.codEspecie, (string) especie.especie));
+            }
+            Console.WriteLine(filtroMascotas.Count);
+            loadingVisible = false;
+            StateHasChanged();
+        }
+        
+        // StateHasChanged();
+    }
+
+    private void SeleccionarPaciente(string id)
+    {
+        PacienteSeleccionado.InvokeAsync(id);
+    }
+}

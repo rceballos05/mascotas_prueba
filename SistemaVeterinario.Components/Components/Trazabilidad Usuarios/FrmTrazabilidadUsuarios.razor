@@ -1,0 +1,305 @@
+﻿<style>
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .window-container {
+        border: 1px solid #999;
+        border-radius: 3px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        background-color: #f0f0f0;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to bottom, #e6e6e6, #cccccc);
+        border-bottom: 1px solid #999;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .window-title {
+        font-weight: bold;
+        color: #333;
+        margin-left: 5px;
+    }
+
+    .window-controls {
+        margin-left: auto;
+    }
+
+    .window-button {
+        background: linear-gradient(to bottom, #f5f5f5, #e6e6e6);
+        border: 1px solid #999;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        margin-left: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .progress-bar-custom {
+        height: 20px;
+        background-color: #007bff;
+        border-radius: 0;
+    }
+
+    .progress-custom {
+        height: 20px;
+        background-color: #e9ecef;
+        border: 1px solid #ced4da;
+    }
+
+    .section-header {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .list-container {
+        border: 1px solid #ddd;
+        background-color: white;
+        height: 400px;
+        overflow-y: auto;
+    }
+
+    .list-item {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .list-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .list-item.selected {
+            background-color: #e0f0e0;
+        }
+
+        .list-item.highlighted {
+            background-color: #ffffcc;
+        }
+
+    .table-container {
+        border: 1px solid #ddd;
+        background-color: white;
+        height: 400px;
+        overflow-y: auto;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: normal;
+        text-align: center;
+        border: 1px solid #ddd;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .table td {
+        border: 1px solid #ddd;
+        font-size: 13px;
+    }
+
+    .table tr.highlighted {
+        background-color: #d1ecf1;
+    }
+
+    .filter-section {
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 10px;
+    }
+
+    .filter-header {
+        background-color: #00b0f0;
+        color: white;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .form-control, .form-select {
+        height: 30px;
+        padding: 2px 8px;
+        font-size: 13px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .btn-custom {
+        width: 100%;
+        text-align: center;
+        padding: 5px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        font-size: 13px;
+    }
+
+    .status-bar {
+        background-color: #f0f0f0;
+        border-top: 1px solid #ddd;
+        padding: 5px 10px;
+        font-size: 12px;
+        color: #333;
+    }
+
+    .filter-table-header {
+        background-color: #f0f0f0;
+        color: #333;
+        padding: 5px 10px;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid #ddd;
+    }
+
+    .dropdown-toggle::after {
+        position: absolute;
+        right: 10px;
+        top: 45%;
+    }
+
+    .input-with-dropdown {
+        position: relative;
+    }
+
+        .input-with-dropdown .form-select {
+            padding-right: 25px;
+        }
+</style>
+
+<div class="page-content mt-5 ml-3">
+
+    <!-- Window Header -->
+    <div class="window-header">
+        <i class="bi bi-person-lines-fill text-primary"></i>
+        <span class="window-title">Trazabilidad de Usuarios</span>
+       
+    </div>
+
+    <div class="container-fluid p-2">
+        <!-- Progress Bar -->
+        <div class="progress progress-custom mb-2">
+            <div class="progress-bar progress-bar-custom" style="width: 10%"></div>
+        </div>
+
+        <div class="row g-2">
+            <!-- Left Column -->
+            <div class="col-md-3">
+                <!-- Lista de Usuarios -->
+                <div class="section-header">Lista de Usuarios</div>
+                <div class="list-container mb-2" id="usuariosList">
+                    <div class="list-item">ACOFRE</div>
+                    <div class="list-item">ANDREA</div>
+                    <div class="list-item">BLAURIE</div>
+                    <div class="list-item">CAMIPEREZ</div>
+                    <div class="list-item">CATALINA</div>
+                    <div class="list-item">CGONZALEZ</div>
+                    <div class="list-item">CLEVIQUEO</div>
+                    <div class="list-item">CPARRA</div>
+                    <div class="list-item highlighted">EDUVERGARA</div>
+                    <div class="list-item">GABIRIQUEL</div>
+                    <div class="list-item">GPEÑA</div>
+                    <div class="list-item">HCORONADO</div>
+                    <div class="list-item">JACQUELINE</div>
+                    <div class="list-item">LEYLA</div>
+                    <div class="list-item">MARCO</div>
+                    <div class="list-item">MAURICIO</div>
+                    <div class="list-item">MMORENO</div>
+                    <div class="list-item">MVELASCO</div>
+                    <div class="list-item">OCUEVAS</div>
+                    <div class="list-item">OROA</div>
+                </div>
+
+                <!-- Filtro de Búsqueda -->
+                <div class="filter-header">Filtro de Búsqueda</div>
+                <div class="filter-section">
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">Desde</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>14-05-2025</option>
+                                    <option>13-05-2025</option>
+                                    <option>12-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Hasta</label>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="input-with-dropdown">
+                                <select class="form-select">
+                                    <option>14-05-2025</option>
+                                    <option>15-05-2025</option>
+                                    <option>16-05-2025</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <button class="btn-custom" id="btnBuscar">Buscar</button>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn-custom" id="btnSalir">Salir</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button class="btn-custom" id="btnImprimir">Imprimir</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="col-md-9">
+                <div class="section-header">Informe de Eventos de Usuario</div>
+                <div class="filter-table-header">Filtro</div>
+                <div class="table-container">
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th width="5%"></th>
+                                <th width="10%">Fecha</th>
+                                <th width="10%">Hora</th>
+                                <th width="20%">Sistema</th>
+                                <th width="15%">Módulo</th>
+                                <th width="10%">Acción</th>
+                                <th width="30%">Información</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventosTable">
+                            <!-- Los eventos se cargarán dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar mt-2">
+            Se Encontraron 2 Registros
+        </div>
+    </div>
+</div>

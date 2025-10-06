@@ -1,0 +1,298 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@using SistemaVeterinario.Web.Statics
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject IJSRuntime js
+@inject UserNavgationData data
+@inject IPropietarioRepository repository
+@inject IMascotaRepository mascotaRepository
+@inject MascotaNavigationData mascotaData
+@inject IEspecieRepository especieRepository
+@inject IEstadoRepository estadoRepository
+
+@inject NavigationManager navigation
+
+<ModalAyuda Show ="@showModal" Title="Ayuda Propietario" ShowChanged="@(value => showModal = value)">
+
+    <SistemaVeterinario.Components.Components.Ayudas.AyudaPropietario PropietarioSeleccionado="PropietarioSeleccionado"/>
+</ModalAyuda>
+
+<LoadingModal @ref="loadingModal" IsVisible="@loadingVisible" Message="Cargando información..." />
+<div class="col-12">
+    @*  <div class="card">
+        <div class="card-body pt-0"> *@
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-3 col-form-label text-start">Rut</label>
+                <div class="col-sm-7">
+                    @if (Propietario.Rut == null)
+                    {
+                        <input class="form-control" type="text" id="example-text-input" @onkeydown="AbrirModal" @oninput="CapturarRut" value="@rut">
+                    }
+                    else
+                    {
+                        <input class="form-control" type="text" id="example-text-input" @onkeydown="AbrirModal" value="@rutFormato" disabled="disabled">
+                    }
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-secondary" @onclick="AbrirModalAyuda">
+                        <i class="fa-solid fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-3 col-form-label text-start">Nombre</label>
+                <div class="col-sm-9">
+                    <input class="form-control" type="text" @bind-value="Propietario.Nombre" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-3 col-form-label text-start">Direccion</label>
+                <div class="col-sm-9">
+                    <input class="form-control" type="text" @bind-value="Propietario.Direccion" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Fono</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" @bind-value="Propietario.Fono" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Email</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" @bind-value="Propietario.Email" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-1 row">
+        <label for="example-date-input" class="col-sm-4 col-form-label text-start">Crédito Directo</label>
+        <div class="col-sm-4">
+            <input class="form-control" type="text" @bind-value="Propietario.Cupo" id="example-date-input" disabled="disabled">
+        </div>
+        <div class="form-check col-sm-3">
+            <input class="form-check-input" type="checkbox" @bind-value="Propietario.Bloqueo" id="flexCheckDefaultdemo" disabled="disabled">
+            <label class="form-check-label" for="flexCheckDefaultdemo">
+                Bloqueo Administrativo
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-3 col-form-label text-start">Utilizado</label>
+                <div class="col-sm-5">
+                    <input class="form-control" type="text" value="@(Propietario.Cupo - Propietario.Disponible)" readonly id="example-text-input" disabled="disabled">
+                </div>
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Días</label>
+                <div class="col-sm-2">
+                    <input class="form-control" type="text" @bind-value="Propietario.Plazo" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-5 col-form-label text-start">Último Ingreso Clínico</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="date" value="" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-4 col-form-label text-start">Último Abono</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="date" value="Ingreso" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*     </div>
+</div>
+ *@
+@code
+{
+    [Parameter]
+    public Propietario? Propietario { get; set; }
+    [Parameter] 
+    public EventCallback<bool> RecargaDatos { get; set; }
+
+    private LoadingModal? loadingModal;
+    private bool loadingVisible = false;
+
+    private Propietario Cliente = new Propietario();
+    Rut rutFn = new Rut();
+    public string rut = "";
+    // private ModalAyuda? modalAyuda;
+    private string rutFormato{ get => rutFn.FormatoRut(Propietario.Rut ?? "111111111"); }
+    private bool showModal = false;
+    private async void CapturarRut(ChangeEventArgs e)
+    {
+        string entrada = e.Value.ToString() ?? "";
+        if (entrada.Length > 0)
+        {
+            string rutLimpio = new string(entrada
+           .Where(c => char.IsDigit(c) || c == 'K' || c == 'k')
+           .ToArray()
+
+            ).ToUpper();
+            Rut rutFn = new Rut();
+            rut = rutFn.FormatoRut(rutLimpio);
+        }
+    }
+    private async void AbrirModal(KeyboardEventArgs e)
+    {
+        if (e.Key == "F2")
+        {
+            Console.WriteLine("abriendo modal");
+            AbrirModalAyuda();
+        }
+        else if(e.Key == "Enter")
+        {
+            loadingVisible = true;
+            StateHasChanged();
+            var rut_enviado = rut.Replace(".", "").Replace("-", "").PadLeft(10, '0');
+
+            Console.WriteLine(rut);
+            Console.WriteLine($"RUT ENVIADO A API: {rut_enviado}");
+            await PropietarioSeleccionado(rut_enviado);
+            loadingVisible = false;
+            StateHasChanged();
+        }
+    }
+    private async Task ActualizarInputRut(string palabra)
+    {
+        await js.InvokeVoidAsync("eval", $"document.getElementById('rut').value = '{palabra}'");
+    }
+    private void AbrirModalAyuda()
+    {
+        showModal = true;
+    }
+
+    private async Task PropietarioSeleccionado(string rut)
+    {
+        Rut rutFn = new Rut(); 
+        showModal = false;
+        // Console.WriteLine(rut);
+        var resp = await repository.GetPropietario(data.Token, rut, empresaData.Prefijo);
+        // Console.WriteLine(resp);
+        dynamic bandera = resp;
+        Cliente.Nombre = bandera.nombre;
+        Cliente.Rut = rut;
+        Cliente.Email = bandera.email;
+        Cliente.Direccion = bandera.direccion;
+        Cliente.Fono = bandera.fono1;
+        Cliente.Cupo = bandera.cupo;
+        Cliente.Disponible = bandera.disponible;
+        // Console.WriteLine($"bandera bloqueo: {bandera.bloqueo}");
+        Cliente.Bloqueo = bandera.bloqueo == 0 ? false : true;
+        // Console.WriteLine($"bloqueo: {Cliente.Bloqueo}");
+        Cliente.Plazo = bandera.plazo;
+        // var cliente = await repository.GetPropietario("", C.RutCliente, empresaData.Prefijo);
+
+        // rutFormato = rutFn.FormatoRut(Cliente.Rut);
+        var mascotas = await mascotaRepository.GetMascotaRutCliente(data.Token, empresaData.Prefijo, rut);
+        await localStorage.SetItemAsync("mascota", new MascotasDto
+        {
+
+        });
+        await localStorage.SetItemAsync("propietario", new Propietario
+            {
+                Rut = rut,
+                Cupo = Cliente.Cupo,
+                Bloqueo = Cliente.Bloqueo,
+                Direccion = Cliente.Direccion,
+                Disponible = Cliente.Disponible,
+                Email = Cliente.Email,
+                Fono = Cliente.Fono,
+                Nombre = Cliente.Nombre,
+                Plazo = Cliente.Plazo
+            });
+        List<MascotasDto> lst = new List<MascotasDto>();
+        if(mascotas is not null)
+        {
+            foreach (var item in mascotas)
+            {
+                Console.WriteLine(item);
+                var especie = await especieRepository.GetEspecie(data.Token, empresaData.Prefijo, (string)item.codEspecie);
+                var estado = await estadoRepository.GetEstado(data.Token, empresaData.Prefijo, (string)item.idEstado);
+                lst.Add(new MascotasDto
+                    {
+                        CodColor = item.codColor,
+                        CodEspecie = item.codEspecie,
+                        Sexo = item.sexo,
+                        CodEstadoReproductivo = item.codEstadoReproductivo,
+                        CodRaza = item.codRaza,
+                        CodSexo = item.codSexo,
+                        Color = item.color,
+                        Especie = (string)especie[0].especie,
+                        Estado =  (string)estado[0].nombreEstado,
+                        EstadoReproductivo = item.estadoReproductivo,
+                        FechaCreacion = item.fechaCreacion,
+                        FechaNacimiento = item.fechaNacimiento,
+                        IdEstado = item.idEstado,
+                        IdFotoPerfil = item.idFotoPerfil,
+                        IdMascota = item.idMascota,
+                        Microchip = item.microchip,
+                        NombreMascota = item.nombreMascota,
+                        NumeroHospitalizacion = item.numeroHospitalizacion,
+                        Raza = item.raza,
+                        RutCliente = item.rutCliente,
+                        UltimaModificacion = item.ultimaModificacion
+                    });
+            }
+        }
+        else
+        {
+            lst = [];
+        }
+
+        await localStorage.SetItemAsync("mascotasPropietario", lst);
+        mascotaData.RutCliente = rut;
+        await RecargaDatos.InvokeAsync(true);
+
+    }
+    protected override async void OnInitialized()
+    {
+        // rutFormato = "";
+        Rut rutFn = new Rut();
+        var prop = await localStorage.GetItemAsync<Propietario>("propietario");
+        if(prop.Rut is not null)
+        {
+            Propietario = prop;
+
+            // rutFormato = rutFn.FormatoRut((string)Propietario.Rut);
+            Console.WriteLine($"RUT FORMATO : ----> {rutFormato}");
+        }
+        if(Propietario is not null)
+        {
+            Cliente = Propietario;
+        }
+        
+    }
+}

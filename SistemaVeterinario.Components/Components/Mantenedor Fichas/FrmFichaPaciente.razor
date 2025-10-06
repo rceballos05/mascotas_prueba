@@ -1,0 +1,370 @@
+﻿@using SistemaVeterinario.Backend.Interfaces
+@using SistemaVeterinario.Components.Components.Componentes_Globales
+@inject IMascotaRepository repository
+@inject MascotaNavigationData data
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IPropietarioRepository propietarioRepository
+@inject IRazaRepository razaRepository
+@inject IEstadoRepository estadoRepository
+@inject IEspecieRepository especieRepository
+@inject NavigationManager navigation
+@inject IJSRuntime js
+<SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda Show ="@showModal" Title="Ayuda Paciente" ShowChanged="@(value => showModal = value)">
+    <SistemaVeterinario.Components.Components.Ayudas.AyudaPaciente PacienteSeleccionado="PacienteSeleccionado"/>
+</SistemaVeterinario.Components.Components.Componentes_Globales.ModalAyuda>
+
+<LoadingModal @ref="loadingModal" IsVisible="@loadingVisible" Message="Cargando información..." />
+<div class="col-12">
+
+    @* <div class="card">
+
+        <div class="card-body pt-0"> *@
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-3 col-form-label text-start">N° Ficha</label>
+                <div class="col-sm-7">
+                    @if(Mascota.IdMascota == null)
+                    {
+                        <input class="form-control" type="text" id="example-text-input" @onkeydown="AbrirModal" @oninput="CapturarId" @ref="IdMascotaRef">
+
+                    }
+                    else
+                    {
+                        <input class="form-control" type="text" @bind-value="Mascota.IdMascota" id="example-text-input" @onkeydown="AbrirModal" disabled="disabled">
+                    }
+                </div>
+                <div class="col-sm-1">
+                    <button class="btn btn-secondary" @onclick="AbrirModalAyuda">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-4 col-form-label text-start">Nombre Mascota</label>
+                <div class="col-sm-8">
+
+                    <input class="form-control" type="text" @bind-value="Mascota.NombreMascota" id="example-text-input" disabled="disabled">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-4 col-form-label text-start">Tipo de Mascota</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" @bind-value="Mascota.Especie" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Raza</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="text" @bind-value="Mascota.Raza" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Sexo</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" @bind-value="Mascota.Sexo" id="example-text-input" disabled="disabled">
+                </div>
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Color</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" @bind-value="Mascota.CodColor" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mb-1 row">
+        <label for="example-date-input" class="col-sm-4 col-form-label text-start">Nacimiento</label>
+        <div class="col-sm-8">
+            <input class="form-control" type="date" @bind-value="Mascota.FechaNacimiento" id="example-date-input" disabled="disabled">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-5 col-form-label text-start">Estado Reproductivo</label>
+                <div class="col-sm-7">
+                    <input class="form-control" type="text" @bind-value="Mascota.EstadoReproductivo" id="example-text-input" disabled="disabled">
+                </div>            
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-4 col-form-label text-start">Microchip</label>
+                <div class="col-sm-8">
+                    <input class="form-control" type="text" @bind-value="Mascota.Microchip" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="mb-1 row">
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Estado</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="text" @bind-value="Mascota.Estado" id="example-text-input" disabled="disabled">
+                </div>
+                <label for="example-text-input" class="col-sm-2 col-form-label text-start">Ingreso</label>
+                <div class="col-sm-4">
+                    <input class="form-control" type="date" @bind-value="Mascota.FechaCreacion" id="example-text-input" disabled="disabled">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*     </div>
+</div> *@
+
+@code
+{
+    private ElementReference IdMascotaRef;
+    [Parameter]
+    public MascotasDto? Mascota { get; set; }
+    [Parameter] public EventCallback<bool> RecargaDatos { get; set; }
+    private MascotasDto mascota = new MascotasDto();
+    private LoadingModal? loadingModal;
+    private bool loadingVisible = false;
+    public string id = "";
+    // private ModalAyuda? modalAyuda;
+    private bool showModal = false;
+    private void CapturarId(ChangeEventArgs e)
+    {
+        id = e.Value?.ToString() ?? "";
+    }
+    private void AbrirModal(KeyboardEventArgs e)
+    {
+        if (e.Key == "F2")
+        {
+            Console.WriteLine("abriendo modal");
+            AbrirModalAyuda();
+        }
+        if(e.Key == "Enter")
+        {
+            loadingVisible = true;
+            StateHasChanged();
+            Console.WriteLine($"id mascota: {id}");
+            CargarMascotaID(id.PadLeft(10, '0'));
+            ;
+        }
+    }
+    public async void CargarMascotaID(string id)
+    {
+        var result = await repository.GetMascota(userLoged.Token, empresaData.Prefijo, id);
+        Console.WriteLine(result[0]);
+        var p = result[0];
+        var r = await razaRepository.GetRaza(userLoged.Token, empresaData.Prefijo, (string)p.codEspecie, (string)p.codRaza);
+        var x = r[0];
+        Console.WriteLine(r);
+        Console.WriteLine(x);
+        Mascota.IdMascota = p.idMascota;
+        Mascota.NombreMascota = p.nombreMascota;
+        Mascota.CodRaza = p.codRaza;
+        Mascota.Raza = x.raza;
+        Mascota.CodSexo = p.codSexo;
+        Mascota.Sexo = p.sexo;
+        Mascota.CodColor = p.codColor;
+        Mascota.FechaNacimiento = p.fechaNacimiento;
+        Mascota.EstadoReproductivo = p.estadoReproductivo;
+        Mascota.Microchip = p.microchip;
+        Mascota.IdEstado = p.idEstado;
+        Mascota.Estado = p.estado;
+        Mascota.FechaCreacion = p.fechaCreacion;
+        Mascota.Especie = p.especie;
+        Mascota.RutCliente = p.rutCliente;
+        data.RutCliente = Mascota.RutCliente;
+        data.IdMascota = Mascota.IdMascota;
+        mascota = Mascota;
+        var cliente = await propietarioRepository.GetPropietario(userLoged.Token, Mascota.RutCliente, empresaData.Prefijo);
+        var mascotas = await repository.GetMascotaRutCliente(userLoged.Token, empresaData.Prefijo, Mascota.RutCliente);
+        List<MascotasDto> lst = new List<MascotasDto>();
+        if (mascotas.Count > 0)
+        {
+            foreach (var item in mascotas)
+            {
+                var estado = await estadoRepository.GetEstado(userLoged.Token, empresaData.Prefijo, (string)item.idEstado);
+                var especie = await especieRepository.GetEspecie(userLoged.Token, empresaData.Prefijo, (string)item.codEspecie);
+                especie = especie[0];
+                estado = estado[0];
+                lst.Add(new MascotasDto
+                    {
+                        CodColor = item.codColor,
+                        CodEspecie = item.codEspecie,
+                        Sexo = item.sexo,
+                        CodEstadoReproductivo = item.codEstadoReproductivo,
+                        CodRaza = item.codRaza,
+                        CodSexo = item.codSexo,
+                        Color = item.color,
+                        Especie = especie.especie,
+                        Estado = estado.nombreEstado,
+                        EstadoReproductivo = item.estadoReproductivo,
+                        FechaCreacion = item.fechaCreacion,
+                        FechaNacimiento = item.fechaNacimiento,
+                        IdEstado = item.idEstado,
+                        IdFotoPerfil = item.idFotoPerfil,
+                        IdMascota = item.idMascota,
+                        Microchip = item.microchip,
+                        NombreMascota = item.nombreMascota,
+                        NumeroHospitalizacion = item.numeroHospitalizacion,
+                        Raza = item.raza,
+                        RutCliente = item.rutCliente,
+                        UltimaModificacion = item.ultimaModificacion
+                    });
+            }
+        }
+        data.IdMascota = Mascota.IdMascota;
+        data.RutCliente = Mascota.RutCliente;
+        await RecargaDatos.InvokeAsync(true);
+        loadingVisible = false;
+        StateHasChanged();
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        if(Mascota.IdMascota == null)
+        {
+            var masc = await localStorage.GetItemAsync<MascotasDto>("mascota");
+            if(masc is not null)
+            {
+                mascota = masc;
+            }
+        }
+        else
+        {
+            mascota = Mascota;
+        }
+        await IdMascotaRef.FocusAsync();
+    }
+
+    private async Task PacienteSeleccionado(string id)
+    {
+        showModal = false;
+        var result = await repository.GetMascota(userLoged.Token, empresaData.Prefijo, id);
+        Console.WriteLine(result[0]);
+        var p = result[0];
+        var r = await razaRepository.GetRaza(userLoged.Token, empresaData.Prefijo, (string)p.codEspecie,(string) p.codRaza);
+        var x = r[0];
+        Console.WriteLine(r);
+        Console.WriteLine(x);
+        Mascota.IdMascota = p.idMascota;
+        Mascota.NombreMascota = p.nombreMascota;
+        Mascota.CodRaza = p.codRaza;
+        Mascota.Raza = x.raza;
+        Mascota.CodSexo = p.codSexo;
+        Mascota.Sexo = p.sexo;
+        Mascota.CodColor = p.codColor;
+        Mascota.FechaNacimiento = p.fechaNacimiento;
+        Mascota.EstadoReproductivo = p.estadoReproductivo;
+        Mascota.Microchip = p.microchip;
+        Mascota.IdEstado = p.idEstado;
+        Mascota.Estado = p.estado;
+        Mascota.FechaCreacion = p.fechaCreacion;
+        Mascota.Especie = p.especie;
+        Mascota.RutCliente = p.rutCliente;
+        data.RutCliente = Mascota.RutCliente;
+        data.IdMascota = Mascota.IdMascota;
+        mascota = Mascota;
+        var cliente = await propietarioRepository.GetPropietario(userLoged.Token, Mascota.RutCliente,empresaData.Prefijo);
+        var mascotas = await repository.GetMascotaRutCliente(userLoged.Token, empresaData.Prefijo, Mascota.RutCliente);
+        await localStorage.SetItemAsync("mascota", new MascotasDto
+        {
+            CodColor = Mascota.CodColor,
+            CodEspecie = Mascota.CodEspecie,
+            CodEstadoReproductivo = Mascota.CodEstadoReproductivo,
+            CodRaza = Mascota.CodRaza,
+            CodSexo = Mascota.CodSexo,
+            Color = Mascota.Color,
+            Especie = Mascota.Especie,
+            Estado = Mascota.Estado,
+            EstadoReproductivo = Mascota.EstadoReproductivo,
+            FechaCreacion = Mascota.FechaCreacion,
+            UltimaModificacion = Mascota.UltimaModificacion,
+            FechaNacimiento = Mascota.FechaNacimiento,
+            IdEstado = Mascota.IdEstado,
+            IdFotoPerfil = Mascota.IdFotoPerfil,
+            IdMascota = Mascota.IdMascota,
+            Microchip = Mascota.Microchip,
+            NombreMascota = Mascota.NombreMascota,
+            NumeroHospitalizacion = Mascota.NumeroHospitalizacion,
+            Raza = Mascota.Raza,
+            RutCliente = Mascota.RutCliente,
+            Sexo = Mascota.Sexo
+        });
+        await localStorage.SetItemAsync("propietario", new Propietario
+        {
+            Rut = Mascota.RutCliente,
+            Cupo = cliente.cupo,
+            Bloqueo = cliente.bloqueo == 0 ? false: true,
+            Direccion=cliente.direccion,
+            Disponible = cliente.disponible,
+            Email = cliente.email,
+            Fono=cliente.celular,
+            Nombre = cliente.nombre,
+            Plazo = cliente.plazo
+        });
+        List<MascotasDto> lst = new List<MascotasDto>();
+        if(mascotas.Count > 0)
+        {
+            foreach (var item in mascotas)
+            {
+                var estado = await estadoRepository.GetEstado(userLoged.Token, empresaData.Prefijo, (string)item.idEstado);
+                var especie = await especieRepository.GetEspecie(userLoged.Token, empresaData.Prefijo, (string)item.codEspecie);
+                especie = especie[0];
+                estado = estado[0];
+                lst.Add(new MascotasDto
+                    {
+                        CodColor = item.codColor,
+                        CodEspecie = item.codEspecie,
+                        Sexo = item.sexo,
+                        CodEstadoReproductivo = item.codEstadoReproductivo,
+                        CodRaza = item.codRaza,
+                        CodSexo = item.codSexo,
+                        Color = item.color,
+                        Especie = especie.especie,
+                        Estado = estado.nombreEstado,
+                        EstadoReproductivo = item.estadoReproductivo,
+                        FechaCreacion = item.fechaCreacion,
+                        FechaNacimiento = item.fechaNacimiento,
+                        IdEstado = item.idEstado,
+                        IdFotoPerfil = item.idFotoPerfil,
+                        IdMascota = item.idMascota,
+                        Microchip = item.microchip,
+                        NombreMascota = item.nombreMascota,
+                        NumeroHospitalizacion = item.numeroHospitalizacion,
+                        Raza = item.raza,
+                        RutCliente = item.rutCliente,
+                        UltimaModificacion = item.ultimaModificacion
+                    });
+            }
+        }
+        data.IdMascota = Mascota.IdMascota;
+        data.RutCliente = Mascota.RutCliente;
+        await localStorage.SetItemAsync("mascotasPropietario",lst);
+        Console.WriteLine(p);
+        // navigation.Refresh();
+        await RecargaDatos.InvokeAsync(true);
+    }
+    
+    private void AbrirModalAyuda()
+    {
+        showModal = true;
+    }
+}

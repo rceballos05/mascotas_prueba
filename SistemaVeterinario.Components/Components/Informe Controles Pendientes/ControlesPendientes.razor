@@ -1,0 +1,277 @@
+﻿<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    .header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-title {
+        color: #d35400;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }
+
+        .header-title i {
+            color: #d35400;
+            margin-right: 5px;
+        }
+
+    .header-controls {
+        display: flex;
+    }
+
+        .header-controls button {
+            margin-left: 5px;
+            background: none;
+            border: none;
+        }
+
+    .filter-section {
+        background-color: #d6d9ff;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .filter-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .filter-list {
+        background-color: white;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        height: 100px;
+        overflow-y: auto;
+    }
+
+    .filter-list-item {
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+        .filter-list-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .filter-list-item.active {
+            background-color: #cfe2ff;
+        }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .data-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+        }
+
+    .footer {
+        padding: 10px;
+        border-top: 1px solid #dee2e6;
+        font-size: 12px;
+        color: #0d6efd;
+    }
+
+    .action-button {
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+        .action-button i {
+            margin-right: 5px;
+        }
+
+    .progress-container {
+        position: absolute;
+        bottom: 40px;
+        right: 20px;
+    }
+</style>
+
+<div class="page-content mt-5 ml-3">
+    <!-- Header -->
+    <div class="header">
+        <div class="header-title">
+            <i class="bi bi-clipboard2-pulse"></i>
+            <span>Informe de Controles Pendientes</span>
+        </div>
+        
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress" style="height: 20px;">
+        <div class="progress-bar bg-primary" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <!-- Filter Sections -->
+    <div class="container-fluid mt-2">
+        <div class="row">
+            <!-- Left Filter Section -->
+            <div class="col-md-3">
+                <div class="filter-section">
+                    <div class="mb-3">
+                        <label class="filter-label">Recinto</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="01 CLINICA VETERINARIA ARAUCANIA" readonly>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Desde</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="05-05-2025" readonly>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="filter-label">Hasta</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" value="05-05-2025" readonly>
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Filter Section -->
+            <div class="col-md-5">
+                <div class="filter-section">
+                    <h6 class="mb-3">Datos de Mascota</h6>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="filter-label">Mascota</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="col-md-9">
+                            <label class="filter-label">&nbsp;</label>
+                            <input type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="filter-label">Ciudades</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" readonly>
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="filter-label">Lugar Control</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="-- INCLUIR TODOS --" readonly>
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-end">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" id="activarFiltros">
+                                <label class="form-check-label" for="activarFiltros">Activar Filtros</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Filter Sections -->
+            <div class="col-md-2">
+                <div class="filter-section">
+                    <label class="filter-label">Filtrar Por</label>
+                    <div class="filter-list">
+                        <div class="filter-list-item">Pendientes</div>
+                        <div class="filter-list-item">Efectuados</div>
+                        <div class="filter-list-item active">Todos</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="filter-section">
+                    <label class="filter-label">Ordenado Por</label>
+                    <div class="filter-list">
+                        <div class="filter-list-item active">x Mascota</div>
+                        <div class="filter-list-item">x Numero</div>
+                        <div class="filter-list-item">x Fecha</div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                    <div class="action-button me-2">
+                        <i class="bi bi-search"></i>
+                        <span>Buscar Registros</span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2">
+                    <div class="action-button">
+                        <i class="bi bi-printer"></i>
+                        <span>Imprimir Informe</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="container-fluid mt-2">
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Dirección</th>
+                        <th>Ciudad</th>
+                        <th>Fono</th>
+                        <th>Mascota</th>
+                        <th>Motivo</th>
+                        <th>Atención</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Empty rows for data -->
+                    <tr>
+                        <td colspan="9" style="height: 400px;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="progress-container">
+        <span>Progreso</span>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        CLINICA VETERINARIA ARAUCANIA / Usuario Conectado: EDUVERGARA
+    </div>
+</div>

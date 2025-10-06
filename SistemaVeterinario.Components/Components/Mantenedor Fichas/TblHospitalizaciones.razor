@@ -1,0 +1,64 @@
+﻿@using Radzen
+@using Radzen.Blazor
+@using SistemaVeterinario.Backend.Interfaces
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IHospitalizacionesRepository repository
+@inject EmpresaSeleccionadaNavigationData empresaData
+@inject UserNavgationData userLoged
+<div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body pt-0">
+                <div class="table-responsive">
+                    <RadzenDataGrid Data="@Hospitalizaciones" TItem="HospitalizacionesDto" AllowPaging="true" PageSize="5" ShowPagingSummary="true" AllowFiltering="false" AllowSorting="true" EmptyText="No hay registros para mostrar." >
+                        <Columns>
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="Numero" Title="N°" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="BoxIngreso" Title="box" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="FechaIngreso" Title="Fecha Ingreso" FormatString="{0:dd-MM-yyyy}" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="HoraIngreso" Title="Hora" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="Especialista" Title="Especialista" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="AsuntoIngreso" Title="Asunto" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="Peso" Title="Peso" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="Total" Title="Total" />
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Property="GlosaAlta" Title="Alta Médica" />
+
+                            <RadzenDataGridColumn TItem="HospitalizacionesDto" Title="Acción">
+                                <Template Context="data">
+                                    <RadzenButton Icon="check_circle" Style="color: green;" ButtonStyle="ButtonStyle.Light" Click="()=> MostrarHospi(data.Numero)" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </div><!--end card-body-->
+        </div><!--end card-->
+    </div> <!--end col-->
+</div><!--end row-->
+
+@code{
+    [Parameter]
+    public List<HospitalizacionesDto> Hospitalizaciones { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Hospitalizaciones = [];
+        var masc = await localStorage.GetItemAsync<MascotasDto>("mascota");
+        if (masc.IdMascota is not null)
+        {
+            var lst = await repository.GetHospitalizaciones(userLoged.Token,empresaData.Prefijo, (string)masc.IdMascota);
+            if (lst is not null)
+            {
+                if(lst.Count>0)
+                {
+                    Hospitalizaciones = lst;
+                }
+
+            }
+
+        }
+    }
+
+    private async Task MostrarHospi(string id)
+    {
+        
+    }
+}
